@@ -1,0 +1,52 @@
+name: build
+
+on: 
+  workflow_dispatch:
+  push:
+    branches: [ main, dev, 'dev/*', 'feature/*', 'rel/*' ]
+    paths-ignore:
+      - readme.md
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+env:
+  DOTNET_NOLOGO: true
+
+jobs:
+  build-dotnet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with: 
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: build
+        working-directory: ./src
+        run: dotnet build
+
+      - name: test
+        working-directory: ./src
+        run: dotnet test --filter "TestCategory!=UI"
+
+  build-react:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with: 
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Use Node.js '18.x'
+        uses: actions/setup-node@v3
+        with:
+            node-version: '18.x'
+      - run: npm ci
+        working-directory: ./src/web
+      - run: npm run build --if-present
+        working-directory: ./src/web
+      - run: npm test
+        working-directory: ./src/web
+    
