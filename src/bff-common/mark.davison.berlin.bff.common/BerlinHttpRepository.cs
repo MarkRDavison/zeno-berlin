@@ -1,4 +1,4 @@
-﻿namespace mark.davison.berlin.bff.web;
+﻿namespace mark.davison.berlin.bff.common.web;
 
 public class BerlinHttpRepository : HttpRepository
 {

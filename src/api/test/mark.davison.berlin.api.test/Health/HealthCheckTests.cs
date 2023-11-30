@@ -4,7 +4,7 @@
 public class HealthCheckTests : ApiIntegrationTestBase
 {
     [TestMethod]
-    public async Task Ready_ReturnsHealthy()
+    public async Task HealthCheck_ReturnsHealthy()
     {
         var response = await GetRawAsync("/health/readiness");
         Assert.AreEqual("Healthy", response);

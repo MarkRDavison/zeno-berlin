@@ -1,20 +1,17 @@
-﻿namespace mark.davison.berlin.bff.web.Authentication;
+﻿namespace mark.davison.berlin.bff.common.Authentication;
 
 public class BerlinCustomZenoAuthenticationActions : ICustomZenoAuthenticationActions
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly IHttpRepository _httpRepository;
     private readonly IDateService _dateService;
     private readonly IOptions<AppSettings> _appSettings;
 
     public BerlinCustomZenoAuthenticationActions(
-        IServiceProvider serviceProvider,
         IHttpRepository httpRepository,
         IDateService dateService,
         IOptions<AppSettings> appSettings
     )
     {
-        _serviceProvider = serviceProvider;
         _httpRepository = httpRepository;
         _dateService = dateService;
         _appSettings = appSettings;
@@ -28,9 +25,9 @@ public class BerlinCustomZenoAuthenticationActions : ICustomZenoAuthenticationAc
                cancellationToken);
     }
 
-    private Task<User?> UpsertUser(UserProfile userProfile, string token, CancellationToken cancellationToken)
+    private async Task<User?> UpsertUser(UserProfile userProfile, string token, CancellationToken cancellationToken)
     {
-        return _httpRepository.UpsertEntityAsync(
+        return await _httpRepository.UpsertEntityAsync(
                 new User
                 {
                     Id = Guid.NewGuid(),
@@ -47,6 +44,19 @@ public class BerlinCustomZenoAuthenticationActions : ICustomZenoAuthenticationAc
                 cancellationToken);
     }
 
+    private async Task UpsertUserOptions(User user, string token, CancellationToken cancellationToken)
+    {
+        await _httpRepository.UpsertEntityAsync(
+                new UserOptions
+                {
+                    IsAdmin = user.Username == _appSettings.Value.ADMIN_USERNAME,
+                    MaxCapacity = -1,
+                    UserId = user.Id
+                },
+                HeaderParameters.Auth(token, null),
+                cancellationToken);
+    }
+
     public async Task<User?> OnUserAuthenticated(UserProfile userProfile, IZenoAuthenticationSession zenoAuthenticationSession, CancellationToken cancellationToken)
     {
         var token = zenoAuthenticationSession.GetString(ZenoAuthenticationConstants.SessionNames.AccessToken);
@@ -55,15 +65,12 @@ public class BerlinCustomZenoAuthenticationActions : ICustomZenoAuthenticationAc
         if (user == null && !string.IsNullOrEmpty(token))
         {
             user = await UpsertUser(userProfile, token, cancellationToken);
-
-            if (!_appSettings.Value.PRODUCTION_MODE && user != null)
-            {
-                // await UpsertTestData(user, token, cancellationToken);
-            }
         }
 
         if (user != null)
         {
+            await UpsertUserOptions(user, token, cancellationToken);
+
             zenoAuthenticationSession.SetString(ZenoAuthenticationConstants.SessionNames.User, JsonSerializer.Serialize(user));
         }
 
