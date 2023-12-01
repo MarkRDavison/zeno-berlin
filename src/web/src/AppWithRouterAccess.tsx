@@ -1,23 +1,50 @@
 import Box from "@mui/material/Box";
-import { ApplicationBar } from "./components/ApplicationBar/ApplicationBar";
-import { ApplicationDrawer } from "./components/ApplicationDrawer/ApplicationDrawer";
-import { Home } from "./pages/Home";
+import { UserDashboard } from "./pages/User/UserDashboard";
 import { useAuth } from "./util/Auth/AuthContext";
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Toolbar from "@mui/material/Toolbar";
-import { useState } from "react";
+import { Root } from "./Root";
+import { AdminUsers } from "./pages/Admin/AdminUsers";
+import { AdminDashboard } from "./pages/Admin/AdminDashboard";
+import { AdminShares } from "./pages/Admin/AdminShares";
+import { AdminJobs } from "./pages/Admin/AdminJobs";
+import { UserJobs } from "./pages/User/UserJobs";
 
 
 const router = createBrowserRouter([
     {
       path: '/',
-      element: <Home />
+      element: <Root />,
+      children: [
+        {
+            path: '/',
+            element: <UserDashboard />
+        },
+        {
+            path: '/user-jobs',
+            element: <UserJobs />
+        },
+        {
+            path: '/admin-users',
+            element: <AdminUsers />
+        },
+        {
+            path: '/admin-shares',
+            element: <AdminShares />
+        },
+        {
+            path: '/admin-dashboard',
+            element: <AdminDashboard />
+        },
+        {
+            path: '/admin-Jobs',
+            element: <AdminJobs />
+        }
+      ]
     }
   ]);
 
 export const AppWithRouterAccess: React.FC = () => {
     const { isLoggedIn, isLoggingIn, login } = useAuth();
-    const [drawerOpen, setDrawerOpen] = useState(true);
 
     if (!isLoggedIn && isLoggingIn){            
         return <div className='entire-app-loading'></div>;
@@ -26,12 +53,7 @@ export const AppWithRouterAccess: React.FC = () => {
     if (isLoggedIn && !isLoggingIn) {
         return (
             <Box sx={{ display: 'flex' }}>
-                <ApplicationBar toggleDrawerOpen={() => setDrawerOpen(!drawerOpen)} />
-                { drawerOpen && <ApplicationDrawer /> } 
-                <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                    <Toolbar />
-                    <RouterProvider router={router} />
-                </Box>            
+                <RouterProvider router={router} />    
             </Box>
         );
     }

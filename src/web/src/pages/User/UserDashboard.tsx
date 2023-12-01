@@ -1,8 +1,8 @@
-import { useAuth } from "../util/Auth/AuthContext";
-import { useAppSelector } from "../store/hooks";
-import { selectAdminState } from "../features/userContext/userContextSlice";
+import { useAuth } from "../../util/Auth/AuthContext";
+import { useAppSelector } from "../../store/hooks";
+import { selectAdminState } from "../../features/userContext/userContextSlice";
 
-export const Home: React.FC = () => {
+export const UserDashboard: React.FC = () => {
     const { user } = useAuth();
     const isAdmin = useAppSelector(selectAdminState)
 

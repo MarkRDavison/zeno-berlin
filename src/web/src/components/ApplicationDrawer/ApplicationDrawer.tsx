@@ -4,9 +4,13 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
-import { ExpandLess, ExpandMore, Inbox as InboxIcon, StarBorder, Send as SendIcon, Drafts as DraftsIcon } from '@mui/icons-material';
+import { ExpandLess, ExpandMore, StarBorder } from '@mui/icons-material';
 import Collapse from "@mui/material/Collapse";
 import { useState } from "react";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { useAppSelector } from "../../store/hooks";
+import { selectAdminState } from "../../features/userContext/userContextSlice";
+
 
 const drawerWidth = 240;
 
@@ -16,8 +20,8 @@ export interface ApplicationDrawerProps {
 
 export const ApplicationDrawer: React.FC<ApplicationDrawerProps> = (props: ApplicationDrawerProps) => {
     const {  } = props;
-
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
+    const isAdmin = useAppSelector(selectAdminState);
 
     const handleClick = () => {
       setOpen(!open);
@@ -39,35 +43,58 @@ export const ApplicationDrawer: React.FC<ApplicationDrawerProps> = (props: Appli
             component="nav"
             aria-labelledby="nested-list-subheader"
           >
-            <ListItemButton>
+          <ListItemButton component={ReactRouterLink} to="/">
+            <ListItemIcon>
+              <StarBorder />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItemButton>
+            <ListItemButton component={ReactRouterLink} to="/user-jobs">
               <ListItemIcon>
-                <SendIcon />
+                <StarBorder />
               </ListItemIcon>
-              <ListItemText primary="Sent mail" />
+              <ListItemText primary="Jobs" />
             </ListItemButton>
-            <ListItemButton>
-              <ListItemIcon>
-                <DraftsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Drafts" />
-            </ListItemButton>
+
+             {isAdmin && <>
+
             <ListItemButton onClick={handleClick}>
               <ListItemIcon>
-                <InboxIcon />
+                <StarBorder />
               </ListItemIcon>
-              <ListItemText primary="Inbox" />
+              <ListItemText primary="Administration" />
               {open ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItemButton sx={{ pl: 4 }}>
+                <ListItemButton sx={{ pl: 4 }} component={ReactRouterLink} to="/admin-users">
                   <ListItemIcon>
                     <StarBorder />
                   </ListItemIcon>
-                  <ListItemText primary="Starred" />
+                  <ListItemText primary="Users"/>
+                </ListItemButton>
+                <ListItemButton sx={{ pl: 4 }} component={ReactRouterLink} to="/admin-shares">
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <ListItemText primary="Shares" />
+                </ListItemButton>
+                <ListItemButton sx={{ pl: 4 }} component={ReactRouterLink} to="/admin-dashboard">
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <ListItemText primary="Admin dashboard" />
+                </ListItemButton>
+                <ListItemButton sx={{ pl: 4 }} component={ReactRouterLink} to="/admin-jobs">
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <ListItemText primary="Admin jobs" />
                 </ListItemButton>
               </List>
             </Collapse>
+            
+            </>}
           </List>
         </Drawer>
     );
