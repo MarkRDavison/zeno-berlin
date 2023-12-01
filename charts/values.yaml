@@ -1,0 +1,8 @@
+api:
+  tag: latest    
+
+bff-web:
+  tag: latest    
+
+web:
+  tag: latest    
