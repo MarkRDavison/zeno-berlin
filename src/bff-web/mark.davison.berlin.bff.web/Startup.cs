@@ -38,7 +38,7 @@ public class Startup
         services.UseRedisSession(
             AppSettings.AUTH,
             AppSettings.REDIS,
-            "berlin",
+            AppSettings.SECTION.ToLower(),
             AppSettings.PRODUCTION_MODE);
 
         services.AddZenoAuthentication(_ =>
@@ -89,6 +89,8 @@ public class Startup
 
             endpoints
                 .UseAuthenticationEndpoints();
+
+            MapProxyCQRSGet(endpoints, "/api/startup-query");
         });
     }
 

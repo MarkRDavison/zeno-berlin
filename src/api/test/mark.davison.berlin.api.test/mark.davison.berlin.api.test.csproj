@@ -11,8 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="JunitXml.TestLogger" Version="3.0.134" />
-    <PackageReference Include="markdavison.common.server.test" Version="8.0.0" />
-    <PackageReference Include="markdavison.common.test" Version="8.0.0" />
+    <PackageReference Include="markdavison.common.server.test" Version="8.0.1" />
+    <PackageReference Include="markdavison.common.test" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />

@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import config from "../config"
+import { useAppDispatch } from "../../store/hooks"
+import { client } from "../../api/client"
 
 export interface UserProfile {
     sub: string
@@ -38,6 +40,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props: AuthProviderPro
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoggingIn, setIsLoggingIn] = useState(true);
 
+    const dispatch = useAppDispatch();
+
     useEffect(() => {
         setIsLoggedIn(false);
         setIsLoggingIn(true);
@@ -47,12 +51,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = (props: AuthProviderPro
         })
             .then(async r => {
                 if (r.ok) {
-
-
-
                     setUser(await r.json());
                     setIsLoggedIn(true);
                     setIsLoggingIn(false);
+
+                    await client.fetchStartup(dispatch);
                 }
                 else {                    
                     setUser(null);

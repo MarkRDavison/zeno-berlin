@@ -1,4 +1,8 @@
-﻿namespace mark.davison.berlin.api;
+﻿using mark.davison.berlin.shared.models.Entities;
+using mark.davison.common.server.abstractions.Identification;
+using mark.davison.common.server.Endpoints;
+
+namespace mark.davison.berlin.api;
 
 [UseCQRSServer(typeof(DtosRootType), typeof(CommandsRootType), typeof(QueriesRootType))]
 public class Startup
@@ -97,6 +101,12 @@ public class Startup
 
             endpoints
                 .ConfigureCQRSEndpoints();
+
+            endpoints
+                .UseGet<User>()
+                .UseGetById<User>()
+                .UsePost<User>()
+                .UsePost<UserOptions>();
         });
     }
 }

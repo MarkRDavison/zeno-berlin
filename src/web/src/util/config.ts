@@ -12,7 +12,7 @@ declare global {
 
 const createConfig = (): Config => {
     return {
-        bff_base_uri: window.ENV?.BFF_BASE_URI ?? 'https://localhost:4000',
+        bff_base_uri: window.ENV?.BFF_BASE_URI ?? 'https://localhost:40000',
     }
 };
 

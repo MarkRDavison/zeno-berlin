@@ -59,6 +59,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6DE42E8F-1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.berlin.bff.common.test", "bff-common\test\mark.davison.berlin.bff.common.test\mark.davison.berlin.bff.common.test.csproj", "{96155DAE-91B8-4764-9191-7C1E015846EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.berlin.shared.validation", "shared\mark.davison.berlin.shared.validation\mark.davison.berlin.shared.validation.csproj", "{1CF27260-5666-488F-BEC9-C30D503C562F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,10 @@ Global
 		{96155DAE-91B8-4764-9191-7C1E015846EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96155DAE-91B8-4764-9191-7C1E015846EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96155DAE-91B8-4764-9191-7C1E015846EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CF27260-5666-488F-BEC9-C30D503C562F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CF27260-5666-488F-BEC9-C30D503C562F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CF27260-5666-488F-BEC9-C30D503C562F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CF27260-5666-488F-BEC9-C30D503C562F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -155,6 +161,7 @@ Global
 		{2C46BA79-D240-44C8-8501-0FF9AA5959B3} = {F821870F-DB4D-4472-BEBD-2A7164BFA942}
 		{6DE42E8F-1B40-434A-8762-0E668B6B83B0} = {F821870F-DB4D-4472-BEBD-2A7164BFA942}
 		{96155DAE-91B8-4764-9191-7C1E015846EC} = {6DE42E8F-1B40-434A-8762-0E668B6B83B0}
+		{1CF27260-5666-488F-BEC9-C30D503C562F} = {F4ACDAFB-CC48-4451-AE95-760C70A580D6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {203F8C74-DF4A-4DF5-942E-8C2E8B6D92CA}
