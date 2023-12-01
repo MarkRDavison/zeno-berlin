@@ -113,7 +113,7 @@ jobs:
           changes: |
             {
               "api.tag": "${{ github.event.release.tag_name }}",
-              "bff-web.tag": "${{ github.event.release.tag_name }}",
+              "bffweb.tag": "${{ github.event.release.tag_name }}",
               "web.tag": "${{ github.event.release.tag_name }}"
             }
 
