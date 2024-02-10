@@ -12,10 +12,4 @@ public class BerlinDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserEntityConfiguration).Assembly);
     }
 
-    public DbSet<Document> Documents => Set<Document>();
-    public DbSet<Location> Locations => Set<Location>();
-    public DbSet<Share> Shares => Set<Share>();
-    public DbSet<SharingOptions> SharingOptions => Set<SharingOptions>();
-    public DbSet<StorageOptions> StorageOptions => Set<StorageOptions>();
-    public DbSet<UserOptions> UserOptions => Set<UserOptions>();
 }

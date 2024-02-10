@@ -1,5 +1,4 @@
-﻿using mark.davison.berlin.shared.models.Entities;
-using mark.davison.common.server.abstractions.Identification;
+﻿using mark.davison.common.server.abstractions.Identification;
 using mark.davison.common.server.Endpoints;
 
 namespace mark.davison.berlin.api;
@@ -105,8 +104,7 @@ public class Startup
             endpoints
                 .UseGet<User>()
                 .UseGetById<User>()
-                .UsePost<User>()
-                .UsePost<UserOptions>();
+                .UsePost<User>();
         });
     }
 }

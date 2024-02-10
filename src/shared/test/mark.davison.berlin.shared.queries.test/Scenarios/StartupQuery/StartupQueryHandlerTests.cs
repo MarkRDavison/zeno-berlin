@@ -18,42 +18,4 @@ public class StartupQueryHandlerTests
             .Setup(_ => _.BeginTransaction())
             .Returns(new StubAsyncDisposable());
     }
-
-    [TestMethod]
-    public async Task Handle_RetrievesUserOptions()
-    {
-        var userOptions = new UserOptions
-        {
-            IsAdmin = true
-        };
-
-        _repository
-            .Setup(_ => _.GetEntityAsync(
-                It.IsAny<Expression<Func<UserOptions, bool>>>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(userOptions);
-
-        var request = new StartupQueryRequest { };
-
-        var response = await _handler.Handle(request, _currentUserContext.Object, CancellationToken.None);
-
-        Assert.AreEqual(userOptions.IsAdmin, response.Admin);
-    }
-
-    [TestMethod]
-    public async Task Handle_WhereOptionsDontExist_ReturnError()
-    {
-        _repository
-            .Setup(_ => _.GetEntityAsync(
-                It.IsAny<Expression<Func<UserOptions, bool>>>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((UserOptions?)null);
-
-        var request = new StartupQueryRequest { };
-
-        var response = await _handler.Handle(request, _currentUserContext.Object, CancellationToken.None);
-
-        Assert.IsFalse(response.Success);
-        Assert.IsTrue(response.Errors.Contains(ValidationMessages.MissingUserOptions));
-    }
 }

@@ -44,19 +44,6 @@ public class BerlinCustomZenoAuthenticationActions : ICustomZenoAuthenticationAc
                 cancellationToken);
     }
 
-    private async Task UpsertUserOptions(User user, string token, CancellationToken cancellationToken)
-    {
-        await _httpRepository.UpsertEntityAsync(
-                new UserOptions
-                {
-                    IsAdmin = user.Username == _appSettings.Value.ADMIN_USERNAME,
-                    MaxCapacity = -1,
-                    UserId = user.Id
-                },
-                HeaderParameters.Auth(token, null),
-                cancellationToken);
-    }
-
     public async Task<User?> OnUserAuthenticated(UserProfile userProfile, IZenoAuthenticationSession zenoAuthenticationSession, CancellationToken cancellationToken)
     {
         var token = zenoAuthenticationSession.GetString(ZenoAuthenticationConstants.SessionNames.AccessToken);
@@ -69,8 +56,6 @@ public class BerlinCustomZenoAuthenticationActions : ICustomZenoAuthenticationAc
 
         if (user != null)
         {
-            await UpsertUserOptions(user, token, cancellationToken);
-
             zenoAuthenticationSession.SetString(ZenoAuthenticationConstants.SessionNames.User, JsonSerializer.Serialize(user));
         }
 

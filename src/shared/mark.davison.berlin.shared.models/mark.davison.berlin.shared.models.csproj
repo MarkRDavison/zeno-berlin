@@ -10,4 +10,8 @@
     <PackageReference Include="markdavison.common.server.abstractions" Version="8.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\" />
+  </ItemGroup>
+
 </Project>

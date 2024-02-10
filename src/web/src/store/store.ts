@@ -1,8 +1,6 @@
 import { Store, configureStore } from '@reduxjs/toolkit'
 import userContextReducer from '../features/userContext/userContextSlice'
 
-
-
 const store: Store = configureStore({
     reducer: {
         userContext: userContextReducer

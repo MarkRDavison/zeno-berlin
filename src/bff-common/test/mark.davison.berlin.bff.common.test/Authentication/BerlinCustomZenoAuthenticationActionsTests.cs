@@ -1,5 +1,4 @@
-﻿using mark.davison.berlin.shared.models.Entities;
-using mark.davison.common.Repository;
+﻿using mark.davison.common.Repository;
 using mark.davison.common.server.abstractions.Authentication;
 using mark.davison.common.server.abstractions.Identification;
 
@@ -60,62 +59,6 @@ public class BerlinCustomZenoAuthenticationActionsTests
     }
 
     [TestMethod]
-    public async Task OnUserAuthenticated_WhereValidUserProfile_CreatesUserSettings()
-    {
-        _httpRepository
-            .Setup(_ => _.UpsertEntityAsync(
-                It.IsAny<UserOptions>(),
-                It.IsAny<HeaderParameters>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((UserOptions u, HeaderParameters h, CancellationToken c) =>
-            {
-                Assert.IsFalse(u.IsAdmin);
-                return u;
-            })
-            .Verifiable();
-
-        _user.Username = "NotAdmin";
-
-        await _actions.OnUserAuthenticated(new(), _authenticationSession.Object, CancellationToken.None);
-
-        _httpRepository
-            .Verify(
-                _ => _.UpsertEntityAsync(
-                    It.IsAny<UserOptions>(),
-                    It.IsAny<HeaderParameters>(),
-                    It.IsAny<CancellationToken>()),
-                Times.Once);
-    }
-
-    [TestMethod]
-    public async Task OnUserAuthenticated_WhereValidAdminUserProfile_CreatesAdminUserSettings()
-    {
-        _httpRepository
-            .Setup(_ => _.UpsertEntityAsync(
-                It.IsAny<UserOptions>(),
-                It.IsAny<HeaderParameters>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((UserOptions u, HeaderParameters h, CancellationToken c) =>
-            {
-                Assert.IsTrue(u.IsAdmin);
-                return u;
-            })
-            .Verifiable();
-
-        _user.Username = _appSettings.ADMIN_USERNAME;
-
-        await _actions.OnUserAuthenticated(new(), _authenticationSession.Object, CancellationToken.None);
-
-        _httpRepository
-            .Verify(
-                _ => _.UpsertEntityAsync(
-                    It.IsAny<UserOptions>(),
-                    It.IsAny<HeaderParameters>(),
-                    It.IsAny<CancellationToken>()),
-                Times.Once);
-    }
-
-    [TestMethod]
     public async Task OnUserAuthenticated_WhereUserDoesntExist_CreatesUser()
     {
         _httpRepository
@@ -124,13 +67,6 @@ public class BerlinCustomZenoAuthenticationActionsTests
                 It.IsAny<HeaderParameters>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(() => (User?)null);
-
-        _httpRepository
-            .Setup(_ => _.UpsertEntityAsync(
-                It.IsAny<UserOptions>(),
-                It.IsAny<HeaderParameters>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync((UserOptions u, HeaderParameters h, CancellationToken c) => u);
 
         _httpRepository
             .Setup(_ => _.UpsertEntityAsync(

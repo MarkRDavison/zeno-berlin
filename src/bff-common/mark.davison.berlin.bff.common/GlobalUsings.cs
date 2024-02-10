@@ -1,5 +1,4 @@
 ﻿global using mark.davison.berlin.bff.common.Configuration;
-global using mark.davison.berlin.shared.models.Entities;
 global using mark.davison.common.Identification;
 global using mark.davison.common.persistence.Configuration;
 global using mark.davison.common.Repository;

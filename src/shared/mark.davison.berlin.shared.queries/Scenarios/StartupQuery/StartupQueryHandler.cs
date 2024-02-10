@@ -13,21 +13,16 @@ public class StartupQueryHandler : IQueryHandler<StartupQueryRequest, StartupQue
     {
         await using (_repository.BeginTransaction())
         {
-            var options = await _repository.GetEntityAsync<UserOptions>(
-                _ => _.UserId == currentUserContext.CurrentUser.Id,
-                cancellation);
-
-            if (options == null)
-            {
-                return new StartupQueryResponse
-                {
-                    Errors = [ValidationMessages.MissingUserOptions]
-                };
-            }
+            //if (options == null)
+            //{
+            //    return new StartupQueryResponse
+            //    {
+            //        Errors = [ValidationMessages.MissingUserOptions]
+            //    };
+            //}
 
             return new StartupQueryResponse
             {
-                Admin = options.IsAdmin
             };
         }
     }
