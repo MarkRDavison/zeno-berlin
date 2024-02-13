@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="markdavison.common.server" Version="8.0.2" />
-    <PackageReference Include="markdavison.common.source.generators" Version="8.0.2" />
+    <PackageReference Include="markdavison.common.server" Version="8.0.4" />
+    <PackageReference Include="markdavison.common.source.generators" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
@@ -16,14 +16,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.commands\mark.davison.berlin.shared.commands.csproj" />
+    <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.constants\mark.davison.berlin.shared.constants.csproj" />
     <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.queries\mark.davison.berlin.shared.queries.csproj" />
     <ProjectReference Include="..\mark.davison.berlin.api.persistence\mark.davison.berlin.api.persistence.csproj" />
     <ProjectReference Include="..\migrations\mark.davison.berlin.api.migrations.postgres\mark.davison.berlin.api.migrations.postgres.csproj" />
     <ProjectReference Include="..\migrations\mark.davison.berlin.api.migrations.sqlite\mark.davison.berlin.api.migrations.sqlite.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Ignition\" />
   </ItemGroup>
 
 </Project>

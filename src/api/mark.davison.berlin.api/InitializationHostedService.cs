@@ -2,12 +2,14 @@
 
 public class InitializationHostedService : GenericApplicationHealthStateHostedService
 {
+    private readonly IBerlinDataSeeder _dataSeeder;
     private readonly IDbContextFactory<BerlinDbContext> _dbContextFactory;
     private readonly IOptions<AppSettings> _appSettings;
 
     public InitializationHostedService(
         IHostApplicationLifetime hostApplicationLifetime,
         IApplicationHealthState applicationHealthState,
+        IBerlinDataSeeder dataSeeder,
         IDbContextFactory<BerlinDbContext> dbContextFactory,
         IOptions<AppSettings> appSettings
     ) : base(
@@ -15,6 +17,7 @@ public class InitializationHostedService : GenericApplicationHealthStateHostedSe
         applicationHealthState
     )
     {
+        _dataSeeder = dataSeeder;
         _dbContextFactory = dbContextFactory;
         _appSettings = appSettings;
     }
@@ -29,8 +32,11 @@ public class InitializationHostedService : GenericApplicationHealthStateHostedSe
         }
         else
         {
+            await dbContext.Database.EnsureDeletedAsync(cancellationToken);
             await dbContext.Database.EnsureCreatedAsync(cancellationToken);
         }
+
+        await _dataSeeder.EnsureDataSeeded(cancellationToken);
 
         await base.AdditionalStartAsync(cancellationToken);
     }

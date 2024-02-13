@@ -53,13 +53,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\TODO.md = ..\TODO.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.berlin.bff.common", "bff-common\mark.davison.berlin.bff.common\mark.davison.berlin.bff.common.csproj", "{2C46BA79-D240-44C8-8501-0FF9AA5959B3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.bff.common", "bff-common\mark.davison.berlin.bff.common\mark.davison.berlin.bff.common.csproj", "{2C46BA79-D240-44C8-8501-0FF9AA5959B3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6DE42E8F-1B40-434A-8762-0E668B6B83B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.berlin.bff.common.test", "bff-common\test\mark.davison.berlin.bff.common.test\mark.davison.berlin.bff.common.test.csproj", "{96155DAE-91B8-4764-9191-7C1E015846EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.bff.common.test", "bff-common\test\mark.davison.berlin.bff.common.test\mark.davison.berlin.bff.common.test.csproj", "{96155DAE-91B8-4764-9191-7C1E015846EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.berlin.shared.validation", "shared\mark.davison.berlin.shared.validation\mark.davison.berlin.shared.validation.csproj", "{1CF27260-5666-488F-BEC9-C30D503C562F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.shared.validation", "shared\mark.davison.berlin.shared.validation\mark.davison.berlin.shared.validation.csproj", "{1CF27260-5666-488F-BEC9-C30D503C562F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.shared.constants", "shared\mark.davison.berlin.shared.constants\mark.davison.berlin.shared.constants.csproj", "{57F02580-101A-415A-97BF-F7EDAA23EAFA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.shared.logic", "mark.davison.berlin.shared.logic\mark.davison.berlin.shared.logic.csproj", "{664C6E2C-9850-4F59-BDC7-DA03B91375CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.berlin.shared.logic.test", "shared\test\mark.davison.berlin.shared.logic.test\mark.davison.berlin.shared.logic.test.csproj", "{F8C5D493-BD29-4679-9169-FC622CB25C8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,6 +141,18 @@ Global
 		{1CF27260-5666-488F-BEC9-C30D503C562F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CF27260-5666-488F-BEC9-C30D503C562F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CF27260-5666-488F-BEC9-C30D503C562F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57F02580-101A-415A-97BF-F7EDAA23EAFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57F02580-101A-415A-97BF-F7EDAA23EAFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57F02580-101A-415A-97BF-F7EDAA23EAFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57F02580-101A-415A-97BF-F7EDAA23EAFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{664C6E2C-9850-4F59-BDC7-DA03B91375CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{664C6E2C-9850-4F59-BDC7-DA03B91375CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{664C6E2C-9850-4F59-BDC7-DA03B91375CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{664C6E2C-9850-4F59-BDC7-DA03B91375CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8C5D493-BD29-4679-9169-FC622CB25C8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8C5D493-BD29-4679-9169-FC622CB25C8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8C5D493-BD29-4679-9169-FC622CB25C8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8C5D493-BD29-4679-9169-FC622CB25C8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -162,6 +180,9 @@ Global
 		{6DE42E8F-1B40-434A-8762-0E668B6B83B0} = {F821870F-DB4D-4472-BEBD-2A7164BFA942}
 		{96155DAE-91B8-4764-9191-7C1E015846EC} = {6DE42E8F-1B40-434A-8762-0E668B6B83B0}
 		{1CF27260-5666-488F-BEC9-C30D503C562F} = {F4ACDAFB-CC48-4451-AE95-760C70A580D6}
+		{57F02580-101A-415A-97BF-F7EDAA23EAFA} = {F4ACDAFB-CC48-4451-AE95-760C70A580D6}
+		{664C6E2C-9850-4F59-BDC7-DA03B91375CA} = {F4ACDAFB-CC48-4451-AE95-760C70A580D6}
+		{F8C5D493-BD29-4679-9169-FC622CB25C8D} = {9FDCA6D9-E3D5-45AD-8F4F-53336BD7F3AC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {203F8C74-DF4A-4DF5-942E-8C2E8B6D92CA}

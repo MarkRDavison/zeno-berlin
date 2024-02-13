@@ -1,7 +1,4 @@
-﻿using mark.davison.common.server.abstractions.Identification;
-using mark.davison.common.server.Endpoints;
-
-namespace mark.davison.berlin.api;
+﻿namespace mark.davison.berlin.api;
 
 [UseCQRSServer(typeof(DtosRootType), typeof(CommandsRootType), typeof(QueriesRootType))]
 public class Startup
@@ -56,23 +53,23 @@ public class Startup
 
         services.UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE);
 
-        services.AddScoped<IRepository>(_ =>
-            new BerlinRepository(
-                _.GetRequiredService<IDbContextFactory<BerlinDbContext>>(),
-                _.GetRequiredService<ILogger<BerlinRepository>>())
-            );
-
-        services.AddScoped<IReadonlyRepository>(_ =>
-            new BerlinRepository(
-                _.GetRequiredService<IDbContextFactory<BerlinDbContext>>(),
-                _.GetRequiredService<ILogger<BerlinRepository>>())
-            );
+        services
+            .AddScoped<IRepository>(_ =>
+                new BerlinRepository(
+                    _.GetRequiredService<IDbContextFactory<BerlinDbContext>>(),
+                    _.GetRequiredService<ILogger<BerlinRepository>>())
+                )
+            .AddScoped<IReadonlyRepository>(_ => _.GetRequiredService<IRepository>());
 
         services.AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc));
         services.UseCQRSServer();
         services
             .AddHttpClient()
-            .AddHttpContextAccessor();
+            .AddHttpContextAccessor()
+            .UseDataSeeders()
+            .UseValidation()
+            .UseBerlinLogic()
+            .UseBerlinCommands();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

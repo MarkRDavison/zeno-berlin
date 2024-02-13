@@ -1,12 +1,12 @@
 ﻿namespace mark.davison.berlin.api.test.Framework;
 
-public class BerlinFinanceHttpRepository : HttpRepository
+public class BerlinHttpRepository : HttpRepository
 {
-    public BerlinFinanceHttpRepository(string baseUri, JsonSerializerOptions options) : base(baseUri, new HttpClient(), options)
+    public BerlinHttpRepository(string baseUri, JsonSerializerOptions options) : base(baseUri, new HttpClient(), options)
     {
 
     }
-    public BerlinFinanceHttpRepository(string baseUri, HttpClient client, JsonSerializerOptions options) : base(baseUri, client, options)
+    public BerlinHttpRepository(string baseUri, HttpClient client, JsonSerializerOptions options) : base(baseUri, client, options)
     {
 
     }
@@ -15,6 +15,12 @@ public class BerlinFinanceHttpRepository : HttpRepository
 public class BerlinApiWebApplicationFactory : WebApplicationFactory<Startup>, ICommonWebApplicationFactory<AppSettings>
 {
     public IServiceProvider ServiceProvider => base.Services;
+    private readonly Dictionary<string, TestHttpMessageHandler> _messageHandlers = new();
+
+    public BerlinApiWebApplicationFactory()
+    {
+        _messageHandlers.Add(nameof(Ao3StoryInfoProcessor), new TestHttpMessageHandler());
+    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -38,6 +44,7 @@ public class BerlinApiWebApplicationFactory : WebApplicationFactory<Startup>, IC
         //    ));
         //services.UseDataSeeders();
 
+
         services
             .AddHttpClient()
             .AddHttpContextAccessor();
@@ -50,7 +57,17 @@ public class BerlinApiWebApplicationFactory : WebApplicationFactory<Startup>, IC
             if (ModifyCurrentUserContext != null) { ModifyCurrentUserContext(_, context); }
             return context;
         });
+
+        foreach (var (name, handler) in _messageHandlers)
+        {
+            services
+                .AddHttpClient(name)
+                .ConfigurePrimaryHttpMessageHandler(_ => handler);
+        }
+
     }
+
+    public TestHttpMessageHandler GetMessageHandler(string httpClientName) => _messageHandlers[httpClientName];
 
     public Action<IServiceProvider, CurrentUserContext>? ModifyCurrentUserContext { get; set; }
 }

@@ -1,9 +1,5 @@
-global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.StartupQuery;
 global using mark.davison.berlin.shared.queries.Scenarios.StartupQuery;
-global using mark.davison.berlin.shared.validation;
 global using mark.davison.common.server.abstractions.Authentication;
 global using mark.davison.common.server.abstractions.Repository;
 global using mark.davison.common.server.test.Framework;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
-global using Moq;
-global using System.Linq.Expressions;

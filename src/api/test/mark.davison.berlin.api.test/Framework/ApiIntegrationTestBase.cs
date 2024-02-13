@@ -2,8 +2,10 @@
 
 public class ApiIntegrationTestBase : IntegrationTestBase<BerlinApiWebApplicationFactory, AppSettings>
 {
+    private IServiceScope? _serviceScope;
     public ApiIntegrationTestBase()
     {
+        _serviceScope = Services.CreateScope();
         _factory.ModifyCurrentUserContext = (serviceProvider, currentUserContext) =>
         {
             var appSettings = serviceProvider.GetRequiredService<IOptions<AppSettings>>();
@@ -26,6 +28,15 @@ public class ApiIntegrationTestBase : IntegrationTestBase<BerlinApiWebApplicatio
             await repository.UpsertEntityAsync(CurrentUser, CancellationToken.None);
         }
         await SeedTestData();
+    }
+
+    protected T GetRequiredService<T>() where T : notnull
+    {
+        if (_serviceScope == null)
+        {
+            throw new NullReferenceException();
+        }
+        return _serviceScope!.ServiceProvider.GetRequiredService<T>();
     }
 
     protected virtual Task SeedTestData() => Task.CompletedTask;

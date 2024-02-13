@@ -12,4 +12,7 @@ public class BerlinDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserEntityConfiguration).Assembly);
     }
 
+    public DbSet<Story> Stories => Set<Story>();
+    public DbSet<StoryUpdate> StoryUpdates => Set<StoryUpdate>();
+    public DbSet<Site> Sites => Set<Site>();
 }
