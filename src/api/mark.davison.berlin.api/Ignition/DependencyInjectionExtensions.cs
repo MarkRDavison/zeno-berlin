@@ -7,4 +7,14 @@ public static class DependencyInjectionExtensions
         services.AddTransient<IBerlinDataSeeder, BerlinDataSeeder>();
         return services;
     }
+
+    public static IServiceCollection UseCronJobs(this IServiceCollection services, AppSettings appSettings)
+    {
+        services.AddCronJob<UpdateStoriesCronJob>(_ =>
+        {
+            _.TimeZoneInfo = TimeZoneInfo.Local;
+            _.CronExpression = appSettings.STORY_UPDATE_CRON;
+        });
+        return services;
+    }
 }

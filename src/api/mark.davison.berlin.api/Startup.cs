@@ -69,7 +69,8 @@ public class Startup
             .UseDataSeeders()
             .UseValidation()
             .UseBerlinLogic()
-            .UseBerlinCommands();
+            .UseBerlinCommands()
+            .UseCronJobs(AppSettings);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
