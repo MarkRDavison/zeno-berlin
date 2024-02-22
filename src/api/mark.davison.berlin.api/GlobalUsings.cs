@@ -23,6 +23,7 @@ global using mark.davison.common.server.abstractions.Identification;
 global using mark.davison.common.server.abstractions.Repository;
 global using mark.davison.common.server.Authentication;
 global using mark.davison.common.server.Configuration;
+global using mark.davison.common.server.Cron;
 global using mark.davison.common.server.Endpoints;
 global using mark.davison.common.server.Health;
 global using mark.davison.common.server.Middleware;
