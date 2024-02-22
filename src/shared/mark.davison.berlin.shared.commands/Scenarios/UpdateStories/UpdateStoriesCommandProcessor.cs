@@ -84,7 +84,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             _ =>
             _.Complete == false &&
                     _.LastModified <= refreshDate,
-                cancellationToken); // TODO: Allow repository to provide paging/max
+                cancellationToken); // TODO: Allow repository to provide paging/max/orderby
 
             return stories.Take(max).ToList();
         }

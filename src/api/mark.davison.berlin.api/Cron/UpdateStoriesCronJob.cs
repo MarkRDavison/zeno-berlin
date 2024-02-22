@@ -7,19 +7,19 @@ public class UpdateStoriesCronJob : CronJobService
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
     public UpdateStoriesCronJob(
-        string cronExpression,
-        TimeZoneInfo timeZoneInfo,
+        IScheduleConfig<UpdateStoriesCronJob> _scheduleConfig,
         ILogger<UpdateStoriesCronJob> logger,
         IOptions<AppSettings> appSettings,
         IServiceScopeFactory serviceScopeFactory) : base(
-        cronExpression,
-        timeZoneInfo)
+        _scheduleConfig.CronExpression,
+        _scheduleConfig.TimeZoneInfo)
     {
         _logger = logger;
         _appSettings = appSettings;
         _serviceScopeFactory = serviceScopeFactory;
     }
 
+    // TODO: Base class for all the scope/repo/currentusercontext stuff
     public override async Task DoWork(CancellationToken cancellationToken)
     {
         using var scope = _serviceScopeFactory.CreateScope();
