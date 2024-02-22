@@ -8,6 +8,7 @@ public static class ValidationMessages
     public const string DUPLICATE_ENTITY = nameof(DUPLICATE_ENTITY);
     public const string UNSUPPORTED_SITE = nameof(UNSUPPORTED_SITE);
     public const string SITE_STORY_MISMATCH = nameof(SITE_STORY_MISMATCH);
+    public const string NO_ITEMS = nameof(NO_ITEMS);
 
     public static string FormatMessageParameters(string message, params string[] parameters)
     {

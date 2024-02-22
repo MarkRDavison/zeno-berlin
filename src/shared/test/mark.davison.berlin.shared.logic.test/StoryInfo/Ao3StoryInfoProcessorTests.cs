@@ -1,21 +1,29 @@
-﻿namespace mark.davison.berlin.shared.logic.test.StoryInfo;
+﻿using mark.davison.shared.services.RateLimit;
+
+namespace mark.davison.berlin.shared.logic.test.StoryInfo;
 
 [TestClass]
 public class Ao3StoryInfoProcessorTests
 {
     private readonly Ao3StoryInfoProcessor _processor;
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IRateLimitService _rateLimitService;
     private readonly TestHttpMessageHandler _handler;
 
     public Ao3StoryInfoProcessorTests()
     {
         _handler = new();
         _httpClientFactory = Substitute.For<IHttpClientFactory>();
+        _rateLimitService = Substitute.For<IRateLimitService>();
         _httpClientFactory
             .CreateClient(nameof(Ao3StoryInfoProcessor))
             .Returns(new HttpClient(_handler));
 
-        _processor = new(_httpClientFactory);
+        _rateLimitService
+            .Wait(Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+
+        _processor = new(_httpClientFactory, _rateLimitService);
     }
 
     [DataRow("https://archiveofourown.org/works/47216291/chapters/118921742", "47216291")]
@@ -62,5 +70,9 @@ public class Ao3StoryInfoProcessorTests
         Assert.AreEqual(false, storyInfo.IsCompleted);
         Assert.AreEqual(57, storyInfo.CurrentChapters);
         Assert.IsNull(storyInfo.TotalChapters);
+
+        await _rateLimitService
+            .Received(1)
+            .Wait(Arg.Any<CancellationToken>());
     }
 }

@@ -12,6 +12,7 @@ global using mark.davison.berlin.shared.models.dtos;
 global using mark.davison.berlin.shared.models.Entities;
 global using mark.davison.berlin.shared.queries;
 global using mark.davison.berlin.shared.validation.Ignition;
+global using mark.davison.common.CQRS;
 global using mark.davison.common.persistence;
 global using mark.davison.common.persistence.Configuration;
 global using mark.davison.common.server;

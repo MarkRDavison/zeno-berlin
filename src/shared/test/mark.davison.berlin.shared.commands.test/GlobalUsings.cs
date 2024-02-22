@@ -1,7 +1,9 @@
 global using mark.davison.berlin.shared.commands.Scenarios.AddStory;
+global using mark.davison.berlin.shared.commands.Scenarios.UpdateStories;
 global using mark.davison.berlin.shared.logic.Models;
 global using mark.davison.berlin.shared.logic.StoryInfo;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddStory;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.UpdateStories;
 global using mark.davison.berlin.shared.models.Entities;
 global using mark.davison.berlin.shared.validation;
 global using mark.davison.berlin.shared.validation.Context;

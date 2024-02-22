@@ -8,7 +8,8 @@ public static class DependencyInjectionExtensions
         services.AddKeyedScoped<IStoryInfoProcessor>(
             SiteConstants.ArchiveOfOurOwn_ShortName,
             (_, __) => new Ao3StoryInfoProcessor(
-                _.GetRequiredService<IHttpClientFactory>()));
+                _.GetRequiredService<IHttpClientFactory>(),
+                new RateLimitService(2.0, _.GetRequiredService<IDateService>())));
 
         return services;
     }

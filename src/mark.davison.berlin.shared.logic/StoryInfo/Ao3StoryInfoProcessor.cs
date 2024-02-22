@@ -1,14 +1,19 @@
-﻿namespace mark.davison.berlin.shared.logic.StoryInfo;
+﻿using mark.davison.shared.services.RateLimit;
+
+namespace mark.davison.berlin.shared.logic.StoryInfo;
 
 public class Ao3StoryInfoProcessor : IStoryInfoProcessor
 {
     private readonly HttpClient _client;
+    private readonly IRateLimitService _rateLimitService;
 
     public Ao3StoryInfoProcessor(
-        IHttpClientFactory httpClientFactory
+        IHttpClientFactory httpClientFactory,
+        IRateLimitService rateLimitService
     )
     {
         _client = httpClientFactory.CreateClient(nameof(Ao3StoryInfoProcessor));
+        _rateLimitService = rateLimitService;
     }
 
     public string ExtractExternalStoryId(string storyAddress)
@@ -40,6 +45,9 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
             Method = HttpMethod.Get,
             RequestUri = new Uri(storyAddress + "?view_adult=true")
         };
+
+        await _rateLimitService.Wait(cancellationToken);
+
         var response = await _client.SendAsync(request);
 
         var content = await response.Content.ReadAsStringAsync();
