@@ -17,7 +17,7 @@ public abstract class CQRSCronJob<TCronJobService, TRequest, TResponse> : CronJo
 
     protected virtual Guid JobUserId => Guid.Empty;
     protected abstract TRequest CreateRequest();
-    protected abstract Task HandleResponse(TResponse response);
+    protected virtual Task HandleResponse(TResponse response) => Task.CompletedTask;
 
     public override async Task DoWork(CancellationToken cancellationToken)
     {
@@ -28,7 +28,7 @@ public abstract class CQRSCronJob<TCronJobService, TRequest, TResponse> : CronJo
 
         await using (repo.BeginTransaction())
         {
-            currentUserContext.CurrentUser = await repo.GetEntityAsync<User>(Guid.Empty, cancellationToken) ?? throw new InvalidOperationException("Job user was not found");
+            currentUserContext.CurrentUser = await repo.GetEntityAsync<User>(JobUserId, cancellationToken) ?? throw new InvalidOperationException("Job user was not found");
         }
 
         var handler = scope.ServiceProvider.GetRequiredService<ICommandHandler<TRequest, TResponse>>();
