@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="markdavison.common" Version="8.0.4" />
+    <PackageReference Include="markdavison.common.server.abstractions" Version="8.0.4" />
   </ItemGroup>
 
 </Project>

@@ -40,7 +40,8 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
                 Complete = info.IsCompleted,
                 CurrentChapters = info.CurrentChapters,
                 Name = info.Name,
-                TotalChapters = info.TotalChapters
+                TotalChapters = info.TotalChapters,
+                UpdateTypeId = UpdateTypeConstants.EachChapterId
             };
 
             var storyUpdate = new StoryUpdate

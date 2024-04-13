@@ -1,6 +1,4 @@
-﻿using mark.davison.shared.services.RateLimit;
-
-namespace mark.davison.berlin.shared.logic.StoryInfo;
+﻿namespace mark.davison.berlin.shared.logic.StoryInfo;
 
 public class Ao3StoryInfoProcessor : IStoryInfoProcessor
 {
@@ -9,11 +7,11 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
 
     public Ao3StoryInfoProcessor(
         IHttpClientFactory httpClientFactory,
-        IRateLimitService rateLimitService
+        IRateLimitServiceFactory rateLimitServiceFactory
     )
     {
         _client = httpClientFactory.CreateClient(nameof(Ao3StoryInfoProcessor));
-        _rateLimitService = rateLimitService;
+        _rateLimitService = rateLimitServiceFactory.CreateRateLimiter(TimeSpan.FromSeconds(3)); // TODO: CONFIG
     }
 
     public string ExtractExternalStoryId(string storyAddress)

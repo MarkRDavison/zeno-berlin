@@ -50,7 +50,7 @@ public class Startup
                 .Build()
             ));
 
-
+        // TODO: AsNoTracking as default??? Very breaking change...
         services.UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE);
 
         services
@@ -70,6 +70,7 @@ public class Startup
             .UseValidation()
             .UseBerlinLogic()
             .UseBerlinCommands()
+            .UseSharedServices()
             .UseCronJobs(AppSettings);
     }
 

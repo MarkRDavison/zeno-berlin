@@ -3,8 +3,10 @@
 [TestClass]
 public class UpdateStoriesCommandProcessorTests
 {
+    private readonly ILogger<UpdateStoriesCommandProcessor> _logger;
     private readonly IRepository _repository;
     private readonly IDateService _dateService;
+    private readonly IStoryNotificationHub _storyNotificationHub;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly UpdateStoriesCommandProcessor _processor;
 
@@ -21,11 +23,12 @@ public class UpdateStoriesCommandProcessorTests
 
     public UpdateStoriesCommandProcessorTests()
     {
-
+        _logger = Substitute.For<ILogger<UpdateStoriesCommandProcessor>>();
         _repository = Substitute.For<IRepository>();
         _dateService = Substitute.For<IDateService>();
         _site1StoryInfoProcessor = Substitute.For<IStoryInfoProcessor>();
         _site2StoryInfoProcessor = Substitute.For<IStoryInfoProcessor>();
+        _storyNotificationHub = Substitute.For<IStoryNotificationHub>();
         _currentUserContext = Substitute.For<ICurrentUserContext>();
 
         _dateService.Now.Returns(DateTime.Now);
@@ -93,7 +96,7 @@ public class UpdateStoriesCommandProcessorTests
                 _site2
             }.FirstOrDefault(__ => __.Id == _.Arg<Guid>())));
 
-        _processor = new(_repository, _dateService, services.BuildServiceProvider());
+        _processor = new(_logger, _repository, _dateService, _storyNotificationHub, services.BuildServiceProvider());
     }
 
     [TestMethod]
@@ -238,7 +241,6 @@ public class UpdateStoriesCommandProcessorTests
     [TestMethod]
     public async Task ProcessAsync_UpdatesStoryInfoOnStories()
     {
-
         var request = new UpdateStoriesRequest
         {
             StoryIds = [_story1Site1.Id]
@@ -280,5 +282,49 @@ public class UpdateStoriesCommandProcessorTests
             .UpsertEntitiesAsync<Story>(
                 Arg.Any<List<Story>>(),
                 Arg.Any<CancellationToken>());
+    }
+
+    [TestMethod]
+    public async Task ProcessAsync_SendsNotification_ForUpdatedStory()
+    {
+        var request = new UpdateStoriesRequest
+        {
+            StoryIds = [_story1Site1.Id]
+        };
+
+        _repository
+            .GetEntitiesAsync<Story>(
+                Arg.Any<Expression<Func<Story, bool>>>(),
+                Arg.Any<CancellationToken>())
+            .Returns(_ => Task.FromResult<List<Story>>([_story1Site1]));
+
+        var info = new StoryInfoModel
+        {
+            Name = "A new name"
+        };
+
+        _site1StoryInfoProcessor
+            .ExtractStoryInfo(
+                Arg.Any<string>(),
+                Arg.Any<CancellationToken>())
+            .Returns(info);
+
+        _repository
+            .UpsertEntitiesAsync<Story>(
+                Arg.Any<List<Story>>(),
+                Arg.Any<CancellationToken>())
+            .Returns(_ => Task.FromResult(_.Arg<List<Story>>()));
+
+        _storyNotificationHub
+            .SendNotification(Arg.Any<string>())
+            .Returns(new Response());
+
+        var response = await _processor.ProcessAsync(request, _currentUserContext, CancellationToken.None);
+
+        Assert.IsTrue(response.Success);
+
+        await _storyNotificationHub
+            .Received(1)
+            .SendNotification(Arg.Any<string>());
     }
 }

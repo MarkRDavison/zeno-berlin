@@ -22,6 +22,7 @@ public class BerlinDataSeeder : IBerlinDataSeeder
         {
             var user = await EnsureUserSeeded(repository, cancellationToken);
             await EnsureSitesSeeded(repository, user, cancellationToken);
+            await EnsureUpdateTypesSeeded(repository, user, cancellationToken);
         }
     }
 
@@ -69,5 +70,16 @@ public class BerlinDataSeeder : IBerlinDataSeeder
         };
 
         await EnsureSeeded(repository, sites, cancellationToken);
+    }
+
+    private async Task EnsureUpdateTypesSeeded(IRepository repository, User user, CancellationToken cancellationToken)
+    {
+        var updateTypes = new List<UpdateType> {
+            new UpdateType{ Id = UpdateTypeConstants.WhenCompleteId, Description = "When story completed" },
+            new UpdateType{ Id = UpdateTypeConstants.EachChapterId, Description = "When each chapter" },
+            new UpdateType{ Id = UpdateTypeConstants.MonthlyWithUpdateId, Description = "Monthly as long as at least one update has been made" },
+        };
+
+        await EnsureSeeded(repository, updateTypes, cancellationToken);
     }
 }

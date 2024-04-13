@@ -32,6 +32,7 @@ global using mark.davison.common.server.Health;
 global using mark.davison.common.server.Middleware;
 global using mark.davison.common.Services;
 global using mark.davison.common.source.generators.CQRS;
+global using mark.davison.shared.services.Ignition;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Options;

@@ -7,12 +7,15 @@ global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.UpdateSto
 global using mark.davison.berlin.shared.models.Entities;
 global using mark.davison.berlin.shared.validation;
 global using mark.davison.berlin.shared.validation.Context;
+global using mark.davison.common.CQRS;
 global using mark.davison.common.server.abstractions.Authentication;
 global using mark.davison.common.server.abstractions.Identification;
 global using mark.davison.common.server.abstractions.Repository;
 global using mark.davison.common.server.test.Framework;
 global using mark.davison.common.Services;
+global using mark.davison.shared.services.Notification;
 global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging;
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 global using NSubstitute;
 global using System.Linq.Expressions;

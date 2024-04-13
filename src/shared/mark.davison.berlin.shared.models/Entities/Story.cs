@@ -10,7 +10,9 @@ public class Story : BerlinEntity
     public bool Complete { get; set; }
 
     public Guid SiteId { get; set; }
+    public Guid UpdateTypeId { get; set; }
 
 
     public virtual Site? Site { get; set; }
+    public virtual UpdateType? UpdateType { get; set; }
 }

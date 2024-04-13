@@ -8,6 +8,7 @@ public class Ao3StoryInfoProcessorTests
     private readonly Ao3StoryInfoProcessor _processor;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IRateLimitService _rateLimitService;
+    private readonly IRateLimitServiceFactory _rateLimitServiceFactory;
     private readonly TestHttpMessageHandler _handler;
 
     public Ao3StoryInfoProcessorTests()
@@ -15,6 +16,7 @@ public class Ao3StoryInfoProcessorTests
         _handler = new();
         _httpClientFactory = Substitute.For<IHttpClientFactory>();
         _rateLimitService = Substitute.For<IRateLimitService>();
+        _rateLimitServiceFactory = Substitute.For<IRateLimitServiceFactory>();
         _httpClientFactory
             .CreateClient(nameof(Ao3StoryInfoProcessor))
             .Returns(new HttpClient(_handler));
@@ -23,7 +25,11 @@ public class Ao3StoryInfoProcessorTests
             .Wait(Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
 
-        _processor = new(_httpClientFactory, _rateLimitService);
+        _rateLimitServiceFactory
+            .CreateRateLimiter(Arg.Any<TimeSpan>())
+            .Returns(_rateLimitService);
+
+        _processor = new(_httpClientFactory, _rateLimitServiceFactory);
     }
 
     [DataRow("https://archiveofourown.org/works/47216291/chapters/118921742", "47216291")]
