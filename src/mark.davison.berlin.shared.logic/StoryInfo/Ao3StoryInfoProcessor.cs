@@ -7,11 +7,12 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
 
     public Ao3StoryInfoProcessor(
         IHttpClientFactory httpClientFactory,
-        IRateLimitServiceFactory rateLimitServiceFactory
+        IRateLimitServiceFactory rateLimitServiceFactory,
+        IOptions<Ao3Config> ao3ConfigOptions
     )
     {
         _client = httpClientFactory.CreateClient(nameof(Ao3StoryInfoProcessor));
-        _rateLimitService = rateLimitServiceFactory.CreateRateLimiter(TimeSpan.FromSeconds(3)); // TODO: CONFIG
+        _rateLimitService = rateLimitServiceFactory.CreateRateLimiter(TimeSpan.FromSeconds(ao3ConfigOptions.Value.RATE_DELAY));
     }
 
     public string ExtractExternalStoryId(string storyAddress)
