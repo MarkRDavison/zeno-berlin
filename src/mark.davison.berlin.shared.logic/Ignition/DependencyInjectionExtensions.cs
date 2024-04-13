@@ -9,7 +9,8 @@ public static class DependencyInjectionExtensions
             SiteConstants.ArchiveOfOurOwn_ShortName,
             (_, __) => new Ao3StoryInfoProcessor(
                 _.GetRequiredService<IHttpClientFactory>(),
-                _.GetRequiredService<IRateLimitServiceFactory>()));
+                _.GetRequiredService<IRateLimitServiceFactory>(),
+                _.GetRequiredService<IOptions<Ao3Config>>()));
 
         return services;
     }

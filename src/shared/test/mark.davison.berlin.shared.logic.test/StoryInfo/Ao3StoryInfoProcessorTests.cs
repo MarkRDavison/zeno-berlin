@@ -1,6 +1,4 @@
-﻿using mark.davison.shared.services.RateLimit;
-
-namespace mark.davison.berlin.shared.logic.test.StoryInfo;
+﻿namespace mark.davison.berlin.shared.logic.test.StoryInfo;
 
 [TestClass]
 public class Ao3StoryInfoProcessorTests
@@ -10,6 +8,7 @@ public class Ao3StoryInfoProcessorTests
     private readonly IRateLimitService _rateLimitService;
     private readonly IRateLimitServiceFactory _rateLimitServiceFactory;
     private readonly TestHttpMessageHandler _handler;
+    private readonly Ao3Config _config;
 
     public Ao3StoryInfoProcessorTests()
     {
@@ -21,6 +20,8 @@ public class Ao3StoryInfoProcessorTests
             .CreateClient(nameof(Ao3StoryInfoProcessor))
             .Returns(new HttpClient(_handler));
 
+        _config = new() { RATE_DELAY = 0 };
+
         _rateLimitService
             .Wait(Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
@@ -29,7 +30,7 @@ public class Ao3StoryInfoProcessorTests
             .CreateRateLimiter(Arg.Any<TimeSpan>())
             .Returns(_rateLimitService);
 
-        _processor = new(_httpClientFactory, _rateLimitServiceFactory);
+        _processor = new(_httpClientFactory, _rateLimitServiceFactory, Options.Create(_config));
     }
 
     [DataRow("https://archiveofourown.org/works/47216291/chapters/118921742", "47216291")]
