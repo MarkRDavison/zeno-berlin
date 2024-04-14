@@ -11,6 +11,7 @@ on:
 
 env:
   DOTNET_NOLOGO: true
+  CI_BUILD: true
 
 jobs:
   build-dotnet:
