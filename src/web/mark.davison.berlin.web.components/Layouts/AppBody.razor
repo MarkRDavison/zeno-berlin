@@ -1,0 +1,24 @@
+﻿@inject IAuthenticationContext _authContext
+
+@if (_authContext.IsAuthenticated)
+{
+    <MudContainer Class="pa-6">
+        @ChildContent
+    </MudContainer>
+}
+
+@code {
+
+    [Parameter, EditorRequired]
+    public RenderFragment? ChildContent { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (_authContext.IsAuthenticated)
+        {
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+}

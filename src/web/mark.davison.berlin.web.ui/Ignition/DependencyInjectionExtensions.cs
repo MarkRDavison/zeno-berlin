@@ -6,6 +6,7 @@ public static class DependencyInjectionExtensions
     {
 
         services
+            .UseBerlinComponents()
             .AddSingleton<IAuthenticationConfig>(authConfig)
             .AddSingleton<IAuthenticationContext, AuthenticationContext>()
             .AddFluxor(_ => _.ScanAssemblies(typeof(Program).Assembly, typeof(FeaturesRootType).Assembly))

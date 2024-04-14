@@ -1,4 +1,6 @@
-
+$primary-text-colour: var(--mud-palette-text-primary);
+$secondary-text-colour: var(--mud-palette-text-secondary);
+$primary-hover: var(--mud-palette-primary-hover);
 
 .app-title {
     margin-left: 1rem !important;
@@ -21,7 +23,7 @@
 }
 
 .muted-text {
-    color: grey;
+    color: $secondary-text-colour;
 }
 
 .muted-link-text {
@@ -29,7 +31,7 @@
     cursor: pointer;
 
     &:hover {
-        color: white;
+        color: $primary-text-colour;
         transition: color 0.15s ease 0s;
     }
 }

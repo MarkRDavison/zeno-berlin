@@ -1,5 +1,6 @@
 ﻿@inject IAuthenticationConfig _authConfig;
 
+<Fluxor.Blazor.Web.StoreInitializer />
 <AuthProvider AuthenticationConfig="_authConfig">
     <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[]{ typeof(Routes).Assembly }">
         <Found Context="routeData">

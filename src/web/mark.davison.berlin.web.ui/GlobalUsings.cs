@@ -1,6 +1,7 @@
 ﻿global using Fluxor;
 global using mark.davison.berlin.web.components.CommonCandidates.Ignition;
 global using mark.davison.berlin.web.components.CommonCandidates.Navigation;
+global using mark.davison.berlin.web.components.Ignition;
 global using mark.davison.berlin.web.features;
 global using mark.davison.berlin.web.ui;
 global using mark.davison.berlin.web.ui.Ignition;
