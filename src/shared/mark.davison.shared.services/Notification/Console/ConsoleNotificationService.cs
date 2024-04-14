@@ -2,15 +2,21 @@
 
 public class ConsoleNotificationService : IConsoleNotificationService
 {
-    public ConsoleNotificationService(IOptions<ConsoleNotificationSettings> options)
+    private readonly ILogger<ConsoleNotificationService> _logger;
+    private readonly ConsoleNotificationSettings _settings;
+    public ConsoleNotificationService(
+        IOptions<ConsoleNotificationSettings> options,
+        ILogger<ConsoleNotificationService> logger)
     {
-        Settings = options.Value;
+        _settings = options.Value;
+        _logger = logger;
     }
 
-    public StoryNotificationSettings Settings { get; }
+    public StoryNotificationSettings Settings => _settings;
 
     public Task<Response> SendNotification(string message)
     {
-        throw new NotImplementedException();
+        _logger.Log(_settings.LOGLEVEL, message);
+        return Task.FromResult(new Response());
     }
 }

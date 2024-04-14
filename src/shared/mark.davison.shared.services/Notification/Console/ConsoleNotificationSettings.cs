@@ -4,4 +4,5 @@ public class ConsoleNotificationSettings : StoryNotificationSettings
 {
     public override string SECTION => "CONSOLE";
     public override bool ENABLED { get; set; }
+    public LogLevel LOGLEVEL { get; set; } = LogLevel.Information;
 }

@@ -70,7 +70,7 @@ public class Startup
             .UseValidation()
             .UseBerlinLogic()
             .UseBerlinCommands()
-            .UseSharedServices()
+            .UseSharedServices(AppSettings.NOTIFICATIONS)
             .UseCronJobs(AppSettings);
     }
 

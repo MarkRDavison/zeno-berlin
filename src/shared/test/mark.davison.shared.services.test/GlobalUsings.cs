@@ -1,2 +1,10 @@
+global using mark.davison.common.test;
 global using mark.davison.shared.services.Notification;
+global using mark.davison.shared.services.Notification.Matrix;
+global using mark.davison.shared.services.Notification.Matrix.Client;
+global using Microsoft.Extensions.Options;
 global using NSubstitute;
+global using System.Net;
+global using System.Net.Http.Json;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;

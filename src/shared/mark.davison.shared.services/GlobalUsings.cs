@@ -2,6 +2,13 @@
 global using mark.davison.common.server.abstractions.Configuration;
 global using mark.davison.common.Services;
 global using mark.davison.shared.services.Notification;
+global using mark.davison.shared.services.Notification.Console;
+global using mark.davison.shared.services.Notification.Matrix;
 global using mark.davison.shared.services.RateLimit;
 global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Options;
+global using System.Net.Http.Headers;
+global using System.Net.Http.Json;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;

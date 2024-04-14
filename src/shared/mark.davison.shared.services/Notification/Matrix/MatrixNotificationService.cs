@@ -2,12 +2,14 @@
 
 public class MatrixNotificationService : IMatrixNotificationService
 {
+    private readonly MatrixNotificationSettings _settings;
+
     public MatrixNotificationService(IOptions<MatrixNotificationSettings> options)
     {
-        Settings = options.Value;
+        _settings = options.Value;
     }
 
-    public StoryNotificationSettings Settings { get; }
+    public StoryNotificationSettings Settings => _settings;
 
     public Task<Response> SendNotification(string message)
     {
