@@ -14,6 +14,7 @@ global using mark.davison.berlin.shared.models.dtos;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.UpdateStories;
 global using mark.davison.berlin.shared.models.Entities;
 global using mark.davison.berlin.shared.queries;
+global using mark.davison.berlin.shared.validation;
 global using mark.davison.berlin.shared.validation.Ignition;
 global using mark.davison.common.CQRS;
 global using mark.davison.common.persistence;

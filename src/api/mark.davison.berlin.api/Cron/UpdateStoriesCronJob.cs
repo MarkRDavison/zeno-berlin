@@ -30,7 +30,14 @@ public class UpdateStoriesCronJob : CQRSCronJob<UpdateStoriesCronJob, UpdateStor
     {
         if (response.Success)
         {
-            _logger.LogInformation("Successfully updated {0} stories.", _appSettings.Value.STORIES_PER_CRON_UPDATE);
+            if (response.Warnings.Any(_ => _ == ValidationMessages.NO_ITEMS))
+            {
+                _logger.LogInformation("No stories were found that required updating.");
+            }
+            else
+            {
+                _logger.LogInformation("Successfully updated {0} stories.", _appSettings.Value.STORIES_PER_CRON_UPDATE);
+            }
         }
         else
         {
