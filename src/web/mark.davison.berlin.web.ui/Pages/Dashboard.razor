@@ -1,3 +1,15 @@
 ﻿@attribute [Route(Routes.Dashboard)]
 
-<h3>Dashboard</h3>
+
+<MudStack Row AlignItems="AlignItems.End">
+    <MudSpacer />
+    <MudButton 
+        ButtonType="ButtonType.Submit" 
+        Color="Color.Primary" 
+        StartIcon="@Icons.Material.Filled.Add" 
+        Variant="Variant.Filled" 
+        Size="Size.Large" 
+        Disabled="false"
+        IconSize="Size.Large"
+        OnClick="@(() => Console.WriteLine("ADD"))">Add</MudButton>
+</MudStack>
