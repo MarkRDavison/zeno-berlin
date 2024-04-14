@@ -8,7 +8,7 @@ COPY / /app/
 RUN dotnet tool install Excubo.WebCompiler --global
 RUN /root/.dotnet/tools/webcompiler mark.davison.berlin.web.ui/compilerconfig.json
 
-RUN dotnet restore
+RUN dotnet restore mark.davison.berlin.web.ui/mark.davison.berlin.web.ui.csproj
 RUN dotnet publish -c Release -o /app/publish/ mark.davison.berlin.web.ui/mark.davison.berlin.web.ui.csproj
 
 FROM nginx:alpine AS FINAL
