@@ -1,0 +1,10 @@
+@inject IJSRuntime _jsRuntime;
+
+@if (!AuthenticationContext.IsAuthenticated)
+{
+    <div class="entire-app-loading" />
+}
+else
+{
+    @ChildContent
+}

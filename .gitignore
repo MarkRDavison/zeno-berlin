@@ -365,4 +365,5 @@ FodyWeavers.xsd
 appsettings.Development.json
 *.db*
 *.g.cs
-/src/mark.davison.finance.web/wwwroot
+berlin.min.css
+berlin.css

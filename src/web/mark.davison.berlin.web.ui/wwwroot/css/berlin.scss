@@ -1,0 +1,35 @@
+
+
+.app-title {
+    margin-left: 1rem !important;
+    margin-right: 3rem !important;
+}
+
+.text-centered {
+    text-align: center !important;
+}
+
+.float-right {
+    margin-left: auto;
+}
+
+.text-unselectable {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+.muted-text {
+    color: grey;
+}
+
+.muted-link-text {
+    @extend .muted-text;
+    cursor: pointer;
+
+    &:hover {
+        color: white;
+        transition: color 0.15s ease 0s;
+    }
+}

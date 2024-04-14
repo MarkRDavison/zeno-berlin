@@ -1,15 +1,19 @@
-FROM node:alpine as BUILD
+FROM mcr.microsoft.com/dotnet/sdk:8.0 as BUILD
+WORKDIR /app 
 
-WORKDIR /app
+ENV CI_BUILD=true
 
-COPY . ./
+COPY / /app/
 
-RUN npm install
-RUN npm run build
+RUN dotnet tool install Excubo.WebCompiler --global
+RUN /root/.dotnet/tools/webcompiler web/mark.davison.berlin.web.ui/compilerconfig.json
 
-FROM nginx:alpine
+RUN dotnet restore
+RUN dotnet publish -c Release -o /app/publish/ web/mark.davison.berlin.web.ui/mark.davison.berlin.web.ui.csproj
+
+FROM nginx:alpine AS FINAL
 WORKDIR /usr/share/nginx/html
-COPY --from=BUILD /app/dist .
+COPY --from=BUILD /app/publish/wwwroot .
 COPY entry.sh /usr/share/nginx/html/entry.sh
 COPY nginx.conf /etc/nginx/nginx.conf
 

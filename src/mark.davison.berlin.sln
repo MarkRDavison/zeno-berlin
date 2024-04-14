@@ -50,6 +50,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C6AF52C5-15EA-4675-9846-4E0D8D7D7D98}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitattributes = ..\.gitattributes
+		..\.gitignore = ..\.gitignore
+		entry.sh = entry.sh
+		nginx.conf = nginx.conf
 		..\README.md = ..\README.md
 		..\TODO.md = ..\TODO.md
 	EndProjectSection
@@ -70,7 +73,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.shared.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.shared.services", "shared\mark.davison.shared.services\mark.davison.shared.services.csproj", "{9C626CA3-8CBE-4772-BF0C-A58900BCBE7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.shared.services.test", "shared\test\mark.davison.shared.services.test\mark.davison.shared.services.test.csproj", "{26E75C28-B2E1-4509-B2D9-F300669D2C26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.shared.services.test", "shared\test\mark.davison.shared.services.test\mark.davison.shared.services.test.csproj", "{26E75C28-B2E1-4509-B2D9-F300669D2C26}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "web", "web", "{878597A8-9199-4F18-8D1E-EA6FDB9FD471}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.web.ui", "web\mark.davison.berlin.web.ui\mark.davison.berlin.web.ui.csproj", "{D7A10A28-A0E2-403F-9C04-FD76DC7635F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.web.components", "web\mark.davison.berlin.web.components\mark.davison.berlin.web.components.csproj", "{66BA533C-995B-47C0-B9A8-27C6F74DE20E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.web.features", "web\mark.davison.berlin.web.features\mark.davison.berlin.web.features.csproj", "{EB0313B5-33D4-4360-A507-F5D8B0725102}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.web.services", "web\mark.davison.berlin.web.services\mark.davison.berlin.web.services.csproj", "{B4CC9480-7FEE-490F-8483-6046227B948D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -166,6 +179,22 @@ Global
 		{26E75C28-B2E1-4509-B2D9-F300669D2C26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26E75C28-B2E1-4509-B2D9-F300669D2C26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26E75C28-B2E1-4509-B2D9-F300669D2C26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7A10A28-A0E2-403F-9C04-FD76DC7635F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7A10A28-A0E2-403F-9C04-FD76DC7635F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7A10A28-A0E2-403F-9C04-FD76DC7635F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7A10A28-A0E2-403F-9C04-FD76DC7635F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66BA533C-995B-47C0-B9A8-27C6F74DE20E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66BA533C-995B-47C0-B9A8-27C6F74DE20E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66BA533C-995B-47C0-B9A8-27C6F74DE20E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66BA533C-995B-47C0-B9A8-27C6F74DE20E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB0313B5-33D4-4360-A507-F5D8B0725102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB0313B5-33D4-4360-A507-F5D8B0725102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB0313B5-33D4-4360-A507-F5D8B0725102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB0313B5-33D4-4360-A507-F5D8B0725102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4CC9480-7FEE-490F-8483-6046227B948D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4CC9480-7FEE-490F-8483-6046227B948D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4CC9480-7FEE-490F-8483-6046227B948D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4CC9480-7FEE-490F-8483-6046227B948D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -198,6 +227,10 @@ Global
 		{F8C5D493-BD29-4679-9169-FC622CB25C8D} = {9FDCA6D9-E3D5-45AD-8F4F-53336BD7F3AC}
 		{9C626CA3-8CBE-4772-BF0C-A58900BCBE7B} = {F4ACDAFB-CC48-4451-AE95-760C70A580D6}
 		{26E75C28-B2E1-4509-B2D9-F300669D2C26} = {9FDCA6D9-E3D5-45AD-8F4F-53336BD7F3AC}
+		{D7A10A28-A0E2-403F-9C04-FD76DC7635F9} = {878597A8-9199-4F18-8D1E-EA6FDB9FD471}
+		{66BA533C-995B-47C0-B9A8-27C6F74DE20E} = {878597A8-9199-4F18-8D1E-EA6FDB9FD471}
+		{EB0313B5-33D4-4360-A507-F5D8B0725102} = {878597A8-9199-4F18-8D1E-EA6FDB9FD471}
+		{B4CC9480-7FEE-490F-8483-6046227B948D} = {878597A8-9199-4F18-8D1E-EA6FDB9FD471}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {203F8C74-DF4A-4DF5-942E-8C2E8B6D92CA}
