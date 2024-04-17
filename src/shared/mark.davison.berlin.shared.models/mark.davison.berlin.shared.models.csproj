@@ -10,4 +10,8 @@
     <PackageReference Include="markdavison.common.server.abstractions" Version="8.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\mark.davison.berlin.shared.models.dtos\mark.davison.berlin.shared.models.dtos.csproj" />
+  </ItemGroup>
+
 </Project>

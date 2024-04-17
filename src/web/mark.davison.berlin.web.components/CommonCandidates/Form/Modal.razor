@@ -1,5 +1,5 @@
 ﻿@typeparam TModalViewModel where TModalViewModel : class, IModalViewModel<TFormViewModel, TForm>
-@typeparam TFormViewModel where TFormViewModel : class, IFormViewModel
+@typeparam TFormViewModel where TFormViewModel : class, IFormViewModel, new()
 @typeparam TForm where TForm : ComponentBase, IForm<TFormViewModel>
 
 @inject IServiceProvider _serviceProvider;
@@ -81,6 +81,7 @@
         _editContext.OnFieldChanged += FieldChanged;
     }
 
+    // TODO: Split button for save and add???
     private async Task Primary()
     {
         _inProgress = true;
@@ -95,7 +96,9 @@
             }
             else
             {
-                Console.Error.WriteLine("TODO: How to handle errors in Modal.Primary");
+                Console.Error.WriteLine("TODO: How to handle errors in Modal.Primary, add to message bar/toast???");
+                response.Errors.ForEach(Console.Error.WriteLine);
+                response.Warnings.ForEach(Console.WriteLine);
             }
         }
 

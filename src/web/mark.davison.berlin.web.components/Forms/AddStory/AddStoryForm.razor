@@ -1,0 +1,5 @@
+﻿@inherits Form<AddStoryFormViewModel>
+
+<MudForm>
+    <MudTextField id="add-story-form-story-address" T="string" Label="Address" @bind-Text="FormViewModel.StoryAddress" For=@(() => FormViewModel.StoryAddress) Immediate />
+</MudForm>

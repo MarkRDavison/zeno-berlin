@@ -174,6 +174,25 @@ public class AddStoryCommandValidatorTests
     }
 
     [TestMethod]
+    public async Task ValidateAsync_WhereExtractingExternalIdFails_ReturnsError()
+    {
+        _storyInfoProcessor
+            .ExtractExternalStoryId(
+                Arg.Any<string>())
+            .Returns(string.Empty);
+
+        var response = await _validator.ValidateAsync(new()
+        {
+            StoryAddress = _siteRegistered.Address + "/story"
+        }, _currentUserContext, CancellationToken.None);
+
+        Assert.IsFalse(response.Success);
+        Assert.IsTrue(response.Errors.Any(_ =>
+            _.Contains(ValidationMessages.INVALID_PROPERTY) &&
+            _.Contains(nameof(AddStoryCommandRequest.StoryAddress))));
+    }
+
+    [TestMethod]
     public async Task ValidateAsync_WhereStoryInfoExternalIdExists_ReturnsError()
     {
         const string externalId = "1234";

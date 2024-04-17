@@ -28,6 +28,8 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
 
             var externalId = infoProcessor!.ExtractExternalStoryId(request.StoryAddress);
 
+            // TODO: if externalId not valid dont try extract story info
+
             var info = await infoProcessor.ExtractStoryInfo(request.StoryAddress, cancellationToken);
 
             var story = new Story
@@ -60,7 +62,7 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
 
             return new()
             {
-                StoryId = story.Id
+                Value = story.ToDto()
             };
         }
     }

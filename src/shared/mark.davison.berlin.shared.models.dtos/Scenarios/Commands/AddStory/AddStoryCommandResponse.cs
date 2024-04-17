@@ -1,6 +1,5 @@
 ﻿namespace mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddStory;
 
-public class AddStoryCommandResponse : Response
+public class AddStoryCommandResponse : Response<StoryDto>
 {
-    public Guid StoryId { get; set; }
 }

@@ -26,14 +26,14 @@ public class AddStoryCommandTests : ApiIntegrationTestBase
 
         var response = await handler.Handle(request, currentUserContext, CancellationToken.None);
 
-        Assert.IsTrue(response.Success);
-        Assert.AreNotEqual(Guid.Empty, response.StoryId);
+        Assert.IsTrue(response.SuccessWithValue);
+        Assert.AreNotEqual(Guid.Empty, response.Value.Id);
 
         var repository = GetRequiredService<IReadonlyRepository>();
         await using (repository.BeginTransaction())
         {
-            var stories = await repository.GetEntitiesAsync<Story>(_ => _.Id == response.StoryId, CancellationToken.None);
-            var storyUpdates = await repository.GetEntitiesAsync<StoryUpdate>(_ => _.StoryId == response.StoryId, CancellationToken.None);
+            var stories = await repository.GetEntitiesAsync<Story>(_ => _.Id == response.Value.Id, CancellationToken.None);
+            var storyUpdates = await repository.GetEntitiesAsync<StoryUpdate>(_ => _.StoryId == response.Value.Id, CancellationToken.None);
 
             Assert.AreEqual(1, stories.Count);
             Assert.AreEqual(1, storyUpdates.Count);

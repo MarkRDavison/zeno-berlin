@@ -17,6 +17,9 @@ public static class DependencyInjectionExtensions
             .UseCQRS(typeof(Program), typeof(FeaturesRootType))
             .AddHttpClient(WebConstants.ApiClientName)
             .AddHttpMessageHandler(_ => new CookieHandler());
+
+        services.AddTransient<IFormSubmission<AddStoryFormViewModel>, AddStoryFormSubmission>();
+
         return services;
     }
 }

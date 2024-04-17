@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Fluxor" Version="5.9.1" />
+    <PackageReference Include="markdavison.common.client.abstractions" Version="8.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\mark.davison.berlin.web.services\mark.davison.berlin.web.services.csproj" />
   </ItemGroup>
 

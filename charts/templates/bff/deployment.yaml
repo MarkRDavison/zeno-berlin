@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.bff.app}}-dep
+  labels:
+    app.kubernetes.io/name: {{ .Values.bff.app }}-dep
+    app.kubernetes.io/version: {{ .Values.bff.tag }}
+    app.kubernetes.io/part-of: zeno-fanfic
+spec:
+  replicas: {{ .Values.bff.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name:  {{ .Values.bff.app }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.bff.app }}
+        app.kubernetes.io/version: {{ .Values.bff.tag }}
+        app.kubernetes.io/part-of: zeno-fanfic
+    spec:
+      containers:
+      - name: {{ .Values.bff.name }}
+        image: {{ .Values.bff.image }}:{{ .Values.bff.tag }}
+        imagePullPolicy: Always
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: {{ .Values.bff.port }}
+          failureThreshold: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health/liveness
+            port: {{ .Values.bff.port }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/readiness
+            port: {{ .Values.bff.port }}
+          successThreshold: 3
+        ports:
+        - containerPort: {{ .Values.bff.port }}
+        env:
+        {{- include "helpers.list-bff-deployment-env-variables" . | indent 10 }}

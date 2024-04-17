@@ -1,6 +1,5 @@
 ﻿@attribute [Route(Routes.Dashboard)]
 
-
 <MudStack Row AlignItems="AlignItems.End">
     <MudSpacer />
     <MudButton 
@@ -11,5 +10,5 @@
         Size="Size.Large" 
         Disabled="false"
         IconSize="Size.Large"
-        OnClick="@(() => Console.WriteLine("ADD"))">Add</MudButton>
+        OnClick="@OpenAddStoryModal">Add</MudButton>
 </MudStack>

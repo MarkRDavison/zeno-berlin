@@ -75,6 +75,14 @@ public class AddStoryCommandValidator : ICommandValidator<AddStoryCommandRequest
 
             var externalId = infoProcessor.ExtractExternalStoryId(request.StoryAddress);
 
+            if (string.IsNullOrEmpty(externalId))
+            {
+                return ValidationMessages
+                    .CreateErrorResponse<AddStoryCommandResponse>(
+                        ValidationMessages.INVALID_PROPERTY,
+                        nameof(AddStoryCommandRequest.StoryAddress));
+            }
+
             var existingStory = await _validationContext.GetByProperty<Story, string>(
                 _ => _.ExternalId == externalId,
                 nameof(Story.ExternalId),

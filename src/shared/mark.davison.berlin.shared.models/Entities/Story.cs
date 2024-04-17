@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.shared.models.Entities;
+﻿using mark.davison.berlin.shared.models.dtos.Shared;
+
+namespace mark.davison.berlin.shared.models.Entities;
 
 public class Story : BerlinEntity
 {
@@ -15,4 +17,20 @@ public class Story : BerlinEntity
 
     public virtual Site? Site { get; set; }
     public virtual UpdateType? UpdateType { get; set; }
+
+    public StoryDto ToDto()
+    {
+        return new StoryDto
+        {
+            Id = Id,
+            Name = Name,
+            Address = Address,
+            ExternalId = ExternalId,
+            CurrentChapters = CurrentChapters,
+            TotalChapters = TotalChapters,
+            Complete = Complete,
+            SiteId = SiteId,
+            UpdateTypeId = UpdateTypeId
+        };
+    }
 }

@@ -1,6 +1,69 @@
+global:
+  ingress:
+    hostname: prod-ingress.markdavison.kiwi
+    certIssuer: letsencrypt-staging
 api:
+  app: zeno-fanfic-api
+  replicas: 1
+  name: zeno-fanfic-api
+  image: ghcr.io/markrdavison/markdavison-berlin-api
   tag: v0.0.4
-bffweb:
+  port: 50000
+  ingress:
+    host: fanfic-api.markdavison.kiwi
+  env:
+    secret:
+      - CLIENT_SECRET
+      - DB_USERNAME
+      - DB_PASSWORD
+    public:
+      FINANCE__DATABASE_TYPE: postgres
+      FINANCE__DB_DATABASE: prod-fanfic
+      FINANCE__DB_PORT: 5432
+      FINANCE__DB_HOST: postgres.markdavison.kiwi
+      FINANCE__URL: http://0.0.0.0:50000
+      FINANCE__CLIENT_ID: zeno-fanfic
+      FINANCE__SESSION_NAME: zeno-fanfic-prod-session
+      FINANCE__SCOPE: openid profile email offline_access zeno-fanfic
+      FINANCE__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
+      FINANCE__PRODUCTION_MODE: true
+bff:
+  app: zeno-fanfic-bff
+  replicas: 1
+  name: zeno-fanfic-bff
+  image: ghcr.io/markrdavison/markdavison-berlin-bff
   tag: v0.0.4
+  port: 40000
+  ingress:
+    host: fanfic-bff.markdavison.kiwi
+  env:
+    secret:
+      - REDIS_PASSWORD
+      - CLIENT_SECRET
+      - SESSION_SECRET
+    public:
+      FINANCE__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
+      FINANCE__REDIS_PORT: '6379'
+      FINANCE__WEB_ORIGIN: https://fanfic.markdavison.kiwi
+      FINANCE__BFF_ORIGIN: https://fanfic-bff.markdavison.kiwi
+      FINANCE__API_ORIGIN: https://fanfic-api.markdavison.kiwi
+      FINANCE__SESSION_NAME: zeno-fanfic-prod-session
+      FINANCE__REDIS_HOST: redis.markdavison.kiwi
+      FINANCE__CLIENT_ID: zeno-fanfic
+      FINANCE__URL: http://0.0.0.0:40000
+      FINANCE__SCOPE: openid profile email offline_access zeno-fanfic
+      FINANCE__PRODUCTION_MODE: true
 web:
+  app: zeno-fanfic-web
+  replicas: 1
+  name: zeno-fanfic-web
+  image: ghcr.io/markrdavison/markdavison-berlin-web
   tag: v0.0.4
+  port: 80
+  ingress:
+    host: fanfic.markdavison.kiwi
+  env:
+    secret: []
+    public:
+      WEB_PORT: '80'
+      BFF_BASE_URI: https://fanfic-bff.markdavison.kiwi

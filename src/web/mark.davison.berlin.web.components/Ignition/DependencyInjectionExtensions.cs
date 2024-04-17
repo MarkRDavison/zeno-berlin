@@ -6,6 +6,10 @@ public static class DependecyInjectionExtensions
     {
         services.AddMudServices();
 
+        // ModalViewModel<TFormViewModel, TForm> : IModalViewModel<TFormViewModel, TForm>
+
+        services.AddTransient(typeof(ModalViewModel<,>));
+
         return services;
     }
 }
