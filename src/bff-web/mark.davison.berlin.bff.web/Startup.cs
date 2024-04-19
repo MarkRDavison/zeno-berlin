@@ -26,7 +26,7 @@ public class Startup
                 builder => builder
                     .AllowAnyMethod()
                     .AllowCredentials()
-                    .SetIsOriginAllowed((host) => true)
+                    .SetIsOriginAllowed((host) => true) // TODO: Config driven
                     .AllowAnyHeader());
         });
 
