@@ -21,7 +21,7 @@ public class AddStoryCommandTests : ApiIntegrationTestBase
         var currentUserContext = GetRequiredService<ICurrentUserContext>();
         var request = new AddStoryCommandRequest
         {
-            StoryAddress = "https://archiveofourown.org/123/47216291/idontmatterforthistest"
+            StoryAddress = "https://archiveofourown.org/works/47216291"
         };
 
         var response = await handler.Handle(request, currentUserContext, CancellationToken.None);

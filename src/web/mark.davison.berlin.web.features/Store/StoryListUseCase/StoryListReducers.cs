@@ -20,14 +20,13 @@ public static class StoryListReducers
     [ReducerMethod]
     public static StoryListState AddStoryActionResponse(StoryListState state, AddStoryListActionResponse action)
     {
-        // TODO: [MemberNotNullWhen( returnValue: true , nameof(BaseResponse<T>.Value))] in common
         if (action.SuccessWithValue)
         {
             return new StoryListState(
                 state.IsLoading,
                 [
                     .. state.Stories.Where(_ => _.Id != action.ActionId),
-                    action.Value!
+                    action.Value
                 ]);
         }
 
