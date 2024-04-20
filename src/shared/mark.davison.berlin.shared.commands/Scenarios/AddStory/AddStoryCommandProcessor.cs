@@ -53,7 +53,7 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
                 Complete = info.IsCompleted,
                 CurrentChapters = info.CurrentChapters,
                 TotalChapters = info.TotalChapters,
-                UpdateDate = _dateService.Today
+                UpdateDate = _dateService.Now
             };
 
             await repository.UpsertEntityAsync(story, cancellationToken);

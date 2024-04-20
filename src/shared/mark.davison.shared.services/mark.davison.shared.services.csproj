@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="markdavison.common" Version="8.1.2" />
-    <PackageReference Include="markdavison.common.server.abstractions" Version="8.1.2" />
+    <PackageReference Include="markdavison.common" Version="8.1.3" />
+    <PackageReference Include="markdavison.common.server.abstractions" Version="8.1.3" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
   </ItemGroup>
 

@@ -1,15 +1,15 @@
-﻿namespace mark.davison.berlin.shared.queries.Scenarios.DashboardQuery;
+﻿namespace mark.davison.berlin.shared.queries.Scenarios.StoryList;
 
-public class DashboardQueryHandler : IQueryHandler<DashboardQueryRequest, DashboardQueryResponse>
+public class StoryListQueryHandler : IQueryHandler<StoryListQueryRequest, StoryListQueryResponse>
 {
     private readonly IReadonlyRepository _repository;
 
-    public DashboardQueryHandler(IReadonlyRepository repository)
+    public StoryListQueryHandler(IReadonlyRepository repository)
     {
         _repository = repository;
     }
 
-    public async Task<DashboardQueryResponse> Handle(DashboardQueryRequest query, ICurrentUserContext currentUserContext, CancellationToken cancellation)
+    public async Task<StoryListQueryResponse> Handle(StoryListQueryRequest query, ICurrentUserContext currentUserContext, CancellationToken cancellation)
     {
         await using (_repository.BeginTransaction())
         {
@@ -31,12 +31,12 @@ public class DashboardQueryHandler : IQueryHandler<DashboardQueryRequest, Dashbo
                 .Select(_ =>
                 {
                     var dto = _.Update.Story!.ToDto();
-                    dto.LastModified = _.Update.LastModified;
+                    dto.LastModified = _.Update.UpdateDate;
                     return dto;
                 })
                 .ToList());
 
-            return new DashboardQueryResponse
+            return new StoryListQueryResponse
             {
                 Value = dashboardData
             };

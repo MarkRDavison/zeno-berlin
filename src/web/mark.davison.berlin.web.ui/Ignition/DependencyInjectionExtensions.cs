@@ -15,7 +15,7 @@ public static class DependencyInjectionExtensions
                         _.GetRequiredService<IAuthenticationConfig>().BffBase,
                         _.GetRequiredService<IHttpClientFactory>(),
                         _.GetRequiredService<ILogger<BerlinClientHttpRepository>>()))
-            .UseCQRS(typeof(Program), typeof(FeaturesRootType))
+            .UseClientCQRS(typeof(Program), typeof(FeaturesRootType))
             .AddHttpClient(WebConstants.ApiClientName)
             .AddHttpMessageHandler(_ => new CookieHandler());
 

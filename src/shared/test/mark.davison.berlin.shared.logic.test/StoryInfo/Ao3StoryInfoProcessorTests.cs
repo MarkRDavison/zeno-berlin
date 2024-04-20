@@ -24,7 +24,7 @@ public class Ao3StoryInfoProcessorTests
 
         _rateLimitService
             .Wait(Arg.Any<CancellationToken>())
-            .Returns(Task.CompletedTask);
+            .Returns(Task.FromResult(false));
 
         _rateLimitServiceFactory
             .CreateRateLimiter(Arg.Any<TimeSpan>())

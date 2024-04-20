@@ -1,5 +1,6 @@
 ﻿namespace mark.davison.berlin.api.Data;
 
+[ExcludeFromCodeCoverage]
 public class BerlinDataSeeder : IBerlinDataSeeder
 {
     protected readonly IServiceScopeFactory _serviceScopeFactory;

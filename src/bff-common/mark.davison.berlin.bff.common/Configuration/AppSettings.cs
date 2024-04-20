@@ -1,5 +1,6 @@
 ﻿namespace mark.davison.berlin.bff.common.Configuration;
 
+[ExcludeFromCodeCoverage]
 public class AppSettings : IAppSettings
 {
     public string SECTION => "BERLIN";

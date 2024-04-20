@@ -1,24 +1,26 @@
-﻿namespace mark.davison.berlin.shared.commands.Scenarios.UpdateStories;
+﻿using mark.davison.common.server.abstractions.Notifications;
+
+namespace mark.davison.berlin.shared.commands.Scenarios.UpdateStories;
 
 public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequest, UpdateStoriesResponse>
 {
     private readonly ILogger<UpdateStoriesCommandProcessor> _logger;
     private readonly IRepository _repository;
     private readonly IDateService _dateService;
-    private readonly IStoryNotificationHub _storyNotificationHub;
+    private readonly INotificationHub _notificationHub;
     private readonly IServiceProvider _serviceProvider;
 
     public UpdateStoriesCommandProcessor(
         ILogger<UpdateStoriesCommandProcessor> logger,
         IRepository repository,
         IDateService dateService,
-        IStoryNotificationHub storyNotificationHub,
+        INotificationHub notificationHub,
         IServiceProvider serviceProvider)
     {
         _logger = logger;
         _repository = repository;
         _dateService = dateService;
-        _storyNotificationHub = storyNotificationHub;
+        _notificationHub = notificationHub;
         _serviceProvider = serviceProvider;
     }
 
@@ -87,7 +89,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                 Complete = info.IsCompleted,
                 CurrentChapters = info.CurrentChapters,
                 TotalChapters = info.TotalChapters,
-                UpdateDate = _dateService.Today
+                UpdateDate = _dateService.Now
             };
 
             await ProcessNotification(site, story, info, cancellationToken);
@@ -118,7 +120,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         builder.AppendLine("|");
         builder.AppendLine("=======================================================");
 
-        var response = await _storyNotificationHub.SendNotification(builder.ToString());
+        var response = await _notificationHub.SendNotification(builder.ToString());
 
         response.Errors.ForEach(_ => _logger.LogError(_));
         response.Warnings.ForEach(_ => _logger.LogWarning(_));

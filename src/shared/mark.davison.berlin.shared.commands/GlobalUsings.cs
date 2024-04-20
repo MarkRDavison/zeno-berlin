@@ -17,7 +17,6 @@ global using mark.davison.common.server.CQRS;
 global using mark.davison.common.server.CQRS.Processors;
 global using mark.davison.common.server.CQRS.Validators;
 global using mark.davison.common.Services;
-global using mark.davison.shared.services.Notification;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;

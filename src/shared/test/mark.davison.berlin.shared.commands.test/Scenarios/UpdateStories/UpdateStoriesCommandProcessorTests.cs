@@ -6,7 +6,7 @@ public class UpdateStoriesCommandProcessorTests
     private readonly ILogger<UpdateStoriesCommandProcessor> _logger;
     private readonly IRepository _repository;
     private readonly IDateService _dateService;
-    private readonly IStoryNotificationHub _storyNotificationHub;
+    private readonly INotificationHub _notificationHub;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly UpdateStoriesCommandProcessor _processor;
 
@@ -28,7 +28,7 @@ public class UpdateStoriesCommandProcessorTests
         _dateService = Substitute.For<IDateService>();
         _site1StoryInfoProcessor = Substitute.For<IStoryInfoProcessor>();
         _site2StoryInfoProcessor = Substitute.For<IStoryInfoProcessor>();
-        _storyNotificationHub = Substitute.For<IStoryNotificationHub>();
+        _notificationHub = Substitute.For<INotificationHub>();
         _currentUserContext = Substitute.For<ICurrentUserContext>();
 
         _dateService.Now.Returns(DateTime.Now);
@@ -96,7 +96,7 @@ public class UpdateStoriesCommandProcessorTests
                 _site2
             }.FirstOrDefault(__ => __.Id == _.Arg<Guid>())));
 
-        _processor = new(_logger, _repository, _dateService, _storyNotificationHub, services.BuildServiceProvider());
+        _processor = new(_logger, _repository, _dateService, _notificationHub, services.BuildServiceProvider());
     }
 
     [TestMethod]
@@ -298,7 +298,7 @@ public class UpdateStoriesCommandProcessorTests
                 Arg.Any<CancellationToken>())
             .Returns(_ => Task.FromResult(_.Arg<List<Story>>()));
 
-        _storyNotificationHub
+        _notificationHub
             .SendNotification(Arg.Any<string>())
             .Returns(new Response());
 
@@ -306,7 +306,7 @@ public class UpdateStoriesCommandProcessorTests
 
         Assert.IsTrue(response.Success);
 
-        await _storyNotificationHub
+        await _notificationHub
             .Received(1)
             .SendNotification(Arg.Any<string>());
     }

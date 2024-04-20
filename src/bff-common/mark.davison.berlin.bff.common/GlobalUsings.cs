@@ -9,4 +9,5 @@ global using mark.davison.common.server.abstractions.Repository;
 global using mark.davison.common.server.Repository;
 global using mark.davison.common.Services;
 global using Microsoft.Extensions.Options;
+global using System.Diagnostics.CodeAnalysis;
 global using System.Text.Json;

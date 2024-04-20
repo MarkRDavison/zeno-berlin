@@ -50,7 +50,6 @@ public class Startup
                 .Build()
             ));
 
-        // TODO: AsNoTracking as default??? Very breaking change...
         services.UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE);
 
         services
@@ -70,8 +69,14 @@ public class Startup
             .UseValidation()
             .UseBerlinLogic()
             .UseBerlinCommands()
-            .UseSharedServices(AppSettings.NOTIFICATIONS)
+            .UseSharedServices()
+            .UseRateLimiter()
+            .UseNotificationHub()
+            .UseMatrixClient()
+            .UseMatrixNotifications()
+            .UseConsoleNotifications()
             .UseCronJobs(AppSettings);
+
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

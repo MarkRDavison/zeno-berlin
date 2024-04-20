@@ -1,4 +1,4 @@
-﻿global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.Dashboard;
+﻿global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.StoryList;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.Startup;
 global using mark.davison.berlin.shared.models.dtos.Shared;
 global using mark.davison.berlin.shared.models.Entities;

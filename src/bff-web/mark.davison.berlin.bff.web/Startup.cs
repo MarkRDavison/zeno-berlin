@@ -91,7 +91,7 @@ public class Startup
                 .UseAuthenticationEndpoints();
 
             MapProxyCQRSGet(endpoints, "/api/startup-query");
-            MapProxyCQRSGet(endpoints, "/api/dashboard-query");
+            MapProxyCQRSGet(endpoints, "/api/story-list-query");
             MapProxyCQRSPost(endpoints, "/api/add-story-command");
             MapProxyCQRSPost(endpoints, "/api/edit-story-command");
             MapProxyCQRSPost(endpoints, "/api/delete-story-command");

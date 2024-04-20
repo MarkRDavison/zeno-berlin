@@ -224,8 +224,16 @@ public class AddStoryCommandValidatorTests
     {
         var request = new AddStoryCommandRequest
         {
+            SiteId = _siteRegistered.Id,
             StoryAddress = _siteRegistered.Address + "/story/1234"
         };
+
+        _validationContext
+            .GetById<Site>(
+                Arg.Any<Guid>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Site?>(_siteRegistered));
+
         var response = await _validator.ValidateAsync(request, _currentUserContext, CancellationToken.None);
 
         Assert.IsTrue(response.Success);

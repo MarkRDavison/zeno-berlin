@@ -1,5 +1,6 @@
 ﻿namespace mark.davison.berlin.api.persistence;
 
+[ExcludeFromCodeCoverage]
 public class BerlinDbContext : DbContext
 {
     public BerlinDbContext(DbContextOptions options) : base(options)

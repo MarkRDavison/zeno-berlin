@@ -1,5 +1,6 @@
 ﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.EditStory;
 using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.UpdateStories;
+using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.StoryList;
 using mark.davison.common.Changeset;
 
 namespace mark.davison.berlin.web.features.Store.StoryListUseCase;
@@ -36,9 +37,9 @@ public class StoryListEffects
     [EffectMethod]
     public async Task HandleFetchStoryListActionAsync(FetchStoryListAction action, IDispatcher dispatcher)
     {
-        var queryRequest = new DashboardQueryRequest { }; // TODO: Rename/ restructure
+        var queryRequest = new StoryListQueryRequest { }; // TODO: Rename/ restructure
 
-        var queryResponse = await _repository.Get<DashboardQueryResponse, DashboardQueryRequest>(queryRequest, CancellationToken.None);
+        var queryResponse = await _repository.Get<StoryListQueryResponse, StoryListQueryRequest>(queryRequest, CancellationToken.None);
 
         var actionResponse = new FetchStoryListActionResponse
         {
