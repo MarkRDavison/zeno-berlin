@@ -51,6 +51,11 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
 
         var content = await response.Content.ReadAsStringAsync();
 
+        return await ParseStoryInfoFromContent(content);
+    }
+
+    private static async Task<StoryInfoModel> ParseStoryInfoFromContent(string content)
+    {
         var context = BrowsingContext.New(Configuration.Default);
 
         var document = await context.OpenAsync(req => req.Content(content));

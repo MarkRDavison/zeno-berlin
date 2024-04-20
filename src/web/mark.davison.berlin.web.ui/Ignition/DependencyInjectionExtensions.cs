@@ -13,7 +13,8 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IClientNavigationManager, ClientNavigationManager>()
             .AddSingleton<IClientHttpRepository>(_ => new BerlinClientHttpRepository(
                         _.GetRequiredService<IAuthenticationConfig>().BffBase,
-                        _.GetRequiredService<IHttpClientFactory>()))
+                        _.GetRequiredService<IHttpClientFactory>(),
+                        _.GetRequiredService<ILogger<BerlinClientHttpRepository>>()))
             .UseCQRS(typeof(Program), typeof(FeaturesRootType))
             .AddHttpClient(WebConstants.ApiClientName)
             .AddHttpMessageHandler(_ => new CookieHandler());

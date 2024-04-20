@@ -1,6 +1,4 @@
-﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.Startup;
-
-namespace mark.davison.berlin.shared.queries.Scenarios.StartupQuery;
+﻿namespace mark.davison.berlin.shared.queries.Scenarios.StartupQuery;
 
 public class StartupQueryHandler : IQueryHandler<StartupQueryRequest, StartupQueryResponse>
 {

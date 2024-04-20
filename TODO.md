@@ -38,3 +38,6 @@ Edit site wide settings, all admins see the same
 ### Anonymous
 #### Description/stats???
 Some random anonymous/landing page so you can be on the site and not immediately get redirected to auth????
+
+## Misc
+Series, ao3 concept does ffnet have it? maybe if site doesnt support it you can manually add them??

@@ -1,6 +1,4 @@
-﻿using mark.davison.berlin.web.features.Store.StoryListUseCase;
-
-namespace mark.davison.berlin.web.components.Forms.AddStory;
+﻿namespace mark.davison.berlin.web.components.Forms.AddStory;
 
 public class AddStoryFormSubmission : IFormSubmission<AddStoryFormViewModel>
 {
@@ -39,7 +37,7 @@ public class AddStoryFormSubmission : IFormSubmission<AddStoryFormViewModel>
         {
             _dispatcher.Dispatch(action);
 
-            await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(10)));
+            await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(100))); // TODO: Configureable
         }
 
         if (result == null)

@@ -1,14 +1,68 @@
 ﻿@attribute [Route(Routes.Dashboard)]
+@inherits FluxorComponent
 
-<MudStack Row AlignItems="AlignItems.End">
-    <MudSpacer />
-    <MudButton 
-        ButtonType="ButtonType.Submit" 
-        Color="Color.Primary" 
-        StartIcon="@Icons.Material.Filled.Add" 
-        Variant="Variant.Filled" 
-        Size="Size.Large" 
-        Disabled="false"
-        IconSize="Size.Large"
-        OnClick="@OpenAddStoryModal">Add</MudButton>
-</MudStack>
+<MudPaper>
+    <MudStack Class="pa-4">
+        <MudStack Row AlignItems="AlignItems.End">
+            <MudSpacer />
+            @if (!StoryListState.Value.IsLoading) {
+                <MudButton 
+                    ButtonType="ButtonType.Submit" 
+                    Color="Color.Primary" 
+                    StartIcon="@Icons.Material.Filled.Add" 
+                    Variant="Variant.Filled" 
+                    Size="Size.Large" 
+                    Disabled="false"
+                    IconSize="Size.Large"
+                    OnClick="@OpenAddStoryModal">Add</MudButton>
+            }
+        </MudStack>
+
+        @if (StoryListState.Value.IsLoading)
+        {
+            <MudProgressCircular Size="Size.Large" Class="ma-auto" Indeterminate />
+        }
+        else
+        {
+            <MudGrid>
+                @if (!_stories.Any())
+                {
+                    <MudText Typo="Typo.h5">Nothing here, add some stories</MudText>
+                }
+                else 
+                {
+                    @foreach (var story in _stories) 
+                    {
+                        <MudItem xs="4">
+                            <MudPaper Class="story-card pa-4" @onclick="() => CardClick(story.Id)">
+                                <MudStack Row>
+                                    @if (story.Temporary)
+                                    {
+                                        <MudProgressCircular Class="ma-auto" Indeterminate />
+                                    }
+                                    else
+                                    {
+                                        <MudStack>
+                                            <MudText Class="story-card-name" Typo="Typo.h5">@story.Name</MudText>
+                                            <MudText Typo="Typo.body1">Checked @story.LastChecked.Humanize()</MudText>
+                                        </MudStack>
+                                        <div class="float-right mr-2 favourite-container">
+                                            @if (story.Favourite)
+                                            {
+                                                <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" @onclick="() => MudIconClick(story.Id, false)" />
+                                            }
+                                            else
+                                            {
+                                                <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" @onclick="() => MudIconClick(story.Id, true)" />
+                                            }
+                                        </div>
+                                    }
+                                </MudStack>
+                            </MudPaper>
+                        </MudItem>
+                    }
+                }
+            </MudGrid>
+        }
+    </MudStack>
+</MudPaper>

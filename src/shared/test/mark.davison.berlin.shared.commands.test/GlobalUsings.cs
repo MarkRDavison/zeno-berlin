@@ -13,6 +13,7 @@ global using mark.davison.common.server.abstractions.Identification;
 global using mark.davison.common.server.abstractions.Repository;
 global using mark.davison.common.server.test.Framework;
 global using mark.davison.common.Services;
+global using mark.davison.common.test;
 global using mark.davison.shared.services.Notification;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;

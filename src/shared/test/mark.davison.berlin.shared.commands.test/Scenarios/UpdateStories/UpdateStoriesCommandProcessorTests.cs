@@ -100,7 +100,7 @@ public class UpdateStoriesCommandProcessorTests
     }
 
     [TestMethod]
-    public async Task ProcessAsync_WhereNoStoryIdsProvided_QueriesStoriesBasedOnLastModified()
+    public async Task GetStoriesToUpdate_WhereNoStoryIdsProvided_QueriesStoriesBasedOnLastModified()
     {
         var stories = new List<Story>
         {
@@ -116,31 +116,14 @@ public class UpdateStoriesCommandProcessorTests
         stories[3].LastModified = _dateService.Now.AddDays(-0);
 
         _repository
-            .GetEntitiesAsync<Story>(
-                Arg.Any<Expression<Func<Story, bool>>>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ =>
-            {
-                var predicate = _.Arg<Expression<Func<Story, bool>>>().Compile();
-
-                var s = stories.Where(predicate).ToList();
-
-                Assert.AreEqual(3, s.Count);
-
-                return Task.FromResult(new List<Story>());
-            });
+            .QueryEntities<Story>()
+            .Returns(_ => stories.AsAsyncQueryable());
 
         var request = new UpdateStoriesRequest();
 
-        var response = await _processor.ProcessAsync(request, _currentUserContext, CancellationToken.None);
+        var queried = await _processor.GetStoriesToUpdate(request, CancellationToken.None);
 
-        Assert.IsTrue(response.Success);
-
-        await _repository
-            .Received(1)
-            .GetEntitiesAsync<Story>(
-                Arg.Any<Expression<Func<Story, bool>>>(),
-                Arg.Any<CancellationToken>());
+        Assert.AreEqual(2, queried.Count);
     }
 
     [TestMethod]

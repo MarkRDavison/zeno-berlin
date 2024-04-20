@@ -1,5 +1,6 @@
 ﻿global using Fluxor;
 global using mark.davison.berlin.web.components.CommonCandidates.Form;
+global using mark.davison.berlin.web.features.Store.StoryListUseCase;
 global using mark.davison.common.client.abstractions.Authentication;
 global using mark.davison.common.client.abstractions.CQRS;
 global using mark.davison.common.client.CQRS;

@@ -24,11 +24,9 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
         {
             var site = await _validationContext.GetById<Site>(request.SiteId!.Value, cancellationToken);
 
-            var infoProcessor = _serviceProvider.GetKeyedService<IStoryInfoProcessor>(site!.ShortName);
+            var infoProcessor = _serviceProvider.GetRequiredKeyedService<IStoryInfoProcessor>(site!.ShortName);
 
-            var externalId = infoProcessor!.ExtractExternalStoryId(request.StoryAddress);
-
-            // TODO: if externalId not valid dont try extract story info
+            var externalId = infoProcessor.ExtractExternalStoryId(request.StoryAddress);
 
             var info = await infoProcessor.ExtractStoryInfo(request.StoryAddress, cancellationToken);
 
@@ -37,13 +35,14 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
                 Id = Guid.NewGuid(),
                 Address = infoProcessor.GenerateBaseStoryAddress(request.StoryAddress),
                 ExternalId = externalId,
-                SiteId = request.SiteId!.Value,
+                SiteId = site.Id,
                 UserId = currentUserContext.CurrentUser.Id,
                 Complete = info.IsCompleted,
                 CurrentChapters = info.CurrentChapters,
                 Name = info.Name,
                 TotalChapters = info.TotalChapters,
-                UpdateTypeId = UpdateTypeConstants.EachChapterId
+                UpdateTypeId = UpdateTypeConstants.EachChapterId,
+                LastChecked = _dateService.Now
             };
 
             var storyUpdate = new StoryUpdate

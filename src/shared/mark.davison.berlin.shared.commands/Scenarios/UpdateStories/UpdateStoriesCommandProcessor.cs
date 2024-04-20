@@ -1,8 +1,4 @@
-﻿using Aqua.EnumerableExtensions;
-using mark.davison.shared.services.Notification;
-using System.Text;
-
-namespace mark.davison.berlin.shared.commands.Scenarios.UpdateStories;
+﻿namespace mark.davison.berlin.shared.commands.Scenarios.UpdateStories;
 
 public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequest, UpdateStoriesResponse>
 {
@@ -30,7 +26,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
     {
         await using (_repository.BeginTransaction())
         {
-            var toUpdate = await GetStoriesToUpdate(request, _repository, cancellationToken);
+            var toUpdate = await GetStoriesToUpdate(request, cancellationToken);
+            var updates = new List<StoryUpdate>();
 
             if (!toUpdate.Any())
             {
@@ -51,7 +48,11 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                 {
                     if (cancellationToken.IsCancellationRequested) { break; }
 
-                    await ProcessStory(site, story, storyInfoProcessor, cancellationToken);
+                    var update = await ProcessStory(site, story, storyInfoProcessor, cancellationToken);
+                    if (update != null)
+                    {
+                        updates.Add(update);
+                    }
                 }
             }
 
@@ -59,20 +60,36 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             {
                 await _repository.UpsertEntitiesAsync(toUpdate);
             }
-        }
+            if (updates.Any())
+            {
+                await _repository.UpsertEntitiesAsync(updates);
+            }
 
-        return new();
+            return new() { Value = [.. toUpdate.Select(_ => _.ToDto())] };
+        }
     }
 
-    private async Task ProcessStory(Site site, Story story, IStoryInfoProcessor storyInfoProcessor, CancellationToken cancellationToken)
+    private async Task<StoryUpdate?> ProcessStory(Site site, Story story, IStoryInfoProcessor storyInfoProcessor, CancellationToken cancellationToken)
     {
-        var info = await storyInfoProcessor.ExtractStoryInfo(site.Address, cancellationToken);
+        StoryUpdate? update = null;
+        var info = await storyInfoProcessor.ExtractStoryInfo(story.Address, cancellationToken);
 
         if (story.TotalChapters != info.TotalChapters ||
             story.CurrentChapters != info.CurrentChapters ||
             story.Complete != info.IsCompleted ||
             story.Name != info.Name)
         {
+            update = new StoryUpdate
+            {
+                Id = Guid.NewGuid(),
+                StoryId = story.Id,
+                UserId = story.UserId,
+                Complete = info.IsCompleted,
+                CurrentChapters = info.CurrentChapters,
+                TotalChapters = info.TotalChapters,
+                UpdateDate = _dateService.Today
+            };
+
             await ProcessNotification(site, story, info, cancellationToken);
         }
 
@@ -81,10 +98,14 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         story.Complete = info.IsCompleted;
         story.Name = info.Name;
         story.LastModified = _dateService.Now;
+        story.LastChecked = _dateService.Now;
+
+        return update;
     }
 
     private async Task ProcessNotification(Site site, Story story, StoryInfoModel info, CancellationToken cancellationToken)
     {
+        // TODO: Look at story.UpdateType to determine if the notification should be sent 
         var builder = new StringBuilder();
 
         builder.AppendLine("==================== STORY UPDATED ====================");
@@ -103,7 +124,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         response.Warnings.ForEach(_ => _logger.LogWarning(_));
     }
 
-    private async Task<List<Story>> GetStoriesToUpdate(UpdateStoriesRequest request, IRepository repository, CancellationToken cancellationToken)
+    public async Task<List<Story>> GetStoriesToUpdate(UpdateStoriesRequest request, CancellationToken cancellationToken)
     {
         if (request.StoryIds.Any())
         {
@@ -115,16 +136,20 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         }
         else
         {
-            int max = request.Amount <= 0 ? 2 : Math.Min(request.Amount, 10);
+            int max = request.Amount <= 0
+                ? 2
+                : Math.Min(request.Amount, 10);
             var refreshDate = _dateService.Now.AddDays(-1);// TODO: Configure/optionbs
 
-            var stories = await _repository.GetEntitiesAsync<Story>(
-                _ =>
-                    _.Complete == false &&
-                    _.LastModified <= refreshDate,
-                cancellationToken); // TODO: Allow repository to provide paging/max/orderby
+            var strs = _repository.QueryEntities<Story>();
+            var strslst = strs.ToList();
 
-            return stories.Take(max).ToList();
+            var stories = await _repository.QueryEntities<Story>()
+                .Where(_ => !_.Complete && _.LastChecked <= refreshDate)
+                .OrderBy(_ => _.LastChecked)
+                .Take(max)
+                .ToListAsync(cancellationToken);
+            return stories;
         }
     }
 }

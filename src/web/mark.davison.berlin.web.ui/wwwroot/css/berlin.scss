@@ -1,6 +1,9 @@
 $primary-text-colour: var(--mud-palette-text-primary);
 $secondary-text-colour: var(--mud-palette-text-secondary);
 $primary-hover: var(--mud-palette-primary-hover);
+$favourite-icon-colour: yellow;
+
+/* GENERIC */
 
 .app-title {
     margin-left: 1rem !important;
@@ -34,4 +37,58 @@ $primary-hover: var(--mud-palette-primary-hover);
         color: $primary-text-colour;
         transition: color 0.15s ease 0s;
     }
+}
+
+@mixin favourite-icon-visible($icon-colour) {
+    visibility: visible;
+    fill: $icon-colour !important;
+    cursor: pointer;
+}
+
+.favourite-container {
+    visibility: hidden;
+
+    .favourite-icon {
+        @include favourite-icon-visible($favourite-icon-colour);
+    }
+
+    .non-favourite-icon {
+        &:hover {
+            @include favourite-icon-visible($favourite-icon-colour);
+        }
+    }
+}
+.favourite-container-visible {
+    @extend .favourite-container;
+    visibility: visible;
+}
+
+@mixin favourite-container-container {
+    &:hover {
+        .favourite-container {
+            visibility: visible;
+        }
+    }
+}
+
+/* SPECIFIC */
+
+.story-card {
+    @include favourite-container-container;
+    aspect-ratio: 5/4;
+
+    &:hover {
+        background: $primary-hover;
+        border-radius: 0.25rem;
+        cursor: pointer;
+    }
+}
+
+.story-card-name {
+    overflow: hidden;
+    /* autoprefixer: ignore next */
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    line-clamp: 3;
 }

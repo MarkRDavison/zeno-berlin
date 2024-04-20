@@ -32,7 +32,7 @@ public class InitializationHostedService : GenericApplicationHealthStateHostedSe
         }
         else
         {
-            await dbContext.Database.EnsureDeletedAsync(cancellationToken);
+            //await dbContext.Database.EnsureDeletedAsync(cancellationToken);
             await dbContext.Database.EnsureCreatedAsync(cancellationToken);
         }
 

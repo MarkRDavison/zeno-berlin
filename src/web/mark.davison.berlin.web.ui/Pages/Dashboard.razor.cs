@@ -3,7 +3,61 @@
 public partial class Dashboard
 {
     [Inject]
+    public required IState<StoryListState> StoryListState { get; set; }
+
+    [Inject]
     public required IDialogService _dialogService { get; set; }
+
+    [Inject]
+    public required IDispatcher Dispatcher { get; set; }
+
+    [Inject]
+    public required IClientNavigationManager ClientNavigationManager { get; set; }
+
+    private readonly List<Guid> _storyIds = new();
+    private bool _loaded;
+
+    // TODO: This wont work for newly added ones.........
+    private IEnumerable<StoryDto> _stories => _storyIds
+        .Select(_ => StoryListState.Value.Stories.FirstOrDefault(s => s.Id == _))
+        .OfType<StoryDto>();
+
+    protected override async Task OnInitializedAsync() // TODO: Framework class for these helpers??? base class???
+    {
+        await EnsureStateLoaded(true);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await EnsureStateLoaded(false);
+    }
+
+    // TODO: ORRRRRRR Should there be something like, when changing the favourite flag, have 2 fields, one is actual up to date, one is what we sort on and gets synced on init?
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!_loaded && !StoryListState.Value.IsLoading)
+        {
+            _loaded = true;
+
+            var orderedStories = StoryListState.Value.Stories
+                .OrderByDescending(_ => _.Favourite)
+                .ThenByDescending(_ => _.LastChecked)
+                .ToList();
+
+            _storyIds.AddRange(orderedStories.Select(_ => _.Id));
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task EnsureStateLoaded(bool force)
+    {
+        // TODO: state helper to throttle
+        await Task.CompletedTask;
+        if (force || !StoryListState.Value.Stories.Any())
+        {
+            Dispatcher.Dispatch(new FetchStoryListAction { Force = force });
+        }
+    }
 
     internal async Task OpenAddStoryModal()
     {
@@ -23,5 +77,28 @@ public partial class Dashboard
         var dialog = _dialogService.Show<Modal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>("Add Story", param, options);
 
         await dialog.Result;
+    }
+
+    private bool _propagationStopper = false;
+    private void MudIconClick(Guid storyId, bool set)
+    {
+        _propagationStopper = true;
+
+        Dispatcher.Dispatch(new SetFavouriteStoryListAction
+        {
+            StoryId = storyId,
+            IsFavourite = set
+        });
+    }
+
+    private void CardClick(Guid storyId)
+    {
+        if (_propagationStopper)
+        {
+            _propagationStopper = false;
+            return;
+        }
+
+        ClientNavigationManager.NavigateTo(RouteHelpers.Story(storyId));
     }
 }

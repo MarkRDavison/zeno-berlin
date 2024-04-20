@@ -1,6 +1,1 @@
-﻿namespace mark.davison.berlin.shared.models;
-
-public class GlobalUsings
-{
-
-}
+﻿global using mark.davison.berlin.shared.models.dtos.Shared;

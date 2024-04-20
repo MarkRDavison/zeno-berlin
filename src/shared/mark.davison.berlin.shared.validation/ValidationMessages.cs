@@ -3,6 +3,7 @@
 public static class ValidationMessages
 {
     public const string ERROR_SAVING = nameof(ERROR_SAVING);
+    public const string ERROR_DELETING = nameof(ERROR_DELETING);
     public const string FAILED_TO_FIND_ENTITY = nameof(FAILED_TO_FIND_ENTITY);
     public const string INVALID_PROPERTY = nameof(INVALID_PROPERTY);
     public const string DUPLICATE_ENTITY = nameof(DUPLICATE_ENTITY);
