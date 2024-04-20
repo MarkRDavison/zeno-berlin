@@ -17,7 +17,6 @@ public partial class Dashboard
     private readonly List<Guid> _storyIds = new();
     private bool _loaded;
 
-    // TODO: This wont work for newly added ones.........
     private IEnumerable<StoryDto> _stories => _storyIds
         .Select(_ => StoryListState.Value.Stories.FirstOrDefault(s => s.Id == _))
         .OfType<StoryDto>();
@@ -44,6 +43,7 @@ public partial class Dashboard
                 .ThenByDescending(_ => _.LastChecked)
                 .ToList();
 
+            _storyIds.Clear();
             _storyIds.AddRange(orderedStories.Select(_ => _.Id));
             InvokeAsync(StateHasChanged);
         }
@@ -76,7 +76,12 @@ public partial class Dashboard
 
         var dialog = _dialogService.Show<Modal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>("Add Story", param, options);
 
-        await dialog.Result;
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            _loaded = false;
+        }
     }
 
     private bool _propagationStopper = false;

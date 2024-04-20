@@ -139,10 +139,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             int max = request.Amount <= 0
                 ? 2
                 : Math.Min(request.Amount, 10);
-            var refreshDate = _dateService.Now.AddDays(-1);// TODO: Configure/optionbs
-
-            var strs = _repository.QueryEntities<Story>();
-            var strslst = strs.ToList();
+            var refreshDate = _dateService.Now.AddDays(-1);// TODO: Configure/options
 
             var stories = await _repository.QueryEntities<Story>()
                 .Where(_ => !_.Complete && _.LastChecked <= refreshDate)
