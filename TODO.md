@@ -41,3 +41,4 @@ Some random anonymous/landing page so you can be on the site and not immediately
 
 ## Misc
 Series, ao3 concept does ffnet have it? maybe if site doesnt support it you can manually add them??
+LastUpdated - story property indicating the last modified by the author date

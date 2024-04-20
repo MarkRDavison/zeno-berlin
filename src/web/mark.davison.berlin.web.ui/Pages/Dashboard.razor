@@ -35,16 +35,17 @@
                     {
                         <MudItem xs="4">
                             <MudPaper Class="story-card pa-4" @onclick="() => CardClick(story.Id)">
-                                <MudStack Row>
+                                <MudStack Row Class="fill-height">
                                     @if (story.Temporary)
                                     {
                                         <MudProgressCircular Class="ma-auto" Indeterminate />
                                     }
                                     else
                                     {
-                                        <MudStack>
+                                        <MudStack Justify="Justify.FlexStart">
                                             <MudText Class="story-card-name" Typo="Typo.h5">@story.Name</MudText>
-                                            <MudText Typo="Typo.body1">Checked @story.LastChecked.Humanize()</MudText>
+                                            <MudSpacer />
+                                            <MudText Class="" Typo="Typo.body1">Checked @story.LastChecked.Humanize()</MudText>
                                         </MudStack>
                                         <div class="float-right mr-2 favourite-container">
                                             @if (story.Favourite)

@@ -98,6 +98,8 @@ public partial class Story
             StoryId = Id
         };
 
+        Console.Error.WriteLine("TODO: If the story is complete prompt with confirmation, user/server setting to configure this check???");
+
         // TODO: Framework-itize this.
         TaskCompletionSource tcs = new();
         UpdateStoryListActionResponse? response = null;

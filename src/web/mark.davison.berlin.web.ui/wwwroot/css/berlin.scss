@@ -29,6 +29,13 @@ $favourite-icon-colour: yellow;
     color: $secondary-text-colour;
 }
 
+.fill-height {
+    height: 100%
+}
+.fill-width {
+    width: 100%
+}
+
 .muted-link-text {
     @extend .muted-text;
     cursor: pointer;

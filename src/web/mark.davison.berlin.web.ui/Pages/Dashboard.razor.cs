@@ -81,6 +81,7 @@ public partial class Dashboard
         if (!result.Canceled)
         {
             _loaded = false;
+            //TODO: Navigate to newly created story???
         }
     }
 
