@@ -16,9 +16,8 @@ public partial class UserSettingsPage
     private async Task Export()
     {
         _inProgress = true;
-        var request = new ExportCommandRequest();
 
-        var response = await ClientHttpRepository.Post<ExportCommandResponse, ExportCommandRequest>(request, CancellationToken.None);
+        var response = await ClientHttpRepository.Post<ExportCommandResponse, ExportCommandRequest>(CancellationToken.None);
 
         if (response.SuccessWithValue)
         {
@@ -27,12 +26,14 @@ public partial class UserSettingsPage
                 WriteIndented = true
             });
 
-            await DownloadContent(content, $"fanfic-export-{DateTime.Today.ToShortDateString()}.json");
+            await DownloadContent(content, $"fanfic_export_{DateTime.Today.ToShortDateString()}.json");
         }
         else
         {
-            Snackbar.Add(string.Join(" - ", response.Errors), Severity.Error);
+            response.Errors.ForEach(_ => Snackbar.Add(_, Severity.Error));
         }
+
+        response.Warnings.ForEach(_ => Snackbar.Add(_, Severity.Warning));
 
         _inProgress = false;
     }
