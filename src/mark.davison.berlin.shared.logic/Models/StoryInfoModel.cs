@@ -6,4 +6,6 @@ public class StoryInfoModel
     public string Name { get; set; } = string.Empty;
     public int CurrentChapters { get; set; }
     public int? TotalChapters { get; set; }
+    public DateOnly Published { get; set; }
+    public DateOnly Updated { get; set; }
 }

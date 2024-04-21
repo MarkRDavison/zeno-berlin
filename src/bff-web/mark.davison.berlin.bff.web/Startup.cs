@@ -96,6 +96,8 @@ public class Startup
             MapProxyCQRSPost(endpoints, "/api/edit-story-command");
             MapProxyCQRSPost(endpoints, "/api/delete-story-command");
             MapProxyCQRSPost(endpoints, "/api/update-stories-command");
+            MapProxyCQRSPost(endpoints, "/api/import-command");
+            MapProxyCQRSPost(endpoints, "/api/export-command");
         });
     }
 

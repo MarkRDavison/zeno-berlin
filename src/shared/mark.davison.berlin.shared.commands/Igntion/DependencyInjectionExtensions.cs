@@ -8,6 +8,7 @@ public static class DependencyInjectionExtensions
         services.AddTransient<ICommandProcessor<DeleteStoryCommandRequest, DeleteStoryCommandResponse>, DeleteStoryCommandProcessor>();
         services.AddTransient<ICommandProcessor<AddStoryCommandRequest, AddStoryCommandResponse>, AddStoryCommandProcessor>();
         services.AddTransient<ICommandValidator<AddStoryCommandRequest, AddStoryCommandResponse>, AddStoryCommandValidator>();
+        services.AddTransient<ICommandProcessor<ExportCommandRequest, ExportCommandResponse>, ExportCommandProcessor>();
         return services;
     }
 }

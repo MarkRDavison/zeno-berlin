@@ -15,6 +15,7 @@ public class StoryDto
 
     public DateTime LastModified { get; set; }
     public DateTime LastChecked { get; set; }
+    public DateOnly LastAuthored { get; set; }
 
     public bool Temporary { get; set; }
     public bool Favourite { get; set; }

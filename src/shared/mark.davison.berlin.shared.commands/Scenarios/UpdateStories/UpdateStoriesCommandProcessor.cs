@@ -89,7 +89,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                 Complete = info.IsCompleted,
                 CurrentChapters = info.CurrentChapters,
                 TotalChapters = info.TotalChapters,
-                UpdateDate = _dateService.Now
+                LastAuthored = info.Updated,
+                LastModified = _dateService.Now
             };
 
             await ProcessNotification(site, story, info, cancellationToken);
@@ -99,6 +100,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         story.CurrentChapters = info.CurrentChapters;
         story.Complete = info.IsCompleted;
         story.Name = info.Name;
+        story.LastAuthored = info.Updated;
         story.LastModified = _dateService.Now;
         story.LastChecked = _dateService.Now;
 

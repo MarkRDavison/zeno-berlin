@@ -7,6 +7,6 @@ public class StoryUpdateEntityConfiguration : BerlinEntityConfiguration<StoryUpd
         builder.Property(_ => _.CurrentChapters);
         builder.Property(_ => _.TotalChapters);
         builder.Property(_ => _.Complete);
-        builder.Property(_ => _.UpdateDate);
+        builder.Property(_ => _.LastAuthored);
     }
 }

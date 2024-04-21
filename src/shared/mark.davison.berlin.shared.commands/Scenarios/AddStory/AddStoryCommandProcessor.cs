@@ -42,7 +42,8 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
                 Name = info.Name,
                 TotalChapters = info.TotalChapters,
                 UpdateTypeId = UpdateTypeConstants.EachChapterId,
-                LastChecked = _dateService.Now
+                LastChecked = _dateService.Now,
+                LastAuthored = info.Updated
             };
 
             var storyUpdate = new StoryUpdate
@@ -53,7 +54,8 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
                 Complete = info.IsCompleted,
                 CurrentChapters = info.CurrentChapters,
                 TotalChapters = info.TotalChapters,
-                UpdateDate = _dateService.Now
+                LastAuthored = info.Updated,
+                LastModified = _dateService.Now,
             };
 
             await repository.UpsertEntityAsync(story, cancellationToken);

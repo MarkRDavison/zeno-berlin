@@ -76,6 +76,8 @@ public class Ao3StoryInfoProcessorTests
         Assert.AreEqual("All She Never Wanted", storyInfo.Name);
         Assert.AreEqual(false, storyInfo.IsCompleted);
         Assert.AreEqual(57, storyInfo.CurrentChapters);
+        Assert.AreEqual(new DateOnly(2023, 5, 16), storyInfo.Published);
+        Assert.AreEqual(new DateOnly(2024, 2, 11), storyInfo.Updated);
         Assert.IsNull(storyInfo.TotalChapters);
 
         await _rateLimitService

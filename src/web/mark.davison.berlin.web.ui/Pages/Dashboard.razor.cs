@@ -28,7 +28,7 @@ public partial class Dashboard
 
     protected override async Task OnParametersSetAsync()
     {
-        await EnsureStateLoaded(false);
+        await Task.CompletedTask;// TODO: Throttle state fetch EnsureStateLoaded(false);
     }
 
     // TODO: ORRRRRRR Should there be something like, when changing the favourite flag, have 2 fields, one is actual up to date, one is what we sort on and gets synced on init?
@@ -40,6 +40,7 @@ public partial class Dashboard
 
             var orderedStories = StoryListState.Value.Stories
                 .OrderByDescending(_ => _.Favourite)
+                .ThenByDescending(_ => _.LastAuthored)
                 .ThenByDescending(_ => _.LastChecked)
                 .ToList();
 
@@ -57,6 +58,7 @@ public partial class Dashboard
         {
             Dispatcher.Dispatch(new FetchStoryListAction { Force = force });
         }
+        // TODO: awaiter for when the state has actually been updated???
     }
 
     internal async Task OpenAddStoryModal()
@@ -106,5 +108,18 @@ public partial class Dashboard
         }
 
         ClientNavigationManager.NavigateTo(RouteHelpers.Story(storyId));
+    }
+
+    private string StoryCardChapterText(StoryDto story)
+    {
+        return $"Chapters: {story.CurrentChapters}/{(story.TotalChapters?.ToString() ?? "?")}";
+    }
+    private string StoryCardUpdatedText(StoryDto story)
+    {
+        return $"Updated {story.LastAuthored.Humanize()}";
+    }
+    private string StoryCardCheckedText(StoryDto story)
+    {
+        return $"Checked {story.LastChecked.Humanize()}";
     }
 }

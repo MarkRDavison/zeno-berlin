@@ -103,12 +103,37 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
             throw new InvalidDataException();
         }
 
+        var stats = document.GetElementsByClassName("stats")
+            .Where(_ => _.TagName.Equals("dl", StringComparison.InvariantCultureIgnoreCase))
+            .ToList();
+
+        var groupedStats = stats
+            .SelectMany(_ => _.Children)
+            .GroupBy(_ => _.ClassName)
+            .Where(_ => !string.IsNullOrEmpty(_.Key))
+            .ToDictionary(_ => _.Key!, _ => _.Last().InnerHtml);
+
+        DateOnly published;
+        DateOnly updated;
+
+        if (!groupedStats.TryGetValue("published", out var publishedValue) || !DateOnly.TryParse(publishedValue, out published))
+        {
+            throw new InvalidDataException("Could not extract published date");
+        }
+        if (!groupedStats.TryGetValue("status", out var updatedValue) || !DateOnly.TryParse(updatedValue, out updated))
+        {
+            throw new InvalidDataException("Could not extract updated date");
+        }
+
+
         return new StoryInfoModel
         {
             Name = title,
             IsCompleted = currentChapters == totalChapters,
             CurrentChapters = currentChapters,
-            TotalChapters = totalChapters
+            TotalChapters = totalChapters,
+            Published = published,
+            Updated = updated
         };
     }
 

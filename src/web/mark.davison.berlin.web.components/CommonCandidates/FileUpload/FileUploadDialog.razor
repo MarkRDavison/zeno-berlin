@@ -1,0 +1,24 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudItem xs="12">
+            <MudFileUpload 
+                T="IReadOnlyList<IBrowserFile>"
+                AppendMultipleFiles="false">
+
+            </MudFileUpload>
+        </MudItem>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Secondary">Cancel</MudButton>
+        <MudButton Disabled="@_primaryDisabled" Color="Color" OnClick="Primary">
+            @if (_inProgress)
+            {
+                <MudProgressCircular Size="Size.Small" Color="Color" Indeterminate="true" />
+            }
+            else
+            {
+                @PrimaryText
+            }
+        </MudButton>
+    </DialogActions>
+</MudDialog>

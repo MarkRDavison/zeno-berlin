@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="CommonCandidates\Ignition\" />
+    <Folder Include="Pages\Settings\Admin\" />
   </ItemGroup>
 
 

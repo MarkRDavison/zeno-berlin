@@ -9,10 +9,11 @@ public class Story : BerlinEntity
     public int? TotalChapters { get; set; }
     public bool Complete { get; set; }
     public bool Favourite { get; set; }
+    public DateTime LastChecked { get; set; }
+    public DateOnly LastAuthored { get; set; }
 
     public Guid SiteId { get; set; }
     public Guid UpdateTypeId { get; set; }
-    public DateTime LastChecked { get; set; }
 
     public virtual Site? Site { get; set; }
     public virtual UpdateType? UpdateType { get; set; }
@@ -31,6 +32,7 @@ public class Story : BerlinEntity
             SiteId = SiteId,
             UpdateTypeId = UpdateTypeId,
             LastChecked = LastChecked,
+            LastAuthored = LastAuthored,
             LastModified = LastModified,
             Favourite = Favourite
         };

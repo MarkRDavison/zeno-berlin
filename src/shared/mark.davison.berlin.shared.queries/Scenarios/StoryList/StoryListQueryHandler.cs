@@ -28,12 +28,7 @@ public class StoryListQueryHandler : IQueryHandler<StoryListQueryRequest, StoryL
 
             dashboardData.Stories = new(storyUpdates
                 .Where(_ => _.Update.Story != null)
-                .Select(_ =>
-                {
-                    var dto = _.Update.Story!.ToDto();
-                    dto.LastModified = _.Update.UpdateDate;
-                    return dto;
-                })
+                .Select(_ => _.Update.Story!.ToDto())
                 .ToList());
 
             return new StoryListQueryResponse

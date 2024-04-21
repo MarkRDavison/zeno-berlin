@@ -2,8 +2,10 @@
 
 @if (_authContext.IsAuthenticated)
 {
-    <MudContainer Class="pa-6">
-        @ChildContent
+    <MudContainer Class="pa-4">
+        <MudPaper Class="pa-4">
+            @ChildContent
+        </MudPaper>
     </MudContainer>
 }
 

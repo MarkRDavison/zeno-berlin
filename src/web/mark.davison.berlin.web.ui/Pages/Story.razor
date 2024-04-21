@@ -1,46 +1,44 @@
 ﻿@attribute [Route(Routes.Story)]
 
-<MudPaper Class="pa-4">
-    @if (StoryListState.Value.IsLoading)
-    {
-        @*TODO: Framework activity monitor loading thingy*@
-    }
-    else 
-    {
-        <MudStack>
-            <MudStack Row AlignItems="AlignItems.End" Class="d-flex align-center">
-                <MudText Typo="Typo.h5">@CurrentStory.Name</MudText>
-                <div class="float-right favourite-container-visible">
-                    @if (CurrentStory.Favourite)
-                    {
-                        <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" onclick="@(() => FavouriteClick(false))" />
-                    }
-                    else
-                    {
-                        <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" onclick="@(() => FavouriteClick(true))" />
-                    }
-                </div>
-                <MudText Class="muted-text" Typo="Typo.body2">@_lastCheckedText</MudText>
-                <MudSpacer />
-                <ProgressButton 
-                    InProgress="@_inProgress" 
-                    Color="Color.Primary" 
-                    Disabled="@_inProgress" 
-                    Label="Check" 
-                    StartIcon="@Icons.Material.Filled.Sync" 
-                    OnClick="@CheckStory" />
-                <MudButton 
-                    ButtonType="ButtonType.Submit"
-                    Color="Color.Error"
-                    StartIcon="@Icons.Material.Filled.Delete"
-                    Variant="Variant.Filled"
-                    Size="Size.Large"
-                    Disabled="_inProgress"
-                    IconSize="Size.Large"
-                    OnClick="OpenDeleteConfirmationDialog">Delete</MudButton>
-            </MudStack>
-
-            <MudText Typo="Typo.body1">@_chaptersText</MudText>
+@if (StoryListState.Value.IsLoading)
+{
+    @*TODO: Framework activity monitor loading thingy*@
+}
+else 
+{
+    <MudStack>
+        <MudStack Row AlignItems="AlignItems.End" Class="d-flex align-center">
+            <MudText Typo="Typo.h5">@CurrentStory.Name</MudText>
+            <div class="float-right favourite-container-visible">
+                @if (CurrentStory.Favourite)
+                {
+                    <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" onclick="@(() => FavouriteClick(false))" />
+                }
+                else
+                {
+                    <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" onclick="@(() => FavouriteClick(true))" />
+                }
+            </div>
+            <MudText Class="muted-text" Typo="Typo.body2">@_lastCheckedText</MudText>
+            <MudSpacer />
+            <ProgressButton 
+                InProgress="@_inProgress" 
+                Color="Color.Primary" 
+                Disabled="@_inProgress" 
+                Label="Check" 
+                StartIcon="@Icons.Material.Filled.Sync" 
+                OnClick="@CheckStory" />
+            <MudButton 
+                ButtonType="ButtonType.Submit"
+                Color="Color.Error"
+                StartIcon="@Icons.Material.Filled.Delete"
+                Variant="Variant.Filled"
+                Size="Size.Large"
+                Disabled="_inProgress"
+                IconSize="Size.Large"
+                OnClick="OpenDeleteConfirmationDialog">Delete</MudButton>
         </MudStack>
-    }
-</MudPaper>
+
+        <MudText Typo="Typo.body1">@_chaptersText</MudText>
+    </MudStack>
+}

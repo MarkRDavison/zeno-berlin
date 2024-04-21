@@ -4,6 +4,7 @@ public class Routes
 {
     public const string Root = "/";
     public const string Dashboard = Root;
+    public const string UserSettings = "/settings/user";
     public const string Story = "/stories/{id:guid}";
 }
 
