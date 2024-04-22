@@ -1,4 +1,8 @@
-﻿namespace mark.davison.berlin.web.components.Pages.Settings.User;
+﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.Import;
+using mark.davison.berlin.shared.models.dtos.Shared;
+using mark.davison.berlin.web.components.CommonCandidates.FileUpload;
+
+namespace mark.davison.berlin.web.components.Pages.Settings.User;
 
 public partial class UserSettingsPage
 {
@@ -13,6 +17,9 @@ public partial class UserSettingsPage
     [Inject]
     public required ISnackbar Snackbar { get; set; }
 
+    [Inject]
+    public required IDialogService DialogService { get; set; }
+
     private async Task Export()
     {
         _inProgress = true;
@@ -26,7 +33,9 @@ public partial class UserSettingsPage
                 WriteIndented = true
             });
 
-            await DownloadContent(content, $"fanfic_export_{DateTime.Today.ToShortDateString()}.json");
+            var filename = $"fanfic_export_{DateTime.Today.ToShortDateString()}_{DateTime.Now.ToLocalTime().ToLongTimeString()}.json".Replace(" ", "_");
+            await DownloadContent(content, filename);
+            Snackbar.Add($"Exported '{filename}'", Severity.Success);
         }
         else
         {
@@ -43,5 +52,44 @@ public partial class UserSettingsPage
         var fileStream = new MemoryStream(new UTF8Encoding(true).GetBytes(content));
         using var streamRef = new DotNetStreamReference(fileStream);
         await JSRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+
+    private async Task OpenImportDialog()
+    {
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = false
+        };
+
+        var param = new DialogParameters<FileUploadDialog<SerialisedtDataDto>>
+        {
+            { _ => _.PrimaryText, "Import stories" },
+            { _ => _.Color, Color.Primary },
+            { _ => _.PrimaryCallback, ImportData },
+            { _ => _.CorrectFileDescriptionCallback, _ => $"Found {_.Stories.Count} stories to import" }
+        };
+
+        var dialog = DialogService.Show<FileUploadDialog<SerialisedtDataDto>>("Import stories", param, options);
+
+        var result = await dialog.Result;
+    }
+
+    private async Task<Response> ImportData(SerialisedtDataDto data)
+    {
+        var request = new ImportCommandRequest
+        {
+            Data = data
+        };
+
+        var response = await ClientHttpRepository.Post<ImportCommandResponse, ImportCommandRequest>(request, CancellationToken.None);
+
+        if (response.Success)
+        {
+            Snackbar.Add($"Imported {response.Imported} stories", Severity.Success);
+        }
+
+        return response;
     }
 }

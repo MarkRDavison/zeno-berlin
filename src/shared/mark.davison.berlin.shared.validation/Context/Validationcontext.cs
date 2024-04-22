@@ -7,6 +7,7 @@ public class ValidationContext : IValidationContext
     private readonly IDictionary<Type, IDictionary<Guid, BerlinEntity?>> _idCache;
     private readonly IDictionary<(Type, string), BerlinEntity?> _propertyCache;
     private readonly IDictionary<Type, List<BerlinEntity>> _allCache;
+    private readonly IDictionary<Type, List<BerlinEntity>> _allByUserCache;
 
     public ValidationContext(
         IReadonlyRepository repository
@@ -16,6 +17,7 @@ public class ValidationContext : IValidationContext
 
         _idCache = new Dictionary<Type, IDictionary<Guid, BerlinEntity?>>();
         _allCache = new Dictionary<Type, List<BerlinEntity>>();
+        _allByUserCache = new Dictionary<Type, List<BerlinEntity>>();
         _propertyCache = new Dictionary<(Type, string), BerlinEntity?>();
     }
 
@@ -37,8 +39,11 @@ public class ValidationContext : IValidationContext
         }
         else
         {
-            entity = await _repository.GetEntityAsync<T>(id, cancellationToken);
-            entityCache.Add(id, entity);
+            await using (_repository.BeginTransaction())
+            {
+                entity = await _repository.GetEntityAsync<T>(id, cancellationToken);
+                entityCache.Add(id, entity);
+            }
         }
 
         return entity;
@@ -55,8 +60,11 @@ public class ValidationContext : IValidationContext
         }
         else
         {
-            entity = await _repository.GetEntityAsync<T>(predicate, cancellationToken);
-            _propertyCache.Add((typeof(T), name), entity);
+            await using (_repository.BeginTransaction())
+            {
+                entity = await _repository.GetEntityAsync<T>(predicate, cancellationToken);
+                _propertyCache.Add((typeof(T), name), entity);
+            }
         }
 
         return entity;
@@ -69,9 +77,26 @@ public class ValidationContext : IValidationContext
             return _allCache[typeof(T)].Cast<T>().ToList();
         }
 
-        var all = await _repository.GetEntitiesAsync<T>(cancellationToken);
-        _allCache[typeof(T)] = [.. all];
-        return all;
+        await using (_repository.BeginTransaction())
+        {
+            var all = await _repository.GetEntitiesAsync<T>(cancellationToken);
+            _allCache[typeof(T)] = [.. all];
+            return all;
+        }
+    }
+    public async Task<List<T>> GetAllForUserId<T>(Guid userId, CancellationToken cancellationToken) where T : BerlinEntity, new()
+    {
+        if (_allByUserCache.ContainsKey(typeof(T)))
+        {
+            return _allByUserCache[typeof(T)].Cast<T>().ToList();
+        }
+
+        await using (_repository.BeginTransaction())
+        {
+            var all = await _repository.GetEntitiesAsync<T>(_ => _.UserId == userId, cancellationToken);
+            _allByUserCache[typeof(T)] = [.. all];
+            return all;
+        }
     }
 
     public static PropertyInfo GetPropertyInfo<T, TProperty>(

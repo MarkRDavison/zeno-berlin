@@ -116,10 +116,11 @@ public partial class Dashboard
     }
     private string StoryCardUpdatedText(StoryDto story)
     {
-        return $"Updated {story.LastAuthored.Humanize()}";
+        var humanised = story.LastAuthored.Humanize(dateToCompareAgainst: DateOnly.FromDateTime(DateTime.Today));
+        return $"Updated {(humanised == "now" ? "today" : humanised)}";
     }
     private string StoryCardCheckedText(StoryDto story)
     {
-        return $"Checked {story.LastChecked.Humanize()}";
+        return $"Checked {story.LastChecked.Humanize(dateToCompareAgainst: DateTime.Now)}";
     }
 }

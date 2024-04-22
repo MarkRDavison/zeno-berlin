@@ -47,3 +47,7 @@ Fandom
  - a way to manage this?
  - some stories have like 50, maybe a management page per user/site???
 	- Each fandom can have a parent associated, so 'Star Wars - All Media Types', 'Star Wars: Rebels' etc all are summarized as Star Wars? What about cross overs???
+Story
+ - Some concept of marking where you last were at??? So like opt in and say you've read up to chapter X, then when there are new updates it tells you how many you have to read, you can then set a new value/mark it read up to current etc???
+	- 
+Importing needs to be an async job

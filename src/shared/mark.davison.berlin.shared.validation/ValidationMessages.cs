@@ -10,6 +10,7 @@ public static class ValidationMessages
     public const string UNSUPPORTED_SITE = nameof(UNSUPPORTED_SITE);
     public const string SITE_STORY_MISMATCH = nameof(SITE_STORY_MISMATCH);
     public const string NO_ITEMS = nameof(NO_ITEMS);
+    public const string FAILED_TO_IMPORT = nameof(FAILED_TO_IMPORT);
 
     public static string FormatMessageParameters(string message, params string[] parameters)
     {

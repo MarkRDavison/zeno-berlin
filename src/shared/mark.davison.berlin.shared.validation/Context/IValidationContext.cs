@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace mark.davison.berlin.shared.validation.Context;
+﻿namespace mark.davison.berlin.shared.validation.Context;
 
 public interface IValidationContext
 {
@@ -10,4 +8,6 @@ public interface IValidationContext
         where T : BerlinEntity, new();
 
     Task<List<T>> GetAll<T>(CancellationToken cancellationToken) where T : BerlinEntity, new();
+
+    Task<List<T>> GetAllForUserId<T>(Guid userId, CancellationToken cancellationToken) where T : BerlinEntity, new();
 }

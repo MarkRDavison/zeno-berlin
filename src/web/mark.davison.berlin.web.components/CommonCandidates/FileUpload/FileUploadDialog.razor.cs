@@ -1,10 +1,14 @@
-﻿namespace mark.davison.berlin.web.components.CommonCandidates.FileUpload;
+﻿using Microsoft.AspNetCore.Components.Forms;
 
-public partial class FileUploadDialog
+namespace mark.davison.berlin.web.components.CommonCandidates.FileUpload;
+
+public partial class FileUploadDialog<T> where T : class, new()
 {
 
     private bool _inProgress;
-    public bool _primaryDisabled => _inProgress;
+    public bool _primaryDisabled => _inProgress || data == null;
+
+    private T? data;
 
     [CascadingParameter, EditorRequired]
     public required MudDialogInstance MudDialog { get; set; }
@@ -13,20 +17,61 @@ public partial class FileUploadDialog
     public string PrimaryText { get; set; } = "Ok";
 
     [Parameter, EditorRequired]
-    public required Func<Task<Response>> PrimaryCallback { get; set; }
+    public required Func<T, Task<Response>> PrimaryCallback { get; set; }
+
+    [Parameter, EditorRequired]
+    public required Func<T, string> CorrectFileDescriptionCallback { get; set; }
 
     [Parameter, EditorRequired]
     public required Color Color { get; set; }
+
+    [Inject]
+    public required ISnackbar Snackbar { get; set; }
+
+
+    private async Task OnInputFileChanged(InputFileChangeEventArgs args)
+    {
+        data = null;
+        var files = args.GetMultipleFiles();
+
+        var file = files.FirstOrDefault();
+        if (file == null)
+        {
+            return;
+        }
+
+        using (var stream = file.OpenReadStream())
+        {
+            try
+            {
+                data = await JsonSerializer.DeserializeAsync<T>(stream, new JsonSerializerOptions());
+                await InvokeAsync(StateHasChanged);
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine("Imported file was not in correct format\nDid you select the correct file?");
+                Console.Error.WriteLine(e.Message);
+                Console.Error.WriteLine(e.StackTrace);
+                Snackbar.Add("Provided file was not in a valid format", Severity.Error);
+            }
+        }
+    }
 
     private async Task Primary()
     {
         _inProgress = true;
 
-        var response = await PrimaryCallback();
+        if (data == null)
+        {
+            return;
+        }
+
+        var response = await PrimaryCallback(data);
 
         if (response.Success)
         {
             MudDialog.Close(DialogResult.Ok(true));
+            data = null;
         }
         else
         {
@@ -37,5 +82,12 @@ public partial class FileUploadDialog
 
         _inProgress = false;
     }
-    private void Secondary() => MudDialog.Cancel();
+
+    private void Secondary()
+    {
+        data = null;
+        MudDialog.Cancel();
+    }
+
+    private string GetParsedInputDisplayText() => data == null ? string.Empty : CorrectFileDescriptionCallback(data);
 }

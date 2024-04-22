@@ -6,12 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fanfic</title>
     <script type="text/javascript">
-
         window.GetBffUri = () => {
             window.ENV = {};
             return window.ENV.BFF_BASE_URI;
         }
-
+        // TODO: Move these to mark.davison.common.client.js ???
         window.downloadFileFromStream = async (fileName, contentStreamReference) => {
             const arrayBuffer = await contentStreamReference.arrayBuffer();
             const blob = new Blob([arrayBuffer]);
@@ -48,12 +47,10 @@
 
         @keyframes sk-scaleout {
             0% {
-                -webkit-transform: scale(0);
                 transform: scale(0);
             }
 
             100% {
-                -webkit-transform: scale(1.0);
                 opacity: 0;
                 transform: scale(1.0);
             }

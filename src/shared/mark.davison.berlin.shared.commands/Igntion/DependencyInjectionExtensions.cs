@@ -9,6 +9,8 @@ public static class DependencyInjectionExtensions
         services.AddTransient<ICommandProcessor<AddStoryCommandRequest, AddStoryCommandResponse>, AddStoryCommandProcessor>();
         services.AddTransient<ICommandValidator<AddStoryCommandRequest, AddStoryCommandResponse>, AddStoryCommandValidator>();
         services.AddTransient<ICommandProcessor<ExportCommandRequest, ExportCommandResponse>, ExportCommandProcessor>();
+        services.AddTransient<ICommandProcessor<ImportCommandRequest, ImportCommandResponse>, ImportCommandProcessor>();
+        services.AddTransient<ICommandValidator<ImportCommandRequest, ImportCommandResponse>, ImportCommandValidator>();
         return services;
     }
 }

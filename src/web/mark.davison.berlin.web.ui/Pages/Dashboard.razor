@@ -32,8 +32,8 @@
             {
                 @foreach (var story in _stories) 
                 {
-                    <MudItem xs="4">
-                        <MudPaper Class="story-card pa-4" @onclick="() => CardClick(story.Id)">
+                    <MudItem xs="12" sm="6" md="4" lg="3">
+                        <MudPaper Class="story-card pa-2" @onclick="() => CardClick(story.Id)">
                             <MudStack Row Class="fill-height">
                                 @if (story.Temporary)
                                 {
