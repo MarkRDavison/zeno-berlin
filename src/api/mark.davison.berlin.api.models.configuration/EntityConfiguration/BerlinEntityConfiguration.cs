@@ -22,9 +22,14 @@ public abstract class BerlinEntityConfiguration<T> : IEntityTypeConfiguration<T>
             .WithMany()
             .HasForeignKey(_ => _.UserId);
 
-        NavigationPropertyEntityConfigurations.ConfigureEntity(builder);
+        if (!ConfigureNavigationManually)
+        {
+            NavigationPropertyEntityConfigurations.ConfigureEntity(builder);
+        }
         ConfigureEntity(builder);
     }
+
+    protected virtual bool ConfigureNavigationManually => false;
 
     public abstract void ConfigureEntity(EntityTypeBuilder<T> builder);
 }

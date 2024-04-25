@@ -7,6 +7,7 @@ public class AddStoryCommandProcessorTests
     private readonly IValidationContext _validationContext;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly IStoryInfoProcessor _storyInfoProcessor;
+    private readonly IFandomService _fandomService;
     private readonly IRepository _repository;
     private readonly AddStoryCommandProcessor _processor;
 
@@ -19,6 +20,7 @@ public class AddStoryCommandProcessorTests
         _validationContext = Substitute.For<IValidationContext>();
         _currentUserContext = Substitute.For<ICurrentUserContext>();
         _storyInfoProcessor = Substitute.For<IStoryInfoProcessor>();
+        _fandomService = Substitute.For<IFandomService>();
         _repository = Substitute.For<IRepository>();
 
         _site = new()
@@ -54,6 +56,7 @@ public class AddStoryCommandProcessorTests
         _processor = new AddStoryCommandProcessor(
             _dateService,
             _validationContext,
+            _fandomService,
             services.BuildServiceProvider());
     }
 

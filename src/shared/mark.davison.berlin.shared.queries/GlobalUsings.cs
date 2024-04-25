@@ -1,7 +1,11 @@
-﻿global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.StoryList;
+﻿global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.DashboardList;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.FandomList;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.ManageStory;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.Startup;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.StoryList;
 global using mark.davison.berlin.shared.models.dtos.Shared;
 global using mark.davison.berlin.shared.models.Entities;
+global using mark.davison.berlin.shared.validation;
 global using mark.davison.common.server.abstractions.Authentication;
 global using mark.davison.common.server.abstractions.CQRS;
 global using mark.davison.common.server.abstractions.Repository;

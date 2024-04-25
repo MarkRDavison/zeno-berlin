@@ -34,7 +34,7 @@ public class ImportCommandProcessor : ICommandProcessor<ImportCommandRequest, Im
                 {
                     StoryAddress = story.StoryAddress,
                     Favourite = story.Favourite,
-                    SuppressUpdateCreation = true
+                    SuppressUpdateCreation = story.Updates.Any()
                 };
 
                 var addStoryResponse = await _addStoryCommandHandler.Handle(addStoryRequest, currentUserContext, cancellationToken);

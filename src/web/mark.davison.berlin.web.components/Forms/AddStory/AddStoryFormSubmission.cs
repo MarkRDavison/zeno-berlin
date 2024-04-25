@@ -2,16 +2,13 @@
 
 public class AddStoryFormSubmission : IFormSubmission<AddStoryFormViewModel>
 {
-    private readonly IDispatcher _dispatcher;
-    private readonly IActionSubscriber _actionSubscriber;
+    private readonly IStoreHelper _storeHelper;
 
     public AddStoryFormSubmission(
-        IDispatcher dispatcher,
-        IActionSubscriber actionSubscriber
+        IStoreHelper storeHelper
     )
     {
-        _dispatcher = dispatcher;
-        _actionSubscriber = actionSubscriber;
+        _storeHelper = storeHelper;
     }
 
     public async Task<Response> Primary(AddStoryFormViewModel formViewModel)
@@ -21,30 +18,6 @@ public class AddStoryFormSubmission : IFormSubmission<AddStoryFormViewModel>
             StoryAddress = formViewModel.StoryAddress
         };
 
-        // TODO: Framework-itize this.
-        TaskCompletionSource tcs = new();
-        AddStoryListActionResponse? result = null;
-
-        _actionSubscriber.SubscribeToAction(
-            this,
-            (AddStoryListActionResponse resultAction) =>
-            {
-                result = resultAction;
-                tcs.SetResult();
-            });
-
-        using (_actionSubscriber.GetActionUnsubscriberAsIDisposable(this))
-        {
-            _dispatcher.Dispatch(action);
-
-            await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(100))); // TODO: Configureable
-        }
-
-        if (result == null)
-        {
-            return new Response { Errors = ["TODO: TIMED OUT, please try again..."] };
-        }
-
-        return result;
+        return await _storeHelper.DispatchAndWaitForResponse<AddStoryListAction, AddStoryListActionResponse>(action);
     }
 }

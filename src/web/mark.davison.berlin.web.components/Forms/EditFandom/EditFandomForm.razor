@@ -1,0 +1,17 @@
+﻿@inherits Form<EditFandomFormViewModel>
+
+<MudForm>
+    <MudTextField 
+        id="edit-fandom-form-name" 
+        T="string" 
+        Label="Name" @bind-Text="FormViewModel.Name" 
+        For=@(() => FormViewModel.Name) 
+        Immediate />
+    <MudCheckBox 
+        id="edit-fandom-for-hidden" 
+        T="bool" 
+        Label="Hidden" 
+        LabelPosition="LabelPosition.End" 
+        @bind-Value="FormViewModel.IsHidden" 
+        For=@(() => FormViewModel.IsHidden) />
+</MudForm>

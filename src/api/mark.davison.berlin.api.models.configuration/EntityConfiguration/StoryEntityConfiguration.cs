@@ -13,5 +13,7 @@ public class StoryEntityConfiguration : BerlinEntityConfiguration<Story>
         builder.Property(_ => _.Favourite);
         builder.Property(_ => _.LastChecked);
         builder.Property(_ => _.LastAuthored);
+
+        builder.HasMany(_ => _.StoryFandomLinks).WithOne(_ => _.Story);
     }
 }

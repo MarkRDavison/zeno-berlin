@@ -1,4 +1,6 @@
 ﻿using mark.davison.common.server.abstractions.Notifications;
+using mark.davison.shared.server.services.Helpers;
+using System.Linq.Expressions;
 
 namespace mark.davison.berlin.shared.commands.Scenarios.UpdateStories;
 
@@ -8,6 +10,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
     private readonly IRepository _repository;
     private readonly IDateService _dateService;
     private readonly INotificationHub _notificationHub;
+    private readonly IFandomService _fandomService;
     private readonly IServiceProvider _serviceProvider;
 
     public UpdateStoriesCommandProcessor(
@@ -15,12 +18,14 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         IRepository repository,
         IDateService dateService,
         INotificationHub notificationHub,
+        IFandomService fandomService,
         IServiceProvider serviceProvider)
     {
         _logger = logger;
         _repository = repository;
         _dateService = dateService;
         _notificationHub = notificationHub;
+        _fandomService = fandomService;
         _serviceProvider = serviceProvider;
     }
 
@@ -50,7 +55,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                 {
                     if (cancellationToken.IsCancellationRequested) { break; }
 
-                    var update = await ProcessStory(site, story, storyInfoProcessor, cancellationToken);
+                    var update = await ProcessStory(site, story, currentUserContext, storyInfoProcessor, cancellationToken);
                     if (update != null)
                     {
                         updates.Add(update);
@@ -71,10 +76,24 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         }
     }
 
-    private async Task<StoryUpdate?> ProcessStory(Site site, Story story, IStoryInfoProcessor storyInfoProcessor, CancellationToken cancellationToken)
+    private async Task<StoryUpdate?> ProcessStory(Site site, Story story, ICurrentUserContext currentUserContext, IStoryInfoProcessor storyInfoProcessor, CancellationToken cancellationToken)
     {
         StoryUpdate? update = null;
         var info = await storyInfoProcessor.ExtractStoryInfo(story.Address, cancellationToken);
+
+        foreach (var fandomExternalName in info.Fandoms)
+        {
+            if (story.StoryFandomLinks.All(_ => _.Fandom?.ExternalName != fandomExternalName))
+            {
+                var fandoms = await _fandomService.GetOrCreateFandomsByExternalNames([fandomExternalName], cancellationToken);
+
+                var fandom = fandoms.First();
+
+                var link = CreateStoryFandomLink(story.Id, fandom.Id, currentUserContext.CurrentUser.Id);
+
+                story.StoryFandomLinks.Add(link);
+            }
+        }
 
         if (story.TotalChapters != info.TotalChapters ||
             story.CurrentChapters != info.CurrentChapters ||
@@ -130,10 +149,16 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
 
     public async Task<List<Story>> GetStoriesToUpdate(UpdateStoriesRequest request, CancellationToken cancellationToken)
     {
+        var includes = new Expression<Func<Story, object>>[] {
+            _ => _.StoryFandomLinks,
+            _ => _.StoryFandomLinks.Select(_ => _.Fandom)
+        };
+
         if (request.StoryIds.Any())
         {
             var stories = await _repository.GetEntitiesAsync<Story>(
                 _ => request.StoryIds.Contains(_.Id),
+                includes,
                 cancellationToken);
             // TODO: Override max???
             return stories;
@@ -146,11 +171,25 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             var refreshDate = _dateService.Now.AddDays(-1);// TODO: Configure/options
 
             var stories = await _repository.QueryEntities<Story>()
+                .Include(_ => _.StoryFandomLinks)
+                .ThenInclude(_ => _.Fandom)
                 .Where(_ => !_.Complete && _.LastChecked <= refreshDate)
                 .OrderBy(_ => _.LastChecked)
                 .Take(max)
                 .ToListAsync(cancellationToken);
             return stories;
         }
+    }
+
+    // TODO: Duplicate
+    private static StoryFandomLink CreateStoryFandomLink(Guid storyId, Guid fandomId, Guid userId)
+    {
+        return new StoryFandomLink
+        {
+            Id = Guid.NewGuid(),
+            StoryId = storyId,
+            FandomId = fandomId,
+            UserId = userId
+        };
     }
 }

@@ -7,6 +7,7 @@ public class UpdateStoriesCommandProcessorTests
     private readonly IRepository _repository;
     private readonly IDateService _dateService;
     private readonly INotificationHub _notificationHub;
+    private readonly IFandomService _fandomService;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly UpdateStoriesCommandProcessor _processor;
 
@@ -29,6 +30,7 @@ public class UpdateStoriesCommandProcessorTests
         _site1StoryInfoProcessor = Substitute.For<IStoryInfoProcessor>();
         _site2StoryInfoProcessor = Substitute.For<IStoryInfoProcessor>();
         _notificationHub = Substitute.For<INotificationHub>();
+        _fandomService = Substitute.For<IFandomService>();
         _currentUserContext = Substitute.For<ICurrentUserContext>();
 
         _dateService.Now.Returns(DateTime.Now);
@@ -96,7 +98,7 @@ public class UpdateStoriesCommandProcessorTests
                 _site2
             }.FirstOrDefault(__ => __.Id == _.Arg<Guid>())));
 
-        _processor = new(_logger, _repository, _dateService, _notificationHub, services.BuildServiceProvider());
+        _processor = new(_logger, _repository, _dateService, _notificationHub, _fandomService, services.BuildServiceProvider());
     }
 
     [TestMethod]

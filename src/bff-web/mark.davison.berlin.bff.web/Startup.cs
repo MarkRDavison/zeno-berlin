@@ -92,12 +92,17 @@ public class Startup
 
             MapProxyCQRSGet(endpoints, "/api/startup-query");
             MapProxyCQRSGet(endpoints, "/api/story-list-query");
+            MapProxyCQRSGet(endpoints, "/api/fandom-list-query");
+            MapProxyCQRSGet(endpoints, "/api/dashboard-list-query");
+            MapProxyCQRSGet(endpoints, "/api/manage-story-query");
+
             MapProxyCQRSPost(endpoints, "/api/add-story-command");
             MapProxyCQRSPost(endpoints, "/api/edit-story-command");
             MapProxyCQRSPost(endpoints, "/api/delete-story-command");
             MapProxyCQRSPost(endpoints, "/api/update-stories-command");
             MapProxyCQRSPost(endpoints, "/api/import-command");
             MapProxyCQRSPost(endpoints, "/api/export-command");
+            MapProxyCQRSPost(endpoints, "/api/edit-fandom-command");
         });
     }
 

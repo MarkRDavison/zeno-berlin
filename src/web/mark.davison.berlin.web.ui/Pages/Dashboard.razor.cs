@@ -1,15 +1,18 @@
-﻿namespace mark.davison.berlin.web.ui.Pages;
+﻿using mark.davison.berlin.web.features.Store.DashboardListUseCase;
+
+namespace mark.davison.berlin.web.ui.Pages;
 
 public partial class Dashboard
 {
+    // TODO: This needs to be replaced with Dashboard state???
     [Inject]
-    public required IState<StoryListState> StoryListState { get; set; }
+    public required IState<DashboardListState> DashboardListState { get; set; }
 
     [Inject]
     public required IDialogService _dialogService { get; set; }
 
     [Inject]
-    public required IDispatcher Dispatcher { get; set; }
+    public required IStoreHelper StoreHelper { get; set; }
 
     [Inject]
     public required IClientNavigationManager ClientNavigationManager { get; set; }
@@ -17,9 +20,9 @@ public partial class Dashboard
     private readonly List<Guid> _storyIds = new();
     private bool _loaded;
 
-    private IEnumerable<StoryDto> _stories => _storyIds
-        .Select(_ => StoryListState.Value.Stories.FirstOrDefault(s => s.Id == _))
-        .OfType<StoryDto>();
+    private IEnumerable<DashboardTileDto> _tiles => _storyIds
+        .Select(_ => DashboardListState.Value.Entities.FirstOrDefault(s => s.StoryId == _))
+        .OfType<DashboardTileDto>();
 
     protected override async Task OnInitializedAsync() // TODO: Framework class for these helpers??? base class???
     {
@@ -28,37 +31,46 @@ public partial class Dashboard
 
     protected override async Task OnParametersSetAsync()
     {
-        await Task.CompletedTask;// TODO: Throttle state fetch EnsureStateLoaded(false);
+        await EnsureStateLoaded(false);
     }
 
     // TODO: ORRRRRRR Should there be something like, when changing the favourite flag, have 2 fields, one is actual up to date, one is what we sort on and gets synced on init?
     protected override void OnAfterRender(bool firstRender)
     {
-        if (!_loaded && !StoryListState.Value.IsLoading)
+        if (!_loaded && !DashboardListState.Value.IsLoading)
         {
             _loaded = true;
 
-            var orderedStories = StoryListState.Value.Stories
+            var orderedStories = DashboardListState.Value.Entities
                 .OrderByDescending(_ => _.Favourite)
                 .ThenByDescending(_ => _.LastAuthored)
                 .ThenByDescending(_ => _.LastChecked)
                 .ToList();
 
             _storyIds.Clear();
-            _storyIds.AddRange(orderedStories.Select(_ => _.Id));
+            _storyIds.AddRange(orderedStories.Select(_ => _.StoryId));
             InvokeAsync(StateHasChanged);
         }
     }
 
     private async Task EnsureStateLoaded(bool force)
     {
-        // TODO: state helper to throttle
-        await Task.CompletedTask;
-        if (force || !StoryListState.Value.Stories.Any())
+        var action = new FetchDashboardListAction();
+        if (force)
         {
-            Dispatcher.Dispatch(new FetchStoryListAction { Force = force });
+            using (StoreHelper.Force())
+            {
+                await StoreHelper.DispatchWithThrottleAndWaitForResponse<
+                    FetchDashboardListAction,
+                    FetchDashboardListActionResponse>(DashboardListState.Value.LastLoaded, action);
+            }
         }
-        // TODO: awaiter for when the state has actually been updated???
+        else
+        {
+            await StoreHelper.DispatchWithThrottleAndWaitForResponse<
+                FetchDashboardListAction,
+                FetchDashboardListActionResponse>(DashboardListState.Value.LastLoaded, action);
+        }
     }
 
     internal async Task OpenAddStoryModal()
@@ -92,7 +104,7 @@ public partial class Dashboard
     {
         _propagationStopper = true;
 
-        Dispatcher.Dispatch(new SetFavouriteStoryListAction
+        StoreHelper.Dispatch(new SetFavouriteStoryListAction
         {
             StoryId = storyId,
             IsFavourite = set
@@ -110,17 +122,17 @@ public partial class Dashboard
         ClientNavigationManager.NavigateTo(RouteHelpers.Story(storyId));
     }
 
-    private string StoryCardChapterText(StoryDto story)
+    private string StoryCardChapterText(DashboardTileDto tile)
     {
-        return $"Chapters: {story.CurrentChapters}/{(story.TotalChapters?.ToString() ?? "?")}";
+        return $"Chapters: {tile.CurrentChapters}/{(tile.TotalChapters?.ToString() ?? "?")}";
     }
-    private string StoryCardUpdatedText(StoryDto story)
+    private string StoryCardUpdatedText(DashboardTileDto tile)
     {
-        var humanised = story.LastAuthored.Humanize(dateToCompareAgainst: DateOnly.FromDateTime(DateTime.Today));
+        var humanised = tile.LastAuthored.Humanize(dateToCompareAgainst: DateOnly.FromDateTime(DateTime.Today));
         return $"Updated {(humanised == "now" ? "today" : humanised)}";
     }
-    private string StoryCardCheckedText(StoryDto story)
+    private string StoryCardCheckedText(DashboardTileDto tile)
     {
-        return $"Checked {story.LastChecked.Humanize(dateToCompareAgainst: DateTime.Now)}";
+        return $"Checked {tile.LastChecked.Humanize(dateToCompareAgainst: DateTime.Now)}";
     }
 }

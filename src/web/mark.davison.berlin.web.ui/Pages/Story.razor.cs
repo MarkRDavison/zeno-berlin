@@ -1,4 +1,7 @@
-﻿namespace mark.davison.berlin.web.ui.Pages;
+﻿using mark.davison.berlin.web.features.Store.FandomListUseCase;
+using mark.davison.berlin.web.features.Store.ManageStoryUseCase;
+
+namespace mark.davison.berlin.web.ui.Pages;
 
 public partial class Story
 {
@@ -7,7 +10,10 @@ public partial class Story
     public required Guid Id { get; set; }
 
     [Inject]
-    public required IState<StoryListState> StoryListState { get; set; }
+    public required IState<ManageStoryState> ManageStoryState { get; set; }
+
+    [Inject]
+    public required IState<FandomListState> FandomListState { get; set; }
 
     [Inject]
     public required IDispatcher Dispatcher { get; set; }
@@ -21,7 +27,19 @@ public partial class Story
     [Inject]
     public required IActionSubscriber ActionSubscriber { get; set; }
 
-    public StoryDto CurrentStory => StoryListState.Value.Stories.First(_ => _.Id == Id);
+    public StoryManageDto Data => ManageStoryState.Value.Data;
+
+    protected override void OnParametersSet()
+    {
+        if (Id != default && !ManageStoryState.Value.IsLoading && Data.StoryId != Id)
+        {
+            Dispatcher.Dispatch(new FetchManageStoryAction
+            {
+                StoryId = Id
+            });
+        }
+    }
+
     private void FavouriteClick(bool set)
     {
         Dispatcher.Dispatch(new SetFavouriteStoryListAction
@@ -43,7 +61,7 @@ public partial class Story
         var param = new DialogParameters<ConfirmationDialog>
         {
             { _ => _.PrimaryText, "Delete" },
-            { _ => _.Body, $"Are you sure you wish to delete {CurrentStory.Name}?" },
+            { _ => _.Body, $"Are you sure you wish to delete {Data.Name}?" },
             { _ => _.Color, Color.Error },
             { _ => _.PrimaryCallback, DeleteStory }
         };
@@ -130,6 +148,16 @@ public partial class Story
         await InvokeAsync(StateHasChanged);
     }
 
-    private string _lastCheckedText => $"Last checked {CurrentStory.LastChecked.Humanize()}";
-    private string _chaptersText => $"Chapters: {CurrentStory.CurrentChapters}/{(CurrentStory.TotalChapters?.ToString() ?? "?")}";
+    private string GetFandomName(Guid fandomId)
+    {
+        var fandom = FandomListState.Value.Entities.FirstOrDefault(_ => _.FandomId == fandomId);
+
+        return fandom?.Name ?? string.Empty;
+    }
+
+    private string _lastCheckedText => $"Last checked {Data.LastChecked.Humanize()}";
+    private string _lastAuthoredText => $"Last authored {Data.LastAuthored.Humanize()}";
+    private string _chaptersText => $"Chapters: {Data.CurrentChapters}/{(Data.TotalChapters?.ToString() ?? "?")}";
+
+    private string UpdateChapterText(StoryManageUpdatesDto update) => $"{update.CurrentChapters}/{(update.TotalChapters?.ToString() ?? "?")}";
 }

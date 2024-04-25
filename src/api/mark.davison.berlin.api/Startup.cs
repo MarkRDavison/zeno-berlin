@@ -70,6 +70,7 @@ public class Startup
             .UseBerlinLogic()
             .UseBerlinCommands()
             .UseSharedServices()
+            .UseSharedServerServices()
             .UseRateLimiter()
             .UseNotificationHub()
             .UseMatrixClient()

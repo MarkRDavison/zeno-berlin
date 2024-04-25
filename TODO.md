@@ -51,3 +51,23 @@ Story
  - Some concept of marking where you last were at??? So like opt in and say you've read up to chapter X, then when there are new updates it tells you how many you have to read, you can then set a new value/mark it read up to current etc???
 	- 
 Importing needs to be an async job
+
+Date time local vs utc
+
+Stories that update multiple times at once?
+ - Manually add missing updates so if chapter 22&23 at once, add  both updates at 23's update date.  But only notify of 23 and say 2! new chapters???
+
+***
+## Next
+ - Limit the dashboard to X stories
+ - Add Stories page to view ALL
+ - A way to add the update type to the stories, maybe on add as well as manage
+ - DEPLOY TO K8S
+
+## MISC
+
+Queries need to use ValidateAndProcessQueryHandler???
+
+## BUGS
+
+UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol out???

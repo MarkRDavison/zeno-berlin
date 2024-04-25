@@ -9,6 +9,8 @@ public static class DependencyInjectionExtensions
             .UseBerlinComponents()
             .AddSingleton<IAuthenticationConfig>(authConfig)
             .AddSingleton<IAuthenticationContext, AuthenticationContext>()
+            .AddSingleton<IDateService>(_ => new DateService(DateService.DateMode.Local))
+            .AddScoped<IStoreHelper, StoreHelper>()
             .AddFluxor(_ => _.ScanAssemblies(typeof(Program).Assembly, typeof(FeaturesRootType).Assembly))
             .AddSingleton<IClientNavigationManager, ClientNavigationManager>()
             .AddSingleton<IClientHttpRepository>(_ => new BerlinClientHttpRepository(
@@ -18,8 +20,6 @@ public static class DependencyInjectionExtensions
             .UseClientCQRS(typeof(Program), typeof(FeaturesRootType))
             .AddHttpClient(WebConstants.ApiClientName)
             .AddHttpMessageHandler(_ => new CookieHandler());
-
-        services.AddTransient<IFormSubmission<AddStoryFormViewModel>, AddStoryFormSubmission>();
 
         return services;
     }

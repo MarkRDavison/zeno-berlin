@@ -79,6 +79,10 @@ public class Ao3StoryInfoProcessorTests
         Assert.AreEqual(new DateOnly(2023, 5, 16), storyInfo.Published);
         Assert.AreEqual(new DateOnly(2024, 2, 11), storyInfo.Updated);
         Assert.IsNull(storyInfo.TotalChapters);
+        Assert.AreEqual(3, storyInfo.Fandoms.Count);
+        Assert.IsTrue(storyInfo.Fandoms.Contains("Harry Potter - J. K. Rowling"));
+        Assert.IsTrue(storyInfo.Fandoms.Contains("Star Wars Legends: New Jedi Order Series - Various Authors"));
+        Assert.IsTrue(storyInfo.Fandoms.Contains("Star Wars - All Media Types"));
 
         await _rateLimitService
             .Received(1)

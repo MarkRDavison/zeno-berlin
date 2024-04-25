@@ -2,7 +2,6 @@
 
 public class FetchStoryListAction : BaseAction
 {
-    public bool Force { get; set; }
     // TODO: Query params???
 }
 

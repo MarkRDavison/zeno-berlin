@@ -125,6 +125,12 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
             throw new InvalidDataException("Could not extract updated date");
         }
 
+        var fandoms = document.GetElementsByClassName("fandom tags")
+            .SelectMany(_ => _.Children)
+            .SelectMany(_ => _.GetElementsByTagName("a"))
+            .Select(_ => _.InnerHtml)
+            .Distinct()
+            .ToList();
 
         return new StoryInfoModel
         {
@@ -133,7 +139,8 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
             CurrentChapters = currentChapters,
             TotalChapters = totalChapters,
             Published = published,
-            Updated = updated
+            Updated = updated,
+            Fandoms = fandoms
         };
     }
 

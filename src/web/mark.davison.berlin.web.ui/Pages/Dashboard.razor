@@ -4,7 +4,8 @@
 <MudStack Class="pa-4">
     <MudStack Row AlignItems="AlignItems.End">
         <MudSpacer />
-        @if (!StoryListState.Value.IsLoading) {
+        @if (!DashboardListState.Value.IsLoading)
+        {
             <MudButton 
                 ButtonType="ButtonType.Submit" 
                 Color="Color.Primary" 
@@ -17,45 +18,49 @@
         }
     </MudStack>
 
-    @if (StoryListState.Value.IsLoading)
+    @if (DashboardListState.Value.IsLoading)
     {
         <MudProgressCircular Size="Size.Large" Class="ma-auto" Indeterminate />
     }
     else
     {
         <MudGrid>
-            @if (!_stories.Any())
+            @if (!_tiles.Any())
             {
                 <MudText Typo="Typo.h5">Nothing here, add some stories</MudText>
             }
             else 
             {
-                @foreach (var story in _stories) 
+                @foreach (var tile in _tiles) 
                 {
                     <MudItem xs="12" sm="6" md="4" lg="3">
-                        <MudPaper Class="story-card pa-2" @onclick="() => CardClick(story.Id)">
+                        <MudPaper Class="story-card pa-2" @onclick="() => CardClick(tile.StoryId)">
                             <MudStack Row Class="fill-height">
-                                @if (story.Temporary)
+                                @if (tile.Temporary)
                                 {
                                     <MudProgressCircular Class="ma-auto" Indeterminate />
                                 }
                                 else
                                 {
                                     <MudStack Justify="Justify.FlexStart">
-                                        <MudText Class="story-card-name" Typo="Typo.h5">@story.Name</MudText>
+                                        <MudText Class="story-card-name" Typo="Typo.h5">@tile.Name</MudText>
                                         <MudSpacer />
-                                        <MudText Typo="Typo.body1">@StoryCardChapterText(story)</MudText>
-                                        <MudText Typo="Typo.body1">@StoryCardUpdatedText(story)</MudText>
-                                        <MudText Typo="Typo.body1">@StoryCardCheckedText(story)</MudText>
+                                        @foreach (var fandom in tile.Fandoms)
+                                        {
+                                            <span>@fandom</span>
+                                        }
+                                        <MudText Typo="Typo.body1">@StoryCardChapterText(tile)</MudText>
+                                        <MudText Typo="Typo.body1">@StoryCardUpdatedText(tile)</MudText>
+                                        <MudText Typo="Typo.body1">@StoryCardCheckedText(tile)</MudText>
                                     </MudStack>
                                     <div class="float-right mr-2 favourite-container">
-                                        @if (story.Favourite)
+                                        @if (tile.Favourite)
                                         {
-                                            <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" @onclick="() => MudIconClick(story.Id, false)" />
+                                            <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" @onclick="() => MudIconClick(tile.StoryId, false)" />
                                         }
                                         else
                                         {
-                                            <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" @onclick="() => MudIconClick(story.Id, true)" />
+                                            <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" @onclick="() => MudIconClick(tile.StoryId, true)" />
                                         }
                                     </div>
                                 }

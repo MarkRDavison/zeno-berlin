@@ -1,19 +1,24 @@
-﻿namespace mark.davison.berlin.shared.commands.Scenarios.AddStory;
+﻿using mark.davison.shared.server.services.Helpers;
+
+namespace mark.davison.berlin.shared.commands.Scenarios.AddStory;
 
 public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest, AddStoryCommandResponse>
 {
     private readonly IDateService _dateService;
     private readonly IValidationContext _validationContext;
-    protected readonly IServiceProvider _serviceProvider;
+    private readonly IFandomService _fandomService;
+    private readonly IServiceProvider _serviceProvider;
 
     public AddStoryCommandProcessor(
         IDateService dateService,
         IValidationContext validationContext,
+        IFandomService fandomService,
         IServiceProvider serviceProvider
     )
     {
         _dateService = dateService;
         _validationContext = validationContext;
+        _fandomService = fandomService;
         _serviceProvider = serviceProvider;
     }
 
@@ -30,9 +35,12 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
 
             var info = await infoProcessor.ExtractStoryInfo(request.StoryAddress, cancellationToken);
 
+            var fandoms = await _fandomService.GetOrCreateFandomsByExternalNames(info.Fandoms, cancellationToken);
+
+            var storyId = Guid.NewGuid();
             var story = new Story
             {
-                Id = Guid.NewGuid(),
+                Id = storyId,
                 Address = infoProcessor.GenerateBaseStoryAddress(request.StoryAddress),
                 ExternalId = externalId,
                 SiteId = site.Id,
@@ -45,7 +53,8 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
                 LastChecked = _dateService.Now,
                 LastModified = _dateService.Now,
                 LastAuthored = info.Updated,
-                Favourite = request.Favourite
+                Favourite = request.Favourite,
+                StoryFandomLinks = [.. fandoms.Select(_ => CreateStoryFandomLink(storyId, _.Id, currentUserContext.CurrentUser.Id))]
             };
 
             var storyUpdate = new StoryUpdate
@@ -72,5 +81,17 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
                 Value = story.ToDto()
             };
         }
+    }
+
+    // TODO: Duplicate
+    private static StoryFandomLink CreateStoryFandomLink(Guid storyId, Guid fandomId, Guid userId)
+    {
+        return new StoryFandomLink
+        {
+            Id = Guid.NewGuid(),
+            StoryId = storyId,
+            FandomId = fandomId,
+            UserId = userId
+        };
     }
 }

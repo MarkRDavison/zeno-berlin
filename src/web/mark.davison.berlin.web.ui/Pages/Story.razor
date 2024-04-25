@@ -1,16 +1,18 @@
 ﻿@attribute [Route(Routes.Story)]
+@inherits FluxorComponent
 
-@if (StoryListState.Value.IsLoading)
+@if (ManageStoryState.Value.IsLoading)
 {
     @*TODO: Framework activity monitor loading thingy*@
+    <MudProgressCircular Indeterminate />
 }
 else 
 {
     <MudStack>
         <MudStack Row AlignItems="AlignItems.End" Class="d-flex align-center">
-            <MudText Typo="Typo.h5">@CurrentStory.Name</MudText>
+            <MudText Typo="Typo.h5">@Data.Name</MudText>
             <div class="float-right favourite-container-visible">
-                @if (CurrentStory.Favourite)
+                @if (Data.Favourite)
                 {
                     <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" onclick="@(() => FavouriteClick(false))" />
                 }
@@ -40,5 +42,35 @@ else
         </MudStack>
 
         <MudText Typo="Typo.body1">@_chaptersText</MudText>
+        <MudText Typo="Typo.body1">@_lastAuthoredText</MudText>
+        <MudDivider />
+        @if (!FandomListState.Value.IsLoading)
+        {
+        <MudStack>
+            <span>TODO: Slider/toggle to show actual/hidden vs display???</span>
+            <ul>
+            @foreach (var fandomId in Data.FandomIds)
+            {
+                <li><MudLink Href="@RouteHelpers.Fandom(fandomId)" Typo="Typo.body1">@GetFandomName(fandomId)</MudLink></li>
+            }
+            </ul>
+        </MudStack>
+        }
+        <MudDivider />
+        <MudStack>
+            <MudText Typo="Typo.body1">Updates</MudText>
+            <MudTable Items="@Data.Updates" Hover Breakpoint="Breakpoint.Sm" Loading="@FandomListState.Value.IsLoading">
+                <HeaderContent>
+                    <MudTh>Chapters</MudTh>
+                    <MudTh>Last authored</MudTh>
+                    <MudTh>Checked</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Chapters">@UpdateChapterText(context)</MudTd>
+                    <MudTd DataLabel="Chapters">@context.LastAuthored.Humanize()</MudTd>
+                    <MudTd DataLabel="Chapters">@context.LastChecked.Humanize()</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudStack>
     </MudStack>
 }

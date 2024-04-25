@@ -11,6 +11,7 @@ public static class DependencyInjectionExtensions
         services.AddTransient<ICommandProcessor<ExportCommandRequest, ExportCommandResponse>, ExportCommandProcessor>();
         services.AddTransient<ICommandProcessor<ImportCommandRequest, ImportCommandResponse>, ImportCommandProcessor>();
         services.AddTransient<ICommandValidator<ImportCommandRequest, ImportCommandResponse>, ImportCommandValidator>();
+        services.AddTransient<ICommandProcessor<EditFandomCommandRequest, EditFandomCommandResponse>, EditFandomCommandProcessor>();
         return services;
     }
 }

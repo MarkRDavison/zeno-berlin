@@ -1,8 +1,16 @@
 ﻿global using Fluxor;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddStory;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.DeleteStory;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.EditStory;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.UpdateStories;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.DashboardList;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.FandomList;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.ManageStory;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.StoryList;
 global using mark.davison.berlin.shared.models.dtos.Shared;
+global using mark.davison.common.Changeset;
 global using mark.davison.common.client.abstractions.Repository;
 global using mark.davison.common.CQRS;
+global using mark.davison.common.Services;
 global using System.Collections.ObjectModel;
+global using System.Diagnostics.CodeAnalysis;

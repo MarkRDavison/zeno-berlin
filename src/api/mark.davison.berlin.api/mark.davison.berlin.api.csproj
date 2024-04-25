@@ -18,6 +18,7 @@
     <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.commands\mark.davison.berlin.shared.commands.csproj" />
     <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.constants\mark.davison.berlin.shared.constants.csproj" />
     <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.queries\mark.davison.berlin.shared.queries.csproj" />
+    <ProjectReference Include="..\..\shared\mark.davison.shared.server.services\mark.davison.shared.server.services.csproj" />
     <ProjectReference Include="..\mark.davison.berlin.api.persistence\mark.davison.berlin.api.persistence.csproj" />
     <ProjectReference Include="..\migrations\mark.davison.berlin.api.migrations.postgres\mark.davison.berlin.api.migrations.postgres.csproj" />
     <ProjectReference Include="..\migrations\mark.davison.berlin.api.migrations.sqlite\mark.davison.berlin.api.migrations.sqlite.csproj" />

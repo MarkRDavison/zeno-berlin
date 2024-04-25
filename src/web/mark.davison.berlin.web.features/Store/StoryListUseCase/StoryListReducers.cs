@@ -7,7 +7,8 @@ public static class StoryListReducers
     {
         return new StoryListState(
             true,
-            state.Stories);
+            state.Stories,
+            state.LastLoaded);
     }
 
     [ReducerMethod]
@@ -22,10 +23,10 @@ public static class StoryListReducers
                 stories.Add(existingStory.Id, existingStory);
             }
 
-            return new StoryListState(false, stories.Values);
+            return new StoryListState(false, stories.Values, DateTime.Now); // TODO: IDateService.Now???
         }
 
-        return new StoryListState(false, state.Stories);
+        return new StoryListState(false, state.Stories, DateTime.Now);
     }
 
     [ReducerMethod]
@@ -41,7 +42,8 @@ public static class StoryListReducers
                     Address = action.StoryAddress,
                     Temporary = true
                 }
-            ]);
+            ],
+            state.LastLoaded);
     }
 
     [ReducerMethod]
@@ -54,14 +56,16 @@ public static class StoryListReducers
                 [
                     .. state.Stories.Where(_ => _.Id != action.ActionId),
                     action.Value
-                ]);
+                ],
+            state.LastLoaded);
         }
 
         return new StoryListState(
             state.IsLoading,
             [
                 .. state.Stories.Where(_ => _.Id != action.ActionId)
-            ]);
+            ],
+            state.LastLoaded);
     }
 
     [ReducerMethod]
@@ -76,7 +80,8 @@ public static class StoryListReducers
 
         return new StoryListState(
             state.IsLoading,
-            state.Stories);
+            state.Stories,
+            state.LastLoaded);
     }
 
     [ReducerMethod]
@@ -86,7 +91,8 @@ public static class StoryListReducers
         {
             return new StoryListState(
                 state.IsLoading,
-                [.. state.Stories.Where(_ => _.Id != response.Value.DeletedStoryId)]);
+                [.. state.Stories.Where(_ => _.Id != response.Value.DeletedStoryId)],
+            state.LastLoaded);
         }
         else
         {
@@ -98,7 +104,8 @@ public static class StoryListReducers
 
             return new StoryListState(
                 state.IsLoading,
-                state.Stories);
+                state.Stories,
+            state.LastLoaded);
         }
     }
 
@@ -114,7 +121,8 @@ public static class StoryListReducers
 
         return new StoryListState(
             state.IsLoading,
-            state.Stories);
+            state.Stories,
+            state.LastLoaded);
     }
 
     [ReducerMethod]
@@ -124,12 +132,14 @@ public static class StoryListReducers
         {
             return new StoryListState(
                 state.IsLoading,
-                [.. state.Stories.Where(_ => _.Id != response.Value.Id), response.Value]);
+                [.. state.Stories.Where(_ => _.Id != response.Value.Id), response.Value],
+            state.LastLoaded);
         }
 
         return new StoryListState(
             state.IsLoading,
-            state.Stories);
+            state.Stories,
+            state.LastLoaded);
     }
 
     [ReducerMethod]
@@ -142,7 +152,8 @@ public static class StoryListReducers
         {
             return new StoryListState(
             state.IsLoading,
-            [.. state.Stories.Where(_ => _.Id != response.Value.Id), response.Value]);
+            [.. state.Stories.Where(_ => _.Id != response.Value.Id), response.Value],
+            state.LastLoaded);
         }
 
         return state;

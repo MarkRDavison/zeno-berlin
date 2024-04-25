@@ -15,6 +15,8 @@ public class Story : BerlinEntity
     public Guid SiteId { get; set; }
     public Guid UpdateTypeId { get; set; }
 
+    public ICollection<StoryFandomLink> StoryFandomLinks { get; set; } = [];
+
     public virtual Site? Site { get; set; }
     public virtual UpdateType? UpdateType { get; set; }
 

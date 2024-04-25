@@ -1,0 +1,49 @@
+﻿@attribute [Route(Routes.Fandom)]
+@inherits FluxorComponent
+
+@if (FandomListState.Value.IsLoading)
+{
+    @*TODO: Framework activity monitor loading thingy*@
+    <MudProgressCircular Indeterminate />
+}
+else {
+<MudStack>
+    <MudStack Row AlignItems="AlignItems.End" Class="d-flex align-center">
+        <MudText Typo="Typo.h5">@Data?.Name</MudText>
+        <MudSpacer />
+        <MudButton 
+            ButtonType="ButtonType.Submit" 
+            Color="Color.Primary" 
+            StartIcon="@Icons.Material.Filled.Edit" 
+            Variant="Variant.Filled" 
+            Size="Size.Large" 
+            Disabled="false"
+            IconSize="Size.Large"
+            OnClick="@OpenEditFandomModal">Edit</MudButton>
+    </MudStack>
+    @if (Data.Name != Data.ExternalName)
+    {
+        <MudText Typo="Typo.subtitle1">@Data?.ExternalName</MudText>
+    }
+    <MudDivider />
+    @if (Parent != null)
+    {
+        <MudText Typo="Typo.subtitle1">@Parent?.Name</MudText>
+    }
+    else
+    {
+        <MudText Typo="Typo.subtitle1">TODO: Dropdown to select/search for a parent</MudText>
+    }
+    @if (Children.Any())        
+    {
+        <MudDivider />
+        <MudStack>
+        <MudText Typo="Typo.subtitle1">Children</MudText>
+        @foreach (var child in Children)
+        {
+            <MudLink Href="@RouteHelpers.Fandom(child.FandomId)" Typo="Typo.body1">@child.Name</MudLink>
+        }
+        </MudStack>
+    }
+</MudStack>
+}

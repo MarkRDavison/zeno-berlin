@@ -1,8 +1,4 @@
-﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.Import;
-using mark.davison.berlin.shared.models.dtos.Shared;
-using mark.davison.berlin.web.components.CommonCandidates.FileUpload;
-
-namespace mark.davison.berlin.web.components.Pages.Settings.User;
+﻿namespace mark.davison.berlin.web.components.Pages.Settings.User;
 
 public partial class UserSettingsPage
 {
@@ -87,7 +83,14 @@ public partial class UserSettingsPage
 
         if (response.Success)
         {
-            Snackbar.Add($"Imported {response.Imported} stories", Severity.Success);
+            if (response.Imported == 0)
+            {
+                Snackbar.Add("No new stories imported", Severity.Normal);
+            }
+            else
+            {
+                Snackbar.Add($"Imported {response.Imported} stories", Severity.Success);
+            }
         }
 
         return response;

@@ -8,4 +8,5 @@ public class StoryInfoModel
     public int? TotalChapters { get; set; }
     public DateOnly Published { get; set; }
     public DateOnly Updated { get; set; }
+    public List<string> Fandoms { get; set; } = [];
 }
