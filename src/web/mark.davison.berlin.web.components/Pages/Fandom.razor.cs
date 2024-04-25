@@ -1,6 +1,4 @@
-﻿using mark.davison.berlin.web.features.Store.FandomListUseCase;
-
-namespace mark.davison.berlin.web.components.Pages;
+﻿namespace mark.davison.berlin.web.components.Pages;
 
 public partial class Fandom
 {
@@ -31,7 +29,14 @@ public partial class Fandom
         var param = new DialogParameters<Modal<ModalViewModel<EditFandomFormViewModel, EditFandomForm>, EditFandomFormViewModel, EditFandomForm>>
         {
             { _ => _.PrimaryText, "Save" },
-            { _ => _.Instance, new EditFandomFormViewModel{ Name = Data.Name, IsHidden = Data.IsHidden, FandomId = Id } }
+            { _ => _.Instance, new EditFandomFormViewModel
+                {
+                    Name = Data.Name,
+                    IsHidden = Data.IsHidden,
+                    FandomId = Id,
+                    Fandoms = FandomListState.Value.Entities.Where(_ => _.FandomId != Id && _.ParentFandomId != Id).ToList()
+                }
+            }
         };
 
         var dialog = _dialogService.Show<Modal<ModalViewModel<EditFandomFormViewModel, EditFandomForm>, EditFandomFormViewModel, EditFandomForm>>("EditFandom", param, options);

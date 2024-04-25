@@ -7,8 +7,7 @@ public class AddStoryCommandHandler : ValidateAndProcessCommandHandler<AddStoryC
         ICommandValidator<AddStoryCommandRequest, AddStoryCommandResponse> validator
     ) : base(
         processor,
-        validator
-    )
+        validator)
     {
     }
 }

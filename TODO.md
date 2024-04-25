@@ -41,12 +41,13 @@ Edit site wide settings, all admins see the same
 #### Description/stats???
 Some random anonymous/landing page so you can be on the site and not immediately get redirected to auth????
 
+
+***
+***
+***
+
 ## Misc
 Series, ao3 concept does ffnet have it? maybe if site doesnt support it you can manually add them??
-Fandom
- - a way to manage this?
- - some stories have like 50, maybe a management page per user/site???
-	- Each fandom can have a parent associated, so 'Star Wars - All Media Types', 'Star Wars: Rebels' etc all are summarized as Star Wars? What about cross overs???
 Story
  - Some concept of marking where you last were at??? So like opt in and say you've read up to chapter X, then when there are new updates it tells you how many you have to read, you can then set a new value/mark it read up to current etc???
 	- 
@@ -63,11 +64,24 @@ Stories that update multiple times at once?
  - Add Stories page to view ALL
  - A way to add the update type to the stories, maybe on add as well as manage
  - DEPLOY TO K8S
+ - Authors
 
 ## MISC
 
 Queries need to use ValidateAndProcessQueryHandler???
+Method for a fandom to be auto assigned as a parent for a new fandom? Wildcard/rules etc
+
 
 ## BUGS
 
+Duplicated fandoms
+ - FandomService.RetrieveFandomByExternalName may be failing when running in a batch???
+   - Use Cache instead???
 UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol out???
+
+## DONE
+
+Fandom
+ - a way to manage this?
+ - some stories have like 50, maybe a management page per user/site???
+	- Each fandom can have a parent associated, so 'Star Wars - All Media Types', 'Star Wars: Rebels' etc all are summarized as Star Wars? What about cross overs???

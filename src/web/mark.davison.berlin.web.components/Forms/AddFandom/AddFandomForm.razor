@@ -1,0 +1,26 @@
+﻿@inherits Form<AddFandomFormViewModel>
+
+<MudForm>
+    <MudTextField 
+        id="edit-fandom-form-name"
+        T="string"
+        Label="Name" @bind-Text="FormViewModel.Name"
+        For=@(() => FormViewModel.Name)
+        Immediate />
+    <MudCheckBox 
+        id="edit-fandom-for-hidden"
+        T="bool"
+        Label="Hidden"
+        LabelPosition="LabelPosition.End"
+        @bind-Value="FormViewModel.IsHidden"
+        For=@(() => FormViewModel.IsHidden) />
+    <MudAutocomplete 
+        T="Guid?"
+        Label="Parent fandom"
+        Placeholder="Enter text to search..."
+        @bind-Value="FormViewModel.ParentFandomId"
+        For=@(() => FormViewModel.ParentFandomId)
+        SearchFunc="@FormViewModel.Search"
+        ToStringFunc="@FormViewModel.FandomIdToString">
+    </MudAutocomplete>
+</MudForm>

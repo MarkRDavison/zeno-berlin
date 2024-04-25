@@ -5,6 +5,7 @@ public class FandomService : IFandomService
     private readonly IRepository _repository;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly ILogger<FandomService> _logger;
+    private readonly IDictionary<string, Fandom> _createdFandoms;
 
     public FandomService(
         IRepository repository,
@@ -14,6 +15,7 @@ public class FandomService : IFandomService
         _repository = repository;
         _currentUserContext = currentUserContext;
         _logger = logger;
+        _createdFandoms = new Dictionary<string, Fandom>();
     }
 
     public async Task<List<Fandom>> GetOrCreateFandomsByExternalNames(List<string> externalNames, CancellationToken cancellationToken)
@@ -37,6 +39,8 @@ public class FandomService : IFandomService
                     ParentFandomId = null
                 };
 
+                _createdFandoms.Add(externalName, fandom);
+
                 fandom = await _repository.UpsertEntityAsync(fandom, cancellationToken);
             }
 
@@ -53,6 +57,11 @@ public class FandomService : IFandomService
     }
     public async Task<Fandom?> RetrieveFandomByExternalName(string externalName, CancellationToken cancellationToken)
     {
+        if (_createdFandoms.TryGetValue(externalName, out var fandom))
+        {
+            return fandom;
+        }
+
         // TODO: Cache... make a common thing or use validation context???
         return await _repository.GetEntityAsync<Fandom>(
             _ =>

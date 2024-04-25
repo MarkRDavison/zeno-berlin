@@ -43,4 +43,18 @@ public static class FandomListReducers
 
         return state;
     }
+
+    [ReducerMethod]
+    public static FandomListState AddFandomListActionResponse(FandomListState state, AddFandomListActionResponse response)
+    {
+
+        if (response.SuccessWithValue)
+        {
+            return new FandomListState(
+                state.IsLoading,
+                [.. state.Entities.Where(_ => _.FandomId != response.Value.FandomId), response.Value]);
+        }
+
+        return state;
+    }
 }

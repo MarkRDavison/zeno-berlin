@@ -1,12 +1,12 @@
-﻿namespace mark.davison.berlin.web.components.Forms.EditFandom;
+﻿namespace mark.davison.berlin.web.components.Forms.AddFandom;
 
-public class EditFandomFormViewModel : IFormViewModel
+public class AddFandomFormViewModel : IFormViewModel
 {
     public string Name { get; set; } = string.Empty;
     public bool IsHidden { get; set; }
-    public Guid FandomId { get; set; }
     public Guid? ParentFandomId { get; set; }
     public List<FandomDto> Fandoms { get; set; } = [];
+
     // TODO: Duplicate
     public Task<IEnumerable<Guid?>> Search(string text)
     {

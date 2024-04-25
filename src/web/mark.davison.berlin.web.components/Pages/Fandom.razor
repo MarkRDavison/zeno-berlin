@@ -26,14 +26,7 @@ else {
         <MudText Typo="Typo.subtitle1">@Data?.ExternalName</MudText>
     }
     <MudDivider />
-    @if (Parent != null)
-    {
-        <MudText Typo="Typo.subtitle1">@Parent?.Name</MudText>
-    }
-    else
-    {
-        <MudText Typo="Typo.subtitle1">TODO: Dropdown to select/search for a parent</MudText>
-    }
+    <MudText Typo="Typo.subtitle1">@(Parent?.Name ?? "No parent fandom selected")</MudText>
     @if (Children.Any())        
     {
         <MudDivider />

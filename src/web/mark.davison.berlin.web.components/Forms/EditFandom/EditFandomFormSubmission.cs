@@ -17,7 +17,8 @@ public class EditFandomFormSubmission : IFormSubmission<EditFandomFormViewModel>
         {
             FandomId = formViewModel.FandomId,
             IsHidden = formViewModel.IsHidden,
-            Name = formViewModel.Name
+            Name = formViewModel.Name,
+            ParentFandomId = formViewModel.ParentFandomId
         };
 
         return await _storeHelper.DispatchAndWaitForResponse<EditFandomListAction, EditFandomListActionResponse>(action);

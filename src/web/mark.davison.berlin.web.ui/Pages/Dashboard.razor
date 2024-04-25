@@ -45,10 +45,7 @@
                                     <MudStack Justify="Justify.FlexStart">
                                         <MudText Class="story-card-name" Typo="Typo.h5">@tile.Name</MudText>
                                         <MudSpacer />
-                                        @foreach (var fandom in tile.Fandoms)
-                                        {
-                                            <span>@fandom</span>
-                                        }
+                                        <span>@string.Join(", ", tile.Fandoms)</span>
                                         <MudText Typo="Typo.body1">@StoryCardChapterText(tile)</MudText>
                                         <MudText Typo="Typo.body1">@StoryCardUpdatedText(tile)</MudText>
                                         <MudText Typo="Typo.body1">@StoryCardCheckedText(tile)</MudText>

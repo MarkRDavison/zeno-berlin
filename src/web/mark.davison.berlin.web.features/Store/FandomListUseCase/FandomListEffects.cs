@@ -1,4 +1,5 @@
-﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.EditFandom;
+﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddFandom;
+using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.EditFandom;
 
 namespace mark.davison.berlin.web.features.Store.FandomListUseCase;
 
@@ -50,6 +51,12 @@ public class FandomListEffects
                     Name = nameof(FandomDto.IsHidden),
                     PropertyType = typeof(bool).FullName!,
                     Value = action.IsHidden
+                },
+                new DiscriminatedPropertyChangeset
+                {
+                    Name = nameof(FandomDto.ParentFandomId),
+                    PropertyType = typeof(Guid?).FullName!,
+                    Value = action.ParentFandomId
                 }
             ]
         };
@@ -75,4 +82,33 @@ public class FandomListEffects
 
         dispatcher.Dispatch(actionResponse);
     }
+
+    [EffectMethod]
+    public async Task HandleAddFandomListActionAsync(AddFandomListAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new AddFandomCommandRequest
+        {
+            Name = action.Name,
+            ExternalName = action.Name,
+            IsHidden = action.IsHidden,
+            IsUserSpecified = true,
+            ParentFandomId = action.ParentFandomId
+        };
+
+        var commandResponse = await _repository.Post<AddFandomCommandResponse, AddFandomCommandRequest>(commandRequest, CancellationToken.None);
+
+        // TODO: Create response from response, copies Errors/Warnings in common
+        var actionResponse = new AddFandomListActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            Value = commandResponse.Value
+        };
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        dispatcher.Dispatch(actionResponse);
+    }
+
 }
