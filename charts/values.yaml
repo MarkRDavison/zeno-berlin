@@ -18,7 +18,7 @@ api:
       - DATABASE__DB_PASSWORD
     public:
       BERLIN__DATABASE__DATABASE_TYPE: postgres
-      BERLIN__DATABASE__DB_DATABASE: prod-fanfic
+      BERLIN__DATABASE__DB_DATABASE: fanfic
       BERLIN__DATABASE__DB_PORT: 5432
       BERLIN__DATABASE__DB_HOST: postgres.markdavison.kiwi
       BERLIN__URL: http://0.0.0.0:50000
