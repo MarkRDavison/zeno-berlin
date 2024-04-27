@@ -7,7 +7,7 @@ api:
   replicas: 1
   name: zeno-fanfic-api
   image: ghcr.io/markrdavison/markdavison-berlin-api
-  tag: v0.0.4
+  tag: v0.0.5
   port: 50000
   ingress:
     host: fanfic-api.markdavison.kiwi
@@ -58,7 +58,7 @@ web:
   replicas: 1
   name: zeno-fanfic-web
   image: ghcr.io/markrdavison/markdavison-berlin-web
-  tag: v0.0.4
+  tag: v0.0.5
   port: 80
   ingress:
     host: fanfic.markdavison.kiwi
@@ -67,3 +67,5 @@ web:
     public:
       WEB_PORT: '80'
       BFF_BASE_URI: https://fanfic-bff.markdavison.kiwi
+bffweb:
+  tag: v0.0.5
