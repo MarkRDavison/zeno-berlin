@@ -75,7 +75,12 @@ shared action/response are public, non shared ones that are same as shared, inte
 
 ## BUGS
 
+bffroot retrieval is bad, use app settings and sed command into there???
 UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol out???
+navigating to /fandoms after initial load does not load them, so newly added stories wont have their fandoms show up till reload
+
+The stylesheet https://fanfic.markdavison.kiwi/css/berlin.min.css was not loaded because its MIME type, "text/html", is not "text/css".
+ - nginx catch all is messing with this??? but it is still loading
 
 ### DONE
 

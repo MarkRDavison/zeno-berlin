@@ -17,40 +17,27 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IClientNavigationManager, ClientNavigationManager>()
             .AddSingleton<IClientHttpRepository>(_ =>
             {
-                Console.WriteLine("Attempting to read bff value");
                 var authConfig = _.GetRequiredService<IAuthenticationConfig>();
-                Console.WriteLine("Value is: {0}", authConfig.BffBase);
                 if (authConfig.BffBase == WebConstants.LocalBffRoot)
                 {
-                    Console.WriteLine("Value is: the local one, clearing it");
                     authConfig.SetBffBase(string.Empty);
                 }
-                Console.WriteLine("Value is: {0}", authConfig.BffBase);
                 if (string.IsNullOrEmpty(authConfig.BffBase))
                 {
                     var jsRuntime = _.GetRequiredService<IJSRuntime>();
 
-                    string bffRoot;
-
-                    if (jsRuntime is IJSInProcessRuntime jsin)
+                    if (jsRuntime is IJSInProcessRuntime jsInProcessRuntime)
                     {
-                        bffRoot = jsin.Invoke<string>("GetBffUri", null);
-                    }
-                    else
-                    {
-                        var bffRootTask = jsRuntime.InvokeAsync<string>("GetBffUri", null);
 
-                        bffRoot = bffRootTask.GetAwaiter().GetResult();
-                    }
+                        string bffRoot = jsInProcessRuntime.Invoke<string>("GetBffUri", null);
 
-                    if (string.IsNullOrEmpty(bffRoot))
-                    {
-                        Console.WriteLine("Retrieved value was empty, setting to local");
-                        bffRoot = WebConstants.LocalBffRoot;
-                    }
+                        if (string.IsNullOrEmpty(bffRoot))
+                        {
+                            bffRoot = WebConstants.LocalBffRoot;
+                        }
 
-                    authConfig.SetBffBase(bffRoot);
-                    Console.WriteLine("bffRoot was null, setting it to {0}", bffRoot);
+                        authConfig.SetBffBase(bffRoot);
+                    }
                 }
 
                 return new BerlinClientHttpRepository(
