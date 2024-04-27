@@ -147,6 +147,7 @@ public class UpdateStoriesCommandProcessorTests
         _repository
             .GetEntitiesAsync<Story>(
                 Arg.Any<Expression<Func<Story, bool>>>(),
+                Arg.Any<Expression<Func<Story, object>>[]>(),
                 Arg.Any<CancellationToken>())
             .Returns(_ =>
             {
@@ -169,6 +170,7 @@ public class UpdateStoriesCommandProcessorTests
             .Received(1)
             .GetEntitiesAsync<Story>(
                 Arg.Any<Expression<Func<Story, bool>>>(),
+                Arg.Any<Expression<Func<Story, object>>[]>(),
                 Arg.Any<CancellationToken>());
     }
 
@@ -191,6 +193,7 @@ public class UpdateStoriesCommandProcessorTests
         _repository
             .GetEntitiesAsync<Story>(
                 Arg.Any<Expression<Func<Story, bool>>>(),
+                Arg.Any<Expression<Func<Story, object>>[]>(),
                 Arg.Any<CancellationToken>())
             .Returns(_ => Task.FromResult(stories));
 
@@ -234,6 +237,7 @@ public class UpdateStoriesCommandProcessorTests
         _repository
             .GetEntitiesAsync<Story>(
                 Arg.Any<Expression<Func<Story, bool>>>(),
+                Arg.Any<Expression<Func<Story, object>>[]>(),
                 Arg.Any<CancellationToken>())
             .Returns(_ => Task.FromResult<List<Story>>([_story1Site1]));
 
@@ -280,6 +284,7 @@ public class UpdateStoriesCommandProcessorTests
         _repository
             .GetEntitiesAsync<Story>(
                 Arg.Any<Expression<Func<Story, bool>>>(),
+                Arg.Any<Expression<Func<Story, object>>[]>(),
                 Arg.Any<CancellationToken>())
             .Returns(_ => Task.FromResult<List<Story>>([_story1Site1]));
 
