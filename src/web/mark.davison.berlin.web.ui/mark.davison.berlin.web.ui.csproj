@@ -4,6 +4,8 @@
 	<TargetFramework>net8.0</TargetFramework>
 	<Nullable>enable</Nullable>
 	<ImplicitUsings>enable</ImplicitUsings>
+	  <!--TODO: Remove this if not targeting earlier than ios 16.4-->
+	<WasmEnableSIMD>false</WasmEnableSIMD>
   </PropertyGroup>
 
   <ItemGroup>
