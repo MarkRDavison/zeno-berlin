@@ -14,7 +14,7 @@ public partial class AuthProvider
     protected override async Task OnInitializedAsync()
     {
         var bffRoot = await _jsRuntime.InvokeAsync<string>("GetBffUri", null);
-
+        Console.WriteLine("GetBffUri returned: {0}", bffRoot);
         if (string.IsNullOrEmpty(bffRoot))
         {
             Console.WriteLine("GetBffUri returned an empty/null value.");
