@@ -29,9 +29,19 @@ public static class DependencyInjectionExtensions
                 if (string.IsNullOrEmpty(authConfig.BffBase))
                 {
                     var jsRuntime = _.GetRequiredService<IJSRuntime>();
-                    var bffRootTask = jsRuntime.InvokeAsync<string>("GetBffUri", null);
 
-                    var bffRoot = bffRootTask.GetAwaiter().GetResult();
+                    string bffRoot;
+
+                    if (jsRuntime is IJSInProcessRuntime jsin)
+                    {
+                        bffRoot = jsin.Invoke<string>("GetBffUri", null);
+                    }
+                    else
+                    {
+                        var bffRootTask = jsRuntime.InvokeAsync<string>("GetBffUri", null);
+
+                        bffRoot = bffRootTask.GetAwaiter().GetResult();
+                    }
 
                     if (string.IsNullOrEmpty(bffRoot))
                     {
