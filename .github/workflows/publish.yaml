@@ -84,7 +84,7 @@ jobs:
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
           file: ./Docker/web.dockerfile
-          context: ./src/web
+          context: ./src
           push: true
           tags: |
             ghcr.io/markrdavison/markdavison-berlin-web:latest
