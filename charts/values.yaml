@@ -31,7 +31,7 @@ bff:
   app: zeno-fanfic-bff
   replicas: 1
   name: zeno-fanfic-bff
-  image: ghcr.io/markrdavison/markdavison-berlin-bff
+  image: ghcr.io/markrdavison/markdavison-berlin-bff-web
   tag: v0.0.5
   port: 40000
   ingress:
