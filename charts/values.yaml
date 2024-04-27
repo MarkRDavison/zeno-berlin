@@ -13,20 +13,20 @@ api:
     host: fanfic-api.markdavison.kiwi
   env:
     secret:
-      - CLIENT_SECRET
-      - DB_USERNAME
-      - DB_PASSWORD
+      - AUTH__CLIENT_SECRET
+      - DATABASE__DB_USERNAME
+      - DATABASE__DB_PASSWORD
     public:
-      FINANCE__DATABASE_TYPE: postgres
-      FINANCE__DB_DATABASE: prod-fanfic
-      FINANCE__DB_PORT: 5432
-      FINANCE__DB_HOST: postgres.markdavison.kiwi
-      FINANCE__URL: http://0.0.0.0:50000
-      FINANCE__CLIENT_ID: zeno-fanfic
-      FINANCE__SESSION_NAME: zeno-fanfic-prod-session
-      FINANCE__SCOPE: openid profile email offline_access zeno-fanfic
-      FINANCE__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
-      FINANCE__PRODUCTION_MODE: true
+      BERLIN__DATABASE__DATABASE_TYPE: postgres
+      BERLIN__DATABASE__DB_DATABASE: prod-fanfic
+      BERLIN__DATABASE__DB_PORT: 5432
+      BERLIN__DATABASE__DB_HOST: postgres.markdavison.kiwi
+      BERLIN__URL: http://0.0.0.0:50000
+      BERLIN__AUTH__CLIENT_ID: zeno-fanfic
+      BERLIN__AUTH__SESSION_NAME: zeno-fanfic-prod-session
+      BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-fanfic
+      BERLIN__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
+      BERLIN__PRODUCTION_MODE: true
 bff:
   app: zeno-fanfic-bff
   replicas: 1
@@ -38,21 +38,21 @@ bff:
     host: fanfic-bff.markdavison.kiwi
   env:
     secret:
-      - REDIS_PASSWORD
-      - CLIENT_SECRET
-      - SESSION_SECRET
+      - REDIS__PASSWORD
+      - AUTH__CLIENT_SECRET
+      - AUTH__SESSION_SECRET
     public:
-      FINANCE__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
-      FINANCE__REDIS_PORT: '6379'
-      FINANCE__WEB_ORIGIN: https://fanfic.markdavison.kiwi
-      FINANCE__BFF_ORIGIN: https://fanfic-bff.markdavison.kiwi
-      FINANCE__API_ORIGIN: https://fanfic-api.markdavison.kiwi
-      FINANCE__SESSION_NAME: zeno-fanfic-prod-session
-      FINANCE__REDIS_HOST: redis.markdavison.kiwi
-      FINANCE__CLIENT_ID: zeno-fanfic
-      FINANCE__URL: http://0.0.0.0:40000
-      FINANCE__SCOPE: openid profile email offline_access zeno-fanfic
-      FINANCE__PRODUCTION_MODE: true
+      BERLIN__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
+      BERLIN__REDIS__PORT: '6379'
+      BERLIN__WEB_ORIGIN: https://fanfic.markdavison.kiwi
+      BERLIN__BFF_ORIGIN: https://fanfic-bff.markdavison.kiwi
+      BERLIN__API_ORIGIN: https://fanfic-api.markdavison.kiwi
+      BERLIN__AUTH__SESSION_NAME: zeno-fanfic-prod-session
+      BERLIN__REDIS__HOST: redis.markdavison.kiwi
+      BERLIN__AUTH__CLIENT_ID: zeno-fanfic
+      BERLIN__URL: http://0.0.0.0:40000
+      BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-fanfic
+      BERLIN__PRODUCTION_MODE: true
 web:
   app: zeno-fanfic-web
   replicas: 1

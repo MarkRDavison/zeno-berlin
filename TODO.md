@@ -60,10 +60,8 @@ Stories that update multiple times at once?
 
 ***
 ## Next
- - Limit the dashboard to X stories
- - Add Stories page to view ALL
- - A way to add the update type to the stories, maybe on add as well as manage
  - DEPLOY TO K8S
+ - A way to add the update type to the stories, maybe on add as well as manage
  - Authors
 
 ## MISC
