@@ -34,7 +34,8 @@ public partial class Fandom
                     Name = Data.Name,
                     IsHidden = Data.IsHidden,
                     FandomId = Id,
-                    Fandoms = FandomListState.Value.Entities.Where(_ => _.FandomId != Id && _.ParentFandomId != Id).ToList()
+                    Fandoms = FandomListState.Value.Entities.Where(_ => _.FandomId != Id && _.ParentFandomId != Id).ToList(),
+                    ParentFandomId = Data.ParentFandomId
                 }
             }
         };

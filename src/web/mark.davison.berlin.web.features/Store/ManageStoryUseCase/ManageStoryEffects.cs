@@ -28,4 +28,19 @@ public class ManageStoryEffects
 
         dispatcher.Dispatch(actionResponse);
     }
+
+    [EffectMethod]
+    public Task HandleUpdateManageStoryActionResponse(UpdateManageStoryActionResponse response, IDispatcher dispatcher)
+    {
+        var action = new FetchManageStoryAction
+        {
+            ActionId = response.ActionId,
+            StoryId = response.StoryId,
+            SetLoading = false
+        };
+
+        dispatcher.Dispatch(action);
+
+        return Task.CompletedTask;
+    }
 }

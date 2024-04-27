@@ -6,35 +6,30 @@ public partial class StoriesPage
     public required IState<StoryListState> StoryListState { get; set; }
 
     [Inject]
+    public required IState<FandomListState> FandomListState { get; set; }
+
+    [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
-    protected override async Task OnInitializedAsync() // TODO: Framework class for these helpers??? base class???
-    {
-        await EnsureStateLoaded(true);
-    }
+    private IEnumerable<StoryRowDto> _stories => StoryListState.Value.Stories.OrderBy(_ => _.Name);
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
-        await EnsureStateLoaded(false);
-    }
-
-    private async Task EnsureStateLoaded(bool force)
-    {
-        var action = new FetchStoryListAction();
-        if (force)
+        using (StoreHelper.Force())
         {
-            using (StoreHelper.Force())
-            {
-                await StoreHelper.DispatchWithThrottleAndWaitForResponse<
-                    FetchStoryListAction,
-                    FetchStoryListActionResponse>(StoryListState.Value.LastLoaded, action);
-            }
-        }
-        else
-        {
+            var action = new FetchStoryListAction();
             await StoreHelper.DispatchWithThrottleAndWaitForResponse<
                 FetchStoryListAction,
                 FetchStoryListActionResponse>(StoryListState.Value.LastLoaded, action);
         }
+    }
+
+    private void FavouriteClick(Guid storyId, bool set)
+    {
+        StoreHelper.Dispatch(new SetStoryFavouriteAction
+        {
+            StoryId = storyId,
+            IsFavourite = set
+        });
     }
 }

@@ -14,6 +14,7 @@ public class EditStoryCommandProcessor : ICommandProcessor<EditStoryCommandReque
         await using (_repository.BeginTransaction())
         {
             var existing = await _repository.QueryEntities<Story>()
+                .Include(_ => _.StoryFandomLinks)
                 .Where(_ => _.Id == request.StoryId && _.UserId == currentUserContext.CurrentUser.Id)
                 .FirstOrDefaultAsync();
 

@@ -3,21 +3,30 @@
 public class AddStoryFormSubmission : IFormSubmission<AddStoryFormViewModel>
 {
     private readonly IStoreHelper _storeHelper;
+    private readonly IClientNavigationManager _clientNavigationManager;
 
     public AddStoryFormSubmission(
-        IStoreHelper storeHelper
-    )
+        IStoreHelper storeHelper,
+        IClientNavigationManager clientNavigationManager)
     {
         _storeHelper = storeHelper;
+        _clientNavigationManager = clientNavigationManager;
     }
 
     public async Task<Response> Primary(AddStoryFormViewModel formViewModel)
     {
-        var action = new AddStoryListAction
+        var action = new AddStoryAction
         {
             StoryAddress = formViewModel.StoryAddress
         };
 
-        return await _storeHelper.DispatchAndWaitForResponse<AddStoryListAction, AddStoryListActionResponse>(action);
+        var response = await _storeHelper.DispatchAndWaitForResponse<AddStoryAction, AddStoryActionResponse>(action);
+
+        if (response.SuccessWithValue)
+        {
+            _clientNavigationManager.NavigateTo(RouteHelpers.Story(response.Value.Id));
+        }
+
+        return response;
     }
 }

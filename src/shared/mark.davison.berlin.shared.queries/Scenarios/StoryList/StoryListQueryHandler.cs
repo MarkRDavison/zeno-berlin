@@ -13,10 +13,10 @@ public class StoryListQueryHandler : IQueryHandler<StoryListQueryRequest, StoryL
     {
         await using (_repository.BeginTransaction())
         {
-            var dashboardData = new DashboardDataDto();
 
             var storyUpdates = await _repository.QueryEntities<StoryUpdate>()
-                .Include(_ => _.Story)
+                .Include(_ => _.Story!)
+                .ThenInclude(_ => _!.StoryFandomLinks)
                 .Where(_ => _.UserId == currentUserContext.CurrentUser.Id)
                 .GroupBy(_ => _.StoryId)
                 .Select(_ => new
@@ -26,14 +26,24 @@ public class StoryListQueryHandler : IQueryHandler<StoryListQueryRequest, StoryL
                 })
                 .ToListAsync();
 
-            dashboardData.Stories = new(storyUpdates
-                .Where(_ => _.Update.Story != null)
-                .Select(_ => _.Update.Story!.ToDto())
-                .ToList());
-
             return new StoryListQueryResponse
             {
-                Value = dashboardData
+                Value = storyUpdates
+                    .Where(_ => _.Update.Story != null)
+                    .Select(_ =>
+                    {
+                        return new StoryRowDto
+                        {
+                            StoryId = _.StoryId,
+                            Name = _.Update.Story!.Name,
+                            CurrentChapters = _.Update.Story!.CurrentChapters,
+                            TotalChapters = _.Update.Story!.TotalChapters,
+                            IsComplete = _.Update.Story!.Complete,
+                            IsFavourite = _.Update.Story!.Favourite,
+                            Fandoms = [.. _.Update.Story.StoryFandomLinks.Select(sfl => sfl.FandomId)]
+                        };
+                    })
+                    .ToList()
             };
         }
     }

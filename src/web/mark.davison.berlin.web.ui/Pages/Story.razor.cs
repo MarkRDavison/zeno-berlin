@@ -1,7 +1,4 @@
-﻿using mark.davison.berlin.web.features.Store.FandomListUseCase;
-using mark.davison.berlin.web.features.Store.ManageStoryUseCase;
-
-namespace mark.davison.berlin.web.ui.Pages;
+﻿namespace mark.davison.berlin.web.ui.Pages;
 
 public partial class Story
 {
@@ -27,6 +24,9 @@ public partial class Story
     [Inject]
     public required IActionSubscriber ActionSubscriber { get; set; }
 
+    [Inject]
+    public required IStoreHelper StoreHelper { get; set; }
+
     public StoryManageDto Data => ManageStoryState.Value.Data;
 
     protected override void OnParametersSet()
@@ -42,7 +42,7 @@ public partial class Story
 
     private void FavouriteClick(bool set)
     {
-        Dispatcher.Dispatch(new SetFavouriteStoryListAction
+        Dispatcher.Dispatch(new SetStoryFavouriteAction
         {
             StoryId = Id,
             IsFavourite = set
@@ -73,35 +73,14 @@ public partial class Story
 
     private async Task<Response> DeleteStory()
     {
-        var action = new DeleteStoryListAction { StoryId = Id };
+        var action = new DeleteStoryAction { StoryId = Id };
 
-        // TODO: Framework-itize this.
-        TaskCompletionSource tcs = new();
-        DeleteStoryListActionResponse? response = null;
-
-        ActionSubscriber.SubscribeToAction(
-            this,
-            (DeleteStoryListActionResponse resultAction) =>
-            {
-                response = resultAction;
-                tcs.SetResult();
-            });
-
-        using (ActionSubscriber.GetActionUnsubscriberAsIDisposable(this))
-        {
-            Dispatcher.Dispatch(action);
-
-            await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(100))); // TODO: Configureable
-        }
-
-        if (response == null)
-        {
-            return new Response { Errors = ["TODO: TIMED OUT, please try again..."] };
-        }
+        var response = await StoreHelper.DispatchAndWaitForResponse<DeleteStoryAction, DeleteStoryActionResponse>(action);
 
         if (response.Success)
         {
             ClientNavigationManager.NavigateTo(Routes.Dashboard);
+            // TODO: Return to source, you can get here from dashboard or stories page
         }
 
         return response;
@@ -111,41 +90,16 @@ public partial class Story
     {
         _inProgress = true;
 
-        var action = new UpdateStoryListAction
+        var action = new UpdateStoryAction
         {
             StoryId = Id
         };
 
         Console.Error.WriteLine("TODO: If the story is complete prompt with confirmation, user/server setting to configure this check???");
 
-        // TODO: Framework-itize this.
-        TaskCompletionSource tcs = new();
-        UpdateStoryListActionResponse? response = null;
-
-        ActionSubscriber.SubscribeToAction(
-            this,
-            (UpdateStoryListActionResponse resultAction) =>
-            {
-                response = resultAction;
-                tcs.SetResult();
-            });
-
-        using (ActionSubscriber.GetActionUnsubscriberAsIDisposable(this))
-        {
-            Dispatcher.Dispatch(action);
-
-            await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(100))); // TODO: Configureable
-        }
+        await StoreHelper.DispatchAndWaitForResponse<UpdateStoryAction, UpdateStoryActionResponse>(action);
 
         _inProgress = false;
-
-        if (response == null)
-        {
-            Console.WriteLine("TODO: TIMED OUT, please try again...");
-            return;
-        }
-
-        await InvokeAsync(StateHasChanged);
     }
 
     private string GetFandomName(Guid fandomId)

@@ -31,12 +31,10 @@ public class Story : BerlinEntity
             CurrentChapters = CurrentChapters,
             TotalChapters = TotalChapters,
             Complete = Complete,
-            SiteId = SiteId,
-            UpdateTypeId = UpdateTypeId,
             LastChecked = LastChecked,
             LastAuthored = LastAuthored,
-            LastModified = LastModified,
-            Favourite = Favourite
+            Favourite = Favourite,
+            Fandoms = [.. StoryFandomLinks.Select(_ => _.FandomId)]
         };
     }
 }

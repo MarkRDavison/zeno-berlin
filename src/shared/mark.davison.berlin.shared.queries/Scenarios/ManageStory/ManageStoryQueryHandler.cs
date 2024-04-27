@@ -17,8 +17,8 @@ public class ManageStoryQueryHandler : IQueryHandler<ManageStoryQueryRequest, Ma
 
             var story = await _repository.QueryEntities<Story>()
                 .Include(_ => _!.StoryFandomLinks)
-                .ThenInclude(_ => _.Fandom)
-                .ThenInclude(_ => _.ParentFandom)
+                .ThenInclude(_ => _.Fandom!)
+                .ThenInclude(_ => _!.ParentFandom!)
                 .Where(_ => _.Id == query.StoryId && _.UserId == currentUserContext.CurrentUser.Id)
                 .FirstOrDefaultAsync();
 

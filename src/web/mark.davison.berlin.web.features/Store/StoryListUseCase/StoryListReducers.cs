@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.web.features.Store.StoryListUseCase;
+﻿using mark.davison.berlin.web.features.Store.SharedStoryUseCase;
+
+namespace mark.davison.berlin.web.features.Store.StoryListUseCase;
 
 public static class StoryListReducers
 {
@@ -16,11 +18,11 @@ public static class StoryListReducers
     {
         if (action.SuccessWithValue)
         {
-            var stories = action.Value.ToDictionary(_ => _.Id, _ => _);
+            var stories = action.Value.ToDictionary(_ => _.StoryId, _ => _);
 
-            foreach (var existingStory in state.Stories.Where(_ => !stories.ContainsKey(_.Id)))
+            foreach (var existingStory in state.Stories.Where(_ => !stories.ContainsKey(_.StoryId)))
             {
-                stories.Add(existingStory.Id, existingStory);
+                stories.Add(existingStory.StoryId, existingStory);
             }
 
             return new StoryListState(false, stories.Values, DateTime.Now); // TODO: IDateService.Now???
@@ -30,93 +32,27 @@ public static class StoryListReducers
     }
 
     [ReducerMethod]
-    public static StoryListState AddStoryAction(StoryListState state, AddStoryListAction action)
-    {
-        return new StoryListState(
-            state.IsLoading,
-            [
-                .. state.Stories.Where(_ => _.Id != action.ActionId),
-                new StoryDto
-                {
-                    Id = action.ActionId,
-                    Address = action.StoryAddress,
-                    Temporary = true
-                }
-            ],
-            state.LastLoaded);
-    }
-
-    [ReducerMethod]
-    public static StoryListState AddStoryActionResponse(StoryListState state, AddStoryListActionResponse action)
-    {
-        if (action.SuccessWithValue)
-        {
-            return new StoryListState(
-                state.IsLoading,
-                [
-                    .. state.Stories.Where(_ => _.Id != action.ActionId),
-                    action.Value
-                ],
-            state.LastLoaded);
-        }
-
-        return new StoryListState(
-            state.IsLoading,
-            [
-                .. state.Stories.Where(_ => _.Id != action.ActionId)
-            ],
-            state.LastLoaded);
-    }
-
-    [ReducerMethod]
-    public static StoryListState DeleteStoryListAction(StoryListState state, DeleteStoryListAction action)
-    {
-        var storyToDelete = state.Stories.FirstOrDefault(_ => _.Id == action.StoryId);
-
-        if (storyToDelete != null)
-        {
-            storyToDelete.ClientDeletedActionId = action.ActionId;
-        }
-
-        return new StoryListState(
-            state.IsLoading,
-            state.Stories,
-            state.LastLoaded);
-    }
-
-    [ReducerMethod]
     public static StoryListState DeleteStoryListActionResponse(StoryListState state, DeleteStoryListActionResponse response)
     {
-        if (response.SuccessWithValue)
+        if (response.Success)
         {
             return new StoryListState(
                 state.IsLoading,
-                [.. state.Stories.Where(_ => _.Id != response.Value.DeletedStoryId)],
-            state.LastLoaded);
+                [.. state.Stories.Where(_ => _.StoryId != response.StoryId)],
+                state.LastLoaded);
         }
-        else
-        {
-            var failedDeleteStory = state.Stories.FirstOrDefault(_ => _.ClientDeletedActionId == response.ActionId);
-            if (failedDeleteStory != null)
-            {
-                failedDeleteStory.ClientDeletedActionId = null;
-            }
 
-            return new StoryListState(
-                state.IsLoading,
-                state.Stories,
-            state.LastLoaded);
-        }
+        return state;
     }
 
     [ReducerMethod]
     public static StoryListState SetFavouriteStoryListAction(StoryListState state, SetFavouriteStoryListAction action)
     {
-        var storyToEdit = state.Stories.FirstOrDefault(_ => _.Id == action.StoryId);
+        var story = state.Stories.FirstOrDefault(_ => _.StoryId == action.StoryId);
 
-        if (storyToEdit != null)
+        if (story is not null)
         {
-            storyToEdit.Favourite = action.IsFavourite;
+            story.IsFavourite = action.IsFavourite;
         }
 
         return new StoryListState(
@@ -128,12 +64,11 @@ public static class StoryListReducers
     [ReducerMethod]
     public static StoryListState SetFavouriteStoryListActionResponse(StoryListState state, SetFavouriteStoryListActionResponse response)
     {
-        if (response.SuccessWithValue)
+        var story = state.Stories.FirstOrDefault(_ => _.StoryId == response.StoryId);
+
+        if (story is not null)
         {
-            return new StoryListState(
-                state.IsLoading,
-                [.. state.Stories.Where(_ => _.Id != response.Value.Id), response.Value],
-            state.LastLoaded);
+            story.IsFavourite = response.IsFavourite;
         }
 
         return new StoryListState(
@@ -143,17 +78,25 @@ public static class StoryListReducers
     }
 
     [ReducerMethod]
-    public static StoryListState UpdateStoryListAction(StoryListState state, UpdateStoryListAction action) => state;
-
-    [ReducerMethod]
-    public static StoryListState UpdateStoryListActionResponse(StoryListState state, UpdateStoryListActionResponse response)
+    public static StoryListState AddStoryActionResponse(StoryListState state, AddStoryActionResponse response)
     {
         if (response.SuccessWithValue)
         {
+            var newStory = new StoryRowDto
+            {
+                StoryId = response.Value.Id,
+                Name = response.Value.Name,
+                Author = "TODO",
+                IsFavourite = response.Value.Favourite,
+                IsComplete = response.Value.Complete,
+                CurrentChapters = response.Value.CurrentChapters,
+                TotalChapters = response.Value.TotalChapters,
+                Fandoms = response.Value.Fandoms
+            }; // TODO: Helper??? if you ever cannot make one from the other need to fetch
             return new StoryListState(
-            state.IsLoading,
-            [.. state.Stories.Where(_ => _.Id != response.Value.Id), response.Value],
-            state.LastLoaded);
+                state.IsLoading,
+                [.. state.Stories.Where(_ => _.StoryId != newStory.StoryId), newStory],
+                state.LastLoaded);
         }
 
         return state;

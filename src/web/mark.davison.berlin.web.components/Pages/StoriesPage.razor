@@ -6,4 +6,35 @@
         <MudText Typo="Typo.h5">Stories</MudText>
         <MudSpacer />
     </MudStack>
+    <MudTable Items="@_stories" Hover Breakpoint="Breakpoint.Sm" Loading="@StoryListState.Value.IsLoading">
+        <HeaderContent>
+            <MudTh>Title</MudTh>
+            <MudTh>Fandoms</MudTh>
+            <MudTh>Author</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Title">
+                <MudLink Href="@RouteHelpers.Story(context.StoryId)" Typo="Typo.body1">@context.Name</MudLink>
+            </MudTd>
+            <MudTd DataLabel="Fandoms">
+                @FandomDisplayHelpers.FandomIdsToSummaryString(context.Fandoms, FandomListState.Value.Entities)
+            </MudTd>
+            <MudTd DataLabel="Author">
+                @context.Author
+            </MudTd>
+            <MudTd>
+                <div class="float-right favourite-container-visible">
+                    @if (@context.IsFavourite)
+                    {
+                        <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" onclick="@(() => FavouriteClick(context.StoryId, false))" />
+                    }
+                    else
+                    {
+                        <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" onclick="@(() => FavouriteClick(context.StoryId, true))" />
+                    }
+                </div>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
 </MudStack>

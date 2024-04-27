@@ -1,4 +1,5 @@
-﻿using mark.davison.common.server.abstractions.Notifications;
+﻿using Aqua.EnumerableExtensions;
+using mark.davison.common.server.abstractions.Notifications;
 using mark.davison.shared.server.services.Helpers;
 using System.Linq.Expressions;
 
@@ -72,7 +73,22 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                 await _repository.UpsertEntitiesAsync(updates);
             }
 
-            return new() { Value = [.. toUpdate.Select(_ => _.ToDto())] };
+            return new()
+            {
+                Value = [.. toUpdate.Select(_ =>
+                    new StoryRowDto
+                    {
+                        StoryId = _.Id,
+                        Author = "TODO",
+                        Name = _.Name,
+                        CurrentChapters = _.CurrentChapters,
+                        TotalChapters = _.TotalChapters,
+                        IsComplete = _.Complete,
+                        IsFavourite = _.Favourite,
+                        Fandoms = [.. _.StoryFandomLinks.Select(_ => _.FandomId)]
+                    }
+                )]
+            };
         }
     }
 

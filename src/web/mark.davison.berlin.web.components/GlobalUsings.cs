@@ -10,6 +10,7 @@ global using mark.davison.berlin.web.components.Forms.AddStory;
 global using mark.davison.berlin.web.components.Forms.EditFandom;
 global using mark.davison.berlin.web.features.Store;
 global using mark.davison.berlin.web.features.Store.FandomListUseCase;
+global using mark.davison.berlin.web.features.Store.SharedStoryUseCase;
 global using mark.davison.berlin.web.features.Store.StoryListUseCase;
 global using mark.davison.common.client.abstractions.Authentication;
 global using mark.davison.common.client.abstractions.Repository;

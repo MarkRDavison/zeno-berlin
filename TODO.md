@@ -70,6 +70,22 @@ Stories that update multiple times at once?
 
 Queries need to use ValidateAndProcessQueryHandler???
 Method for a fandom to be auto assigned as a parent for a new fandom? Wildcard/rules etc
+Consistency around naming of bool IsComplete vs Complete etc
+Story summary???
+If you are using the site while the cron job runs, stuff may be updated in the background, is this an issue???
+shared action/response are public, non shared ones that are same as shared, internal, keep within reducer/effect???
+
+## BUGS
+
+UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol out???
+
+### DONE
+
+Fandom
+ - a way to manage this?
+ - some stories have like 50, maybe a management page per user/site???
+	- Each fandom can have a parent associated, so 'Star Wars - All Media Types', 'Star Wars: Rebels' etc all are summarized as Star Wars? What about cross overs???
+
 
 
 ## BUGS
@@ -77,11 +93,3 @@ Method for a fandom to be auto assigned as a parent for a new fandom? Wildcard/r
 Duplicated fandoms
  - FandomService.RetrieveFandomByExternalName may be failing when running in a batch???
    - Use Cache instead???
-UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol out???
-
-## DONE
-
-Fandom
- - a way to manage this?
- - some stories have like 50, maybe a management page per user/site???
-	- Each fandom can have a parent associated, so 'Star Wars - All Media Types', 'Star Wars: Rebels' etc all are summarized as Star Wars? What about cross overs???

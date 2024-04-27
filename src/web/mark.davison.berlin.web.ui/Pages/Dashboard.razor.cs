@@ -4,9 +4,10 @@ namespace mark.davison.berlin.web.ui.Pages;
 
 public partial class Dashboard
 {
-    // TODO: This needs to be replaced with Dashboard state???
     [Inject]
     public required IState<DashboardListState> DashboardListState { get; set; }
+    [Inject]
+    public required IState<FandomListState> FandomListState { get; set; }
 
     [Inject]
     public required IDialogService _dialogService { get; set; }
@@ -104,7 +105,7 @@ public partial class Dashboard
     {
         _propagationStopper = true;
 
-        StoreHelper.Dispatch(new SetFavouriteStoryListAction
+        StoreHelper.Dispatch(new SetStoryFavouriteAction
         {
             StoryId = storyId,
             IsFavourite = set

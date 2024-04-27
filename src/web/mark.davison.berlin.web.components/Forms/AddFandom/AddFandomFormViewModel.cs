@@ -10,7 +10,6 @@ public class AddFandomFormViewModel : IFormViewModel
     // TODO: Duplicate
     public Task<IEnumerable<Guid?>> Search(string text)
     {
-        Console.WriteLine("Searching fandoms for '{0}'", text);
         var upperText = text.ToUpper();
         return Task.FromResult(Fandoms
             .Where(_ => _.Name.ToUpper().Contains(upperText))

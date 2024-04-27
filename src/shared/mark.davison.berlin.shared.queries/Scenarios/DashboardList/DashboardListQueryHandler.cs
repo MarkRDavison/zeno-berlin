@@ -21,9 +21,9 @@ public class DashboardListQueryHandler : IQueryHandler<DashboardListQueryRequest
             var storyUpdates = await _repository.QueryEntities<StoryUpdate>()
                 .Include(_ => _.Story)
                 .ThenInclude(_ => _!.StoryFandomLinks)
-                .ThenInclude(_ => _.Fandom)
-                .ThenInclude(_ => _.ParentFandom)
-                .Where(_ => _.UserId == currentUserContext.CurrentUser.Id)
+                .ThenInclude(_ => _.Fandom!)
+                .ThenInclude(_ => _!.ParentFandom!)
+                .Where(_ => _.UserId == currentUserContext.CurrentUser.Id && _.Story!.Favourite)
                 .GroupBy(_ => _.StoryId)
                 .Select(_ => new
                 {
@@ -45,7 +45,7 @@ public class DashboardListQueryHandler : IQueryHandler<DashboardListQueryRequest
                     Favourite = row.Update.Story.Favourite,
                     LastChecked = row.Update.Story.LastChecked,
                     LastAuthored = row.Update.LastAuthored,
-                    Fandoms = row.Update.Story.StoryFandomLinks.Select(_ => _.Fandom!.ParentFandom?.Name ?? _.Fandom.Name).Distinct().ToList()
+                    Fandoms = row.Update.Story.StoryFandomLinks.Select(_ => _.FandomId).Distinct().ToList()
                 };
                 response.Value.Add(dto);
             }
