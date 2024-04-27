@@ -16,6 +16,8 @@ WORKDIR /usr/share/nginx/html
 COPY --from=BUILD /app/publish/wwwroot .
 COPY web/entry.sh /usr/share/nginx/html/entry.sh
 COPY web/nginx.conf /etc/nginx/nginx.conf
+RUN ls -l
+RUN ls -l ./css
 
 RUN chmod +x /usr/share/nginx/html/entry.sh
 
