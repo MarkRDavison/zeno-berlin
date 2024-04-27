@@ -20,13 +20,24 @@ public static class DependencyInjectionExtensions
                 Console.WriteLine("Attempting to read bff value");
                 var authConfig = _.GetRequiredService<IAuthenticationConfig>();
                 Console.WriteLine("Value is: {0}", authConfig.BffBase);
-
+                if (authConfig.BffBase == WebConstants.LocalBffRoot)
+                {
+                    Console.WriteLine("Value is: the local one, clearing it");
+                    authConfig.SetBffBase(string.Empty);
+                }
+                Console.WriteLine("Value is: {0}", authConfig.BffBase);
                 if (string.IsNullOrEmpty(authConfig.BffBase))
                 {
                     var jsRuntime = _.GetRequiredService<IJSRuntime>();
                     var bffRootTask = jsRuntime.InvokeAsync<string>("GetBffUri", null);
 
                     var bffRoot = bffRootTask.GetAwaiter().GetResult();
+
+                    if (string.IsNullOrEmpty(bffRoot))
+                    {
+                        Console.WriteLine("Retrieved value was empty, setting to local");
+                        bffRoot = WebConstants.LocalBffRoot;
+                    }
 
                     authConfig.SetBffBase(bffRoot);
                     Console.WriteLine("bffRoot was null, setting it to {0}", bffRoot);

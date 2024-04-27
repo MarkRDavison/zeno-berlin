@@ -1,6 +1,5 @@
-var bffRoot = "https://localhost:40000";
 var authConfig = new AuthenticationConfig();
-authConfig.SetBffBase(bffRoot);
+authConfig.SetBffBase(WebConstants.LocalBffRoot);
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
