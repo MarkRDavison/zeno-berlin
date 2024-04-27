@@ -48,9 +48,6 @@ Some random anonymous/landing page so you can be on the site and not immediately
 
 ## Misc
 Series, ao3 concept does ffnet have it? maybe if site doesnt support it you can manually add them??
-Story
- - Some concept of marking where you last were at??? So like opt in and say you've read up to chapter X, then when there are new updates it tells you how many you have to read, you can then set a new value/mark it read up to current etc???
-	- 
 Importing needs to be an async job
 
 Date time local vs utc
@@ -58,12 +55,14 @@ Date time local vs utc
 Stories that update multiple times at once?
  - Manually add missing updates so if chapter 22&23 at once, add  both updates at 23's update date.  But only notify of 23 and say 2! new chapters???
 
+With the visual hint for unread chapters, have a user setting as to whether this is just as expected, or respects the update type
+
 ***
 ## Next
- - DEPLOY TO K8S
  - A way to add the update type to the stories, maybe on add as well as manage
  - Authors
-
+ - Some concept of marking where you last were at??? So like opt in and say you've read up to chapter X, then when there are new updates it tells you how many you have to read, you can then set a new value/mark it read up to current etc???
+	- Icon next to favourite??? hit it when you are up to date, and if it has been set but not currently at the current chapter then show some visual hint
 ## MISC
 
 Queries need to use ValidateAndProcessQueryHandler???
@@ -75,7 +74,6 @@ shared action/response are public, non shared ones that are same as shared, inte
 
 ## BUGS
 
-bffroot retrieval is bad, use app settings and sed command into there???
 UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol out???
 navigating to /fandoms after initial load does not load them, so newly added stories wont have their fandoms show up till reload
 
@@ -89,6 +87,7 @@ Fandom
  - some stories have like 50, maybe a management page per user/site???
 	- Each fandom can have a parent associated, so 'Star Wars - All Media Types', 'Star Wars: Rebels' etc all are summarized as Star Wars? What about cross overs???
 
+DEPLOY TO K8S
 
 
 ## BUGS
@@ -96,3 +95,5 @@ Fandom
 Duplicated fandoms
  - FandomService.RetrieveFandomByExternalName may be failing when running in a batch???
    - Use Cache instead???
+
+bffroot retrieval is bad, use app settings and sed command into there???

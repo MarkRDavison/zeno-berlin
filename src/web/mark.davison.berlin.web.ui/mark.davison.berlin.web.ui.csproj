@@ -5,7 +5,7 @@
 	<Nullable>enable</Nullable>
 	<ImplicitUsings>enable</ImplicitUsings>
 	  <!--TODO: Remove this if not targeting earlier than ios 16.4-->
-	<WasmEnableSIMD>false</WasmEnableSIMD>
+	  <!--<WasmEnableSIMD>false</WasmEnableSIMD>-->
   </PropertyGroup>
 
   <ItemGroup>

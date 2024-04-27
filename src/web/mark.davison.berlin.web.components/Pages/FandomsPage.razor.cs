@@ -16,6 +16,11 @@ public partial class FandomsPage
 
     private IEnumerable<FandomDto> _fandoms => FandomListState.Value.Entities.OrderBy(_ => _.Name);
 
+    protected override async Task OnInitializedAsync()
+    {
+        await StoreHelper.DispatchAndWaitForResponse<FetchFandomsListAction, FetchFandomsListActionResponse>(new FetchFandomsListAction());
+    }
+
     public async Task OpenAddFandomModal()
     {
         // TODO: Some boiler-plate reducing for this stuff
@@ -34,12 +39,7 @@ public partial class FandomsPage
 
         var dialog = DialogService.Show<Modal<ModalViewModel<AddFandomFormViewModel, AddFandomForm>, AddFandomFormViewModel, AddFandomForm>>("Add Fandom", param, options);
 
-        var result = await dialog.Result;
-
-        if (!result.Canceled)
-        {
-            //TODO: Navigate to newly created Fandom???
-        }
+        await dialog.Result;
     }
 
     private string? GetFandomName(Guid fandomId)

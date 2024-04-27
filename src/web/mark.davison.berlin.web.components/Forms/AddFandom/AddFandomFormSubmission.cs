@@ -20,6 +20,8 @@ public class AddFandomFormSubmission : IFormSubmission<AddFandomFormViewModel>
             ParentFandomId = formViewModel.ParentFandomId
         };
 
+        // TODO: If success navigate to new entity???
+
         return await _storeHelper.DispatchAndWaitForResponse<AddFandomListAction, AddFandomListActionResponse>(action);
     }
 }
