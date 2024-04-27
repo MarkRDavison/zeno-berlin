@@ -365,5 +365,6 @@ FodyWeavers.xsd
 appsettings.Development.json
 *.db*
 *.g.cs
-berlin.min.css
-berlin.css
+app.min.css
+app.css
+

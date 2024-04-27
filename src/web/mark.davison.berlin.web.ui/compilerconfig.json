@@ -1,6 +1,6 @@
 [
   {
-    "outputFile": "wwwroot/css/berlin.css",
-    "inputFile": "wwwroot/css/berlin.scss"
+    "outputFile": "wwwroot/css/app.css",
+    "inputFile": "wwwroot/css/app.scss"
   }
 ]
