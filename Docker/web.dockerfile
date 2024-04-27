@@ -6,7 +6,7 @@ ENV CI_BUILD=true
 COPY / /app/
 
 RUN dotnet tool install Excubo.WebCompiler --global
-RUN /root/.dotnet/tools/webcompiler mark.davison.berlin.web.ui/compilerconfig.json
+RUN /root/.dotnet/tools/webcompiler web/mark.davison.berlin.web.ui/compilerconfig.json
 
 RUN dotnet restore web/mark.davison.berlin.web.ui/mark.davison.berlin.web.ui.csproj
 RUN dotnet publish -c Release -o /app/publish/ web/mark.davison.berlin.web.ui/mark.davison.berlin.web.ui.csproj
