@@ -2,3 +2,5 @@
 **/bin/
 **/node_modules/
 **/dist/
+app.css
+app.min.css
