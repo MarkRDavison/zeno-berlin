@@ -59,8 +59,8 @@ With the visual hint for unread chapters, have a user setting as to whether this
 
 ***
 ## Next
+ - A way to manually add updates? like to go back and add it previously??? or just import is sufficient???
  - A way to add the update type to the stories, maybe on add as well as manage
- - Authors
  - Some concept of marking where you last were at??? So like opt in and say you've read up to chapter X, then when there are new updates it tells you how many you have to read, you can then set a new value/mark it read up to current etc???
 	- Icon next to favourite??? hit it when you are up to date, and if it has been set but not currently at the current chapter then show some visual hint
 ## MISC
@@ -88,6 +88,9 @@ Fandom
 	- Each fandom can have a parent associated, so 'Star Wars - All Media Types', 'Star Wars: Rebels' etc all are summarized as Star Wars? What about cross overs???
 
 DEPLOY TO K8S
+
+
+Authors
 
 
 ## BUGS

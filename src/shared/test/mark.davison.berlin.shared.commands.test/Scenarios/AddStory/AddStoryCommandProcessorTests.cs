@@ -101,6 +101,13 @@ public class AddStoryCommandProcessorTests
                 Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new List<Fandom>()));
 
+        _authorService
+            .GetOrCreateAuthorsByName(
+                Arg.Any<List<string>>(),
+                Arg.Any<Guid>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new List<Author>()));
+
         _repository
             .UpsertEntityAsync<Story>(
                 Arg.Any<Story>())
