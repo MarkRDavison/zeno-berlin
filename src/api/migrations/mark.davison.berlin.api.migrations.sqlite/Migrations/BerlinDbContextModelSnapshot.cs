@@ -17,6 +17,44 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
 
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Author", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsUserSpecified")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ParentAuthorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("SiteId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentAuthorId");
+
+                    b.HasIndex("SiteId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Authors");
+                });
+
             modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Fandom", b =>
                 {
                     b.Property<Guid>("Id")
@@ -149,6 +187,37 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Stories");
+                });
+
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.StoryAuthorLink", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("StoryId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("StoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("StoryAuthorLinks");
                 });
 
             modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.StoryFandomLink", b =>
@@ -287,6 +356,29 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.ToTable("User");
                 });
 
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Author", b =>
+                {
+                    b.HasOne("mark.davison.berlin.shared.models.Entities.Author", "ParentAuthor")
+                        .WithMany()
+                        .HasForeignKey("ParentAuthorId");
+
+                    b.HasOne("mark.davison.berlin.shared.models.Entities.Site", "Site")
+                        .WithMany()
+                        .HasForeignKey("SiteId");
+
+                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParentAuthor");
+
+                    b.Navigation("Site");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Fandom", b =>
                 {
                     b.HasOne("mark.davison.berlin.shared.models.Entities.Fandom", "ParentFandom")
@@ -338,6 +430,33 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Navigation("Site");
 
                     b.Navigation("UpdateType");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.StoryAuthorLink", b =>
+                {
+                    b.HasOne("mark.davison.berlin.shared.models.Entities.Author", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("mark.davison.berlin.shared.models.Entities.Story", "Story")
+                        .WithMany("StoryAuthorLinks")
+                        .HasForeignKey("StoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Story");
 
                     b.Navigation("User");
                 });
@@ -401,6 +520,8 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
 
             modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Story", b =>
                 {
+                    b.Navigation("StoryAuthorLinks");
+
                     b.Navigation("StoryFandomLinks");
                 });
 #pragma warning restore 612, 618
