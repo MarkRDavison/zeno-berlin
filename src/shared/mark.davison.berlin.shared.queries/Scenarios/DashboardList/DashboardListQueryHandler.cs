@@ -28,7 +28,7 @@ public class DashboardListQueryHandler : IQueryHandler<DashboardListQueryRequest
                 .Select(_ => new
                 {
                     StoryId = _.Key,
-                    Update = _.OrderByDescending(u => u.LastModified).First()
+                    Update = _.OrderByDescending(u => u.LastAuthored).First()
                 })
                 .ToListAsync();
 
