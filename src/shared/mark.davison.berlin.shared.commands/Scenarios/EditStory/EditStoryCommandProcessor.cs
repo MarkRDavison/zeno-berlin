@@ -41,7 +41,7 @@ public class EditStoryCommandProcessor : ICommandProcessor<EditStoryCommandReque
                 return ValidationMessages.CreateErrorResponse<EditStoryCommandResponse>(ValidationMessages.ERROR_SAVING);
             }
 
-            return new() { Value = updated.ToDto() }; // TODO: LastChecked, LastUpdated????
+            return new() { Value = updated.ToDto() };
         }
     }
 }

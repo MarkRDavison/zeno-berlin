@@ -5,18 +5,21 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
     private readonly IDateService _dateService;
     private readonly IValidationContext _validationContext;
     private readonly IFandomService _fandomService;
+    private readonly IAuthorService _authorService;
     private readonly IServiceProvider _serviceProvider;
 
     public AddStoryCommandProcessor(
         IDateService dateService,
         IValidationContext validationContext,
         IFandomService fandomService,
+        IAuthorService authorService,
         IServiceProvider serviceProvider
     )
     {
         _dateService = dateService;
         _validationContext = validationContext;
         _fandomService = fandomService;
+        _authorService = authorService;
         _serviceProvider = serviceProvider;
     }
 
@@ -34,6 +37,7 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
             var info = await infoProcessor.ExtractStoryInfo(request.StoryAddress, cancellationToken);
 
             var fandoms = await _fandomService.GetOrCreateFandomsByExternalNames(info.Fandoms, cancellationToken);
+            var authors = await _authorService.GetOrCreateAuthorsByName(info.Authors, site.Id, cancellationToken);
 
             var storyId = Guid.NewGuid();
             var story = new Story
@@ -52,7 +56,8 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
                 LastModified = _dateService.Now,
                 LastAuthored = info.Updated,
                 Favourite = request.Favourite,
-                StoryFandomLinks = [.. fandoms.Select(_ => CreateStoryFandomLink(storyId, _.Id, currentUserContext.CurrentUser.Id))]
+                StoryFandomLinks = [.. fandoms.Select(_ => CreateStoryFandomLink(storyId, _.Id, currentUserContext.CurrentUser.Id))],
+                StoryAuthorLinks = [.. authors.Select(_ => CreateStoryAuthorLink(storyId, _.Id, currentUserContext.CurrentUser.Id))] // TODO: Some helper methods/entities/framework for linking entities
             };
 
             var storyUpdate = new StoryUpdate
@@ -89,6 +94,17 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
             Id = Guid.NewGuid(),
             StoryId = storyId,
             FandomId = fandomId,
+            UserId = userId
+        };
+    }
+    // TODO: Duplicate
+    private static StoryAuthorLink CreateStoryAuthorLink(Guid storyId, Guid authorId, Guid userId)
+    {
+        return new StoryAuthorLink
+        {
+            Id = Guid.NewGuid(),
+            StoryId = storyId,
+            AuthorId = authorId,
             UserId = userId
         };
     }

@@ -10,7 +10,7 @@
         <HeaderContent>
             <MudTh>Title</MudTh>
             <MudTh>Fandoms</MudTh>
-            <MudTh>Author</MudTh>
+            <MudTh>Author(s)</MudTh>
             <MudTh></MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -18,10 +18,10 @@
                 <MudLink Href="@RouteHelpers.Story(context.StoryId)" Typo="Typo.body1">@context.Name</MudLink>
             </MudTd>
             <MudTd DataLabel="Fandoms">
-                @FandomDisplayHelpers.FandomIdsToSummaryString(context.Fandoms, FandomListState.Value.Entities)
+                @LinkDisplayHelpers.FandomIdsToSummaryString(context.Fandoms, FandomListState.Value.Entities)
             </MudTd>
-            <MudTd DataLabel="Author">
-                @context.Author
+            <MudTd DataLabel="Authors">
+                @LinkDisplayHelpers.AuthorIdsToSummaryString(context.Authors, AuthorListState.Value.Entities)
             </MudTd>
             <MudTd>
                 <div class="float-right favourite-container-visible">

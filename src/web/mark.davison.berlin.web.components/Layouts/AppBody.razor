@@ -1,5 +1,4 @@
-﻿@using mark.davison.berlin.web.features.Store.FandomListUseCase
-@inject IAuthenticationContext _authContext
+﻿@inject IAuthenticationContext _authContext
 @inject IDispatcher _dispatcher
 
 @if (_authContext.IsAuthenticated)
@@ -21,6 +20,7 @@
         if (_authContext.IsAuthenticated)
         {
             _dispatcher.Dispatch(new FetchFandomsListAction());
+            _dispatcher.Dispatch(new FetchAuthorsListAction());
         }
 
         await base.OnInitializedAsync();

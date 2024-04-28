@@ -4,20 +4,24 @@ public class FandomService : IFandomService
 {
     private readonly IRepository _repository;
     private readonly ICurrentUserContext _currentUserContext;
+    private readonly IDateService _dateService;
     private readonly ILogger<FandomService> _logger;
     private readonly IDictionary<string, Fandom> _createdFandoms;
 
     public FandomService(
         IRepository repository,
         ICurrentUserContext currentUserContext,
+        IDateService dateService,
         ILogger<FandomService> logger)
     {
         _repository = repository;
         _currentUserContext = currentUserContext;
+        _dateService = dateService;
         _logger = logger;
         _createdFandoms = new Dictionary<string, Fandom>();
     }
 
+    // TODO: Repository doesnt create transaction
     public async Task<List<Fandom>> GetOrCreateFandomsByExternalNames(List<string> externalNames, CancellationToken cancellationToken)
     {
         var fandoms = new List<Fandom>();
@@ -36,7 +40,9 @@ public class FandomService : IFandomService
                     IsUserSpecified = false,
                     ExternalName = externalName,
                     Name = externalName,
-                    ParentFandomId = null
+                    ParentFandomId = null,
+                    Created = _dateService.Now,
+                    LastModified = _dateService.Now
                 };
 
                 _createdFandoms.Add(externalName, fandom);

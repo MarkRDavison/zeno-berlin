@@ -66,12 +66,6 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
             .TextContent?
             .Trim();
         title = HttpUtility.HtmlDecode(title);
-        var author = document
-            .GetElementsByClassName("byline heading")?
-            .FirstOrDefault()?
-            .TextContent?
-            .Trim();
-        author = HttpUtility.HtmlDecode(author);
 
         var chapterInfo = document
             .GetElementsByClassName("chapters")?
@@ -110,11 +104,6 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
             throw new InvalidDataException();
         }
 
-        if (string.IsNullOrEmpty(author))
-        {
-            throw new InvalidDataException();
-        }
-
         var stats = document.GetElementsByClassName("stats")
             .Where(_ => _.TagName.Equals("dl", StringComparison.InvariantCultureIgnoreCase))
             .ToList();
@@ -144,10 +133,17 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
             .Distinct()
             .ToList();
 
+        var authors = document
+            .GetElementsByClassName("byline heading")?
+            .SelectMany(_ => _.GetElementsByTagName("a"))
+            .Select(_ => HttpUtility.HtmlDecode(_.InnerHtml))
+            .Distinct()
+            .ToList() ?? [];
+
         return new StoryInfoModel
         {
             Name = title,
-            Author = author,
+            Authors = authors,
             IsCompleted = currentChapters == totalChapters,
             CurrentChapters = currentChapters,
             TotalChapters = totalChapters,

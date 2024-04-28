@@ -9,6 +9,9 @@ public partial class StoriesPage
     public required IState<FandomListState> FandomListState { get; set; }
 
     [Inject]
+    public required IState<AuthorListState> AuthorListState { get; set; }
+
+    [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
     private IEnumerable<StoryRowDto> _stories => StoryListState.Value.Stories.OrderBy(_ => _.Name);

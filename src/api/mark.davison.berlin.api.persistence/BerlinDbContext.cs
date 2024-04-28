@@ -19,5 +19,6 @@ public class BerlinDbContext : DbContext
     public DbSet<UpdateType> UpdateTypes => Set<UpdateType>();
     public DbSet<Fandom> Fandoms => Set<Fandom>();
     public DbSet<StoryFandomLink> StoryFandomLinks => Set<StoryFandomLink>();
-
+    public DbSet<Author> Authors => Set<Author>();
+    public DbSet<StoryAuthorLink> StoryAuthorLinks => Set<StoryAuthorLink>();
 }

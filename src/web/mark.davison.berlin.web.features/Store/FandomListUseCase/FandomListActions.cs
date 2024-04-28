@@ -4,7 +4,6 @@ public class FetchFandomsListAction : BaseAction
 {
 }
 
-
 public class FetchFandomsListActionResponse : BaseActionResponse<List<FandomDto>>
 {
 

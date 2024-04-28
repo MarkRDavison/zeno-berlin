@@ -17,8 +17,7 @@ public class ManageStoryQueryHandler : IQueryHandler<ManageStoryQueryRequest, Ma
 
             var story = await _repository.QueryEntities<Story>()
                 .Include(_ => _!.StoryFandomLinks)
-                .ThenInclude(_ => _.Fandom!)
-                .ThenInclude(_ => _!.ParentFandom!)
+                .Include(_ => _!.StoryAuthorLinks)
                 .Where(_ => _.Id == query.StoryId && _.UserId == currentUserContext.CurrentUser.Id)
                 .FirstOrDefaultAsync();
 
@@ -48,6 +47,7 @@ public class ManageStoryQueryHandler : IQueryHandler<ManageStoryQueryRequest, Ma
                     LastChecked = story.LastChecked,
                     LastAuthored = story.LastAuthored,
                     FandomIds = [.. story.StoryFandomLinks.Select(_ => _.FandomId)],
+                    AuthorIds = [.. story.StoryAuthorLinks.Select(_ => _.AuthorId)],
                     Updates = [..updates.Select(_ => new StoryManageUpdatesDto {
                         CurrentChapters = _.CurrentChapters,
                         TotalChapters = _.TotalChapters,

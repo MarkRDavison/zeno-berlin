@@ -4,7 +4,9 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection UseSharedServerServices(this IServiceCollection services)
     {
-        services.AddScoped<IFandomService, FandomService>();
+        services
+            .AddScoped<IFandomService, FandomService>()
+            .AddScoped<IAuthorService, AuthorService>();
         return services;
     }
 }

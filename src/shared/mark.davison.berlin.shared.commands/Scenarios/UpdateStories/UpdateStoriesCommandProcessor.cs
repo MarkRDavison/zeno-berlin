@@ -7,6 +7,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
     private readonly IDateService _dateService;
     private readonly INotificationHub _notificationHub;
     private readonly IFandomService _fandomService;
+    private readonly IAuthorService _authorService;
     private readonly IServiceProvider _serviceProvider;
 
     public UpdateStoriesCommandProcessor(
@@ -15,6 +16,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         IDateService dateService,
         INotificationHub notificationHub,
         IFandomService fandomService,
+        IAuthorService authorService,
         IServiceProvider serviceProvider)
     {
         _logger = logger;
@@ -22,6 +24,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         _dateService = dateService;
         _notificationHub = notificationHub;
         _fandomService = fandomService;
+        _authorService = authorService;
         _serviceProvider = serviceProvider;
     }
 
@@ -74,7 +77,6 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                     new StoryRowDto
                     {
                         StoryId = _.Id,
-                        Author = "TODO",
                         Name = _.Name,
                         CurrentChapters = _.CurrentChapters,
                         TotalChapters = _.TotalChapters,
@@ -98,11 +100,26 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             {
                 var fandoms = await _fandomService.GetOrCreateFandomsByExternalNames([fandomExternalName], cancellationToken);
 
-                var fandom = fandoms.First();
+                if (fandoms.FirstOrDefault() is Fandom fandom)
+                {
+                    var link = CreateStoryFandomLink(story.Id, fandom.Id, currentUserContext.CurrentUser.Id);
 
-                var link = CreateStoryFandomLink(story.Id, fandom.Id, currentUserContext.CurrentUser.Id);
+                    story.StoryFandomLinks.Add(link);
+                }
+            }
+        }
+        foreach (var authorName in info.Authors)
+        {
+            if (story.StoryAuthorLinks.All(_ => _.Author?.Name != authorName))
+            {
+                var authors = await _authorService.GetOrCreateAuthorsByName([authorName], site.Id, cancellationToken);
 
-                story.StoryFandomLinks.Add(link);
+                if (authors.FirstOrDefault() is Author author)
+                {
+                    var link = CreateStoryAuthorLink(story.Id, author.Id, currentUserContext.CurrentUser.Id);
+
+                    story.StoryAuthorLinks.Add(link);
+                }
             }
         }
 
@@ -162,7 +179,9 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
     {
         var includes = new Expression<Func<Story, object>>[] {
             _ => _.StoryFandomLinks,
-            _ => _.StoryFandomLinks.Select(_ => _.Fandom)
+            _ => _.StoryFandomLinks.Select(_ => _.Fandom),
+            _ => _.StoryAuthorLinks,
+            _ => _.StoryAuthorLinks.Select(_ => _.Author)
         };
 
         if (request.StoryIds.Any())
@@ -184,6 +203,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             var stories = await _repository.QueryEntities<Story>()
                 .Include(_ => _.StoryFandomLinks)
                 .ThenInclude(_ => _.Fandom)
+                .Include(_ => _.StoryAuthorLinks)
+                .ThenInclude(_ => _.Author)
                 .Where(_ => !_.Complete && _.LastChecked <= refreshDate)
                 .OrderBy(_ => _.LastChecked)
                 .Take(max)
@@ -200,6 +221,17 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             Id = Guid.NewGuid(),
             StoryId = storyId,
             FandomId = fandomId,
+            UserId = userId
+        };
+    }
+    // TODO: Duplicate
+    private static StoryAuthorLink CreateStoryAuthorLink(Guid storyId, Guid authorId, Guid userId)
+    {
+        return new StoryAuthorLink
+        {
+            Id = Guid.NewGuid(),
+            StoryId = storyId,
+            AuthorId = authorId,
             UserId = userId
         };
     }

@@ -86,13 +86,14 @@ public static class StoryListReducers
             {
                 StoryId = response.Value.Id,
                 Name = response.Value.Name,
-                Author = "TODO",
                 IsFavourite = response.Value.Favourite,
                 IsComplete = response.Value.Complete,
                 CurrentChapters = response.Value.CurrentChapters,
                 TotalChapters = response.Value.TotalChapters,
-                Fandoms = response.Value.Fandoms
+                Fandoms = response.Value.Fandoms,
+                Authors = response.Value.Authors
             }; // TODO: Helper??? if you ever cannot make one from the other need to fetch
+
             return new StoryListState(
                 state.IsLoading,
                 [.. state.Stories.Where(_ => _.StoryId != newStory.StoryId), newStory],

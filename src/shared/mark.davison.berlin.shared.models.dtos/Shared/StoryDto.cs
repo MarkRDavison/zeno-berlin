@@ -10,6 +10,7 @@ public class StoryDto
     public int? TotalChapters { get; set; }
     public bool Complete { get; set; }
     public List<Guid> Fandoms { get; set; } = [];
+    public List<Guid> Authors { get; set; } = [];
 
     public DateTime LastChecked { get; set; }
     public DateOnly LastAuthored { get; set; }

@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.web.components.Helpers;
 
 // TODO: Move to web.services???
-public static class FandomDisplayHelpers
+public static class LinkDisplayHelpers
 {
     public static string FandomIdsToSummaryString(IEnumerable<Guid> fandomIds, ICollection<FandomDto> fandoms)
     {
@@ -52,6 +52,61 @@ public static class FandomDisplayHelpers
         if (fandoms.FirstOrDefault(_ => _.FandomId == current.ParentFandomId) is FandomDto parentFandom)
         {
             return GetParentRecursively(parentFandom, fandoms);
+        }
+
+        return current;
+    }
+
+
+    public static string AuthorIdsToSummaryString(IEnumerable<Guid> authorIds, ICollection<AuthorDto> authors)
+    {
+        var authorsToDisplay = AuthorIdsToSummaryAuthors(authorIds, authors);
+
+        var names = authorsToDisplay.Select(_ => _.Name).Distinct();
+
+        return string.Join(", ", names);
+    }
+
+    public static IEnumerable<AuthorDto> AuthorIdsToSummaryAuthors(IEnumerable<Guid> authorIds, ICollection<AuthorDto> authors)
+    {
+        var authorsToDisplay = new List<AuthorDto>();
+
+        foreach (var fid in authorIds)
+        {
+            if (authors.FirstOrDefault(_ => _.AuthorId == fid) is AuthorDto author)
+            {
+                authorsToDisplay.Add(GetParentRecursively(author, authors));
+            }
+        }
+
+        return authorsToDisplay.DistinctBy(_ => _.AuthorId);
+    }
+
+    public static IEnumerable<AuthorDto> AuthorIdsToAuthors(IEnumerable<Guid> authorIds, ICollection<AuthorDto> authors)
+    {
+        var authorsToDisplay = new List<AuthorDto>();
+
+        foreach (var fid in authorIds)
+        {
+            if (authors.FirstOrDefault(_ => _.AuthorId == fid) is AuthorDto author)
+            {
+                authorsToDisplay.Add(author);
+            }
+        }
+
+        return authorsToDisplay.DistinctBy(_ => _.AuthorId);
+    }
+
+    private static AuthorDto GetParentRecursively(AuthorDto current, ICollection<AuthorDto> authors)
+    {
+        if (current.ParentAuthorId == null)
+        {
+            return current;
+        }
+
+        if (authors.FirstOrDefault(_ => _.AuthorId == current.ParentAuthorId) is AuthorDto parentAuthor)
+        {
+            return GetParentRecursively(parentAuthor, authors);
         }
 
         return current;

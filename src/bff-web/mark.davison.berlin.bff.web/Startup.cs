@@ -93,6 +93,7 @@ public class Startup
             MapProxyCQRSGet(endpoints, "/api/startup-query");
             MapProxyCQRSGet(endpoints, "/api/story-list-query");
             MapProxyCQRSGet(endpoints, "/api/fandom-list-query");
+            MapProxyCQRSGet(endpoints, "/api/author-list-query");
             MapProxyCQRSGet(endpoints, "/api/dashboard-list-query");
             MapProxyCQRSGet(endpoints, "/api/manage-story-query");
 

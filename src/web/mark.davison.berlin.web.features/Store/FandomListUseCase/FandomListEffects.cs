@@ -1,7 +1,4 @@
-﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddFandom;
-using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.EditFandom;
-
-namespace mark.davison.berlin.web.features.Store.FandomListUseCase;
+﻿namespace mark.davison.berlin.web.features.Store.FandomListUseCase;
 
 public class FandomListEffects
 {

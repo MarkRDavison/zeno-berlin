@@ -45,7 +45,7 @@
                                     <MudStack Justify="Justify.FlexStart">
                                         <MudText Class="story-card-name" Typo="Typo.h5">@tile.Name</MudText>
                                         <MudSpacer />
-                                        <span>@FandomDisplayHelpers.FandomIdsToSummaryString(tile.Fandoms, FandomListState.Value.Entities)</span>
+                                        <span>@LinkDisplayHelpers.FandomIdsToSummaryString(tile.Fandoms, FandomListState.Value.Entities)</span>
                                         <MudText Typo="Typo.body1">@StoryCardChapterText(tile)</MudText>
                                         <MudText Typo="Typo.body1">@StoryCardUpdatedText(tile)</MudText>
                                         <MudText Typo="Typo.body1">@StoryCardCheckedText(tile)</MudText>

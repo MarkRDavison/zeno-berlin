@@ -17,6 +17,8 @@ public class StoryListQueryHandler : IQueryHandler<StoryListQueryRequest, StoryL
             var storyUpdates = await _repository.QueryEntities<StoryUpdate>()
                 .Include(_ => _.Story!)
                 .ThenInclude(_ => _!.StoryFandomLinks)
+                .Include(_ => _.Story!)
+                .ThenInclude(_ => _!.StoryAuthorLinks)
                 .Where(_ => _.UserId == currentUserContext.CurrentUser.Id)
                 .GroupBy(_ => _.StoryId)
                 .Select(_ => new
@@ -40,7 +42,8 @@ public class StoryListQueryHandler : IQueryHandler<StoryListQueryRequest, StoryL
                             TotalChapters = _.Update.Story!.TotalChapters,
                             IsComplete = _.Update.Story!.Complete,
                             IsFavourite = _.Update.Story!.Favourite,
-                            Fandoms = [.. _.Update.Story.StoryFandomLinks.Select(sfl => sfl.FandomId)]
+                            Fandoms = [.. _.Update.Story.StoryFandomLinks.Select(sfl => sfl.FandomId)],
+                            Authors = [.. _.Update.Story.StoryAuthorLinks.Select(sal => sal.AuthorId)]
                         };
                     })
                     .ToList()

@@ -13,6 +13,9 @@ public partial class Story
     public required IState<FandomListState> FandomListState { get; set; }
 
     [Inject]
+    public required IState<AuthorListState> AuthorListState { get; set; }
+
+    [Inject]
     public required IDispatcher Dispatcher { get; set; }
 
     [Inject]
@@ -107,6 +110,13 @@ public partial class Story
         var fandom = FandomListState.Value.Entities.FirstOrDefault(_ => _.FandomId == fandomId);
 
         return fandom?.Name ?? string.Empty;
+    }
+
+    private string GetAuthorName(Guid authorId)
+    {
+        var author = AuthorListState.Value.Entities.FirstOrDefault(_ => _.AuthorId == authorId);
+
+        return author?.Name ?? string.Empty;
     }
 
     private string _lastCheckedText => $"Last checked {Data.LastChecked.Humanize()}";

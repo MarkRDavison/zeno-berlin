@@ -74,7 +74,9 @@ public class Ao3StoryInfoProcessorTests
             CancellationToken.None);
 
         Assert.AreEqual("All She Never Wanted", storyInfo.Name);
-        Assert.AreEqual("Ragana62", storyInfo.Author);
+        Assert.AreEqual(2, storyInfo.Authors.Count);
+        Assert.IsTrue(storyInfo.Authors.Contains("Ragana62"));
+        Assert.IsTrue(storyInfo.Authors.Contains("Ragana612"));
         Assert.AreEqual(false, storyInfo.IsCompleted);
         Assert.AreEqual(57, storyInfo.CurrentChapters);
         Assert.AreEqual(new DateOnly(2023, 5, 16), storyInfo.Published);

@@ -12,6 +12,7 @@ public class StoryManageDto
     public DateTime LastChecked { get; set; }
     public DateOnly LastAuthored { get; set; }
     public List<Guid> FandomIds { get; set; } = [];
+    public List<Guid> AuthorIds { get; set; } = [];
 
     public List<StoryManageUpdatesDto> Updates { get; set; } = [];
 

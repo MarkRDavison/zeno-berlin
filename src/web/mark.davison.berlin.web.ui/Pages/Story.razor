@@ -57,6 +57,17 @@ else
         </MudStack>
         }
         <MudDivider />
+
+        <MudStack>
+            <span>TODO: Slider/toggle to show actual/hidden vs display???</span>
+            <ul>
+                @foreach (var authorId in Data.AuthorIds)
+                {
+                    <li><MudLink Href="@RouteHelpers.Author(authorId)" Typo="Typo.body1">@GetAuthorName(authorId)</MudLink></li>
+                }
+            </ul>
+        </MudStack>
+        <MudDivider />
         <MudStack>
             <MudText Typo="Typo.subtitle1">Updates</MudText>
             <MudTable Items="@Data.Updates" Hover Breakpoint="Breakpoint.Sm" Loading="@FandomListState.Value.IsLoading">

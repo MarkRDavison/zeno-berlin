@@ -1,4 +1,5 @@
-﻿global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.DashboardList;
+﻿global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.AuthorList;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.DashboardList;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.FandomList;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.ManageStory;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.Startup;
