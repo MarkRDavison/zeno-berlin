@@ -66,6 +66,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             {
                 await _repository.UpsertEntitiesAsync(toUpdate);
             }
+
             if (updates.Any())
             {
                 await _repository.UpsertEntitiesAsync(updates);
@@ -82,7 +83,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                         TotalChapters = _.TotalChapters,
                         IsComplete = _.Complete,
                         IsFavourite = _.Favourite,
-                        Fandoms = [.. _.StoryFandomLinks.Select(_ => _.FandomId)]
+                        Fandoms = [.. _.StoryFandomLinks.Select(_ => _.FandomId)],
+                        Authors = [.. _.StoryAuthorLinks.Select(_ => _.AuthorId)]
                     }
                 )]
             };
@@ -105,6 +107,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                     var link = CreateStoryFandomLink(story.Id, fandom.Id, currentUserContext.CurrentUser.Id);
 
                     story.StoryFandomLinks.Add(link);
+
+                    await _repository.UpsertEntityAsync(link);
                 }
             }
         }
@@ -119,6 +123,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                     var link = CreateStoryAuthorLink(story.Id, author.Id, currentUserContext.CurrentUser.Id);
 
                     story.StoryAuthorLinks.Add(link);
+
+                    await _repository.UpsertEntityAsync(link);
                 }
             }
         }
