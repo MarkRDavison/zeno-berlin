@@ -46,7 +46,7 @@ Some random anonymous/landing page so you can be on the site and not immediately
 ***
 ***
 
-## Misc
+## Features
 Series, ao3 concept does ffnet have it? maybe if site doesnt support it you can manually add them??
 Importing needs to be an async job
 
@@ -76,11 +76,11 @@ shared action/response are public, non shared ones that are same as shared, inte
 
 UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol out???
 navigating to /fandoms after initial load does not load them, so newly added stories wont have their fandoms show up till reload
-
-The stylesheet https://fanfic.markdavison.kiwi/css/berlin.min.css was not loaded because its MIME type, "text/html", is not "text/css".
- - nginx catch all is messing with this??? but it is still loading
+checking a story that doesnt have an author does not set it on the story, it does create the author
 
 ### DONE
+
+## Features
 
 Fandom
  - a way to manage this?
@@ -88,7 +88,6 @@ Fandom
 	- Each fandom can have a parent associated, so 'Star Wars - All Media Types', 'Star Wars: Rebels' etc all are summarized as Star Wars? What about cross overs???
 
 DEPLOY TO K8S
-
 
 Authors
 
@@ -100,3 +99,8 @@ Duplicated fandoms
    - Use Cache instead???
 
 bffroot retrieval is bad, use app settings and sed command into there???
+
+The stylesheet https://fanfic.markdavison.kiwi/css/berlin.min.css was not loaded because its MIME type, "text/html", is not "text/css".
+ - nginx catch all is messing with this??? but it is still loading
+
+Hard refresh of anything but root gives nginx 404
