@@ -27,6 +27,7 @@ api:
       BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-berlin
       BERLIN__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
       BERLIN__PRODUCTION_MODE: true
+      BERLIN__NOTIFICATIONS__CONSOLE__ENABLED: true
 bffweb:
   app: zeno-fanfic-bff
   replicas: 1
