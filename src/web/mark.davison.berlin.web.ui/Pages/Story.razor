@@ -21,6 +21,7 @@ else
                     <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" onclick="@(() => FavouriteClick(true))" />
                 }
             </div>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowOutward" Href="@Data.Address" Target="_blank"></MudIconButton>
             <MudText Class="muted-text" Typo="Typo.body2">@_lastCheckedText</MudText>
             <MudSpacer />
             <ProgressButton 
