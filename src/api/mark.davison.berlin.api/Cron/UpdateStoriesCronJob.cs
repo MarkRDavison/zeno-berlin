@@ -36,7 +36,19 @@ public class UpdateStoriesCronJob : CQRSCronJob<UpdateStoriesCronJob, UpdateStor
             }
             else
             {
-                _logger.LogInformation("Successfully updated {0} stories.", _appSettings.Value.STORIES_PER_CRON_UPDATE);
+                _logger.LogInformation(
+                    "Successfully updated {0} stories.",
+                    response.SuccessWithValue
+                        ? response.Value.Count
+                        : _appSettings.Value.STORIES_PER_CRON_UPDATE);
+
+                if (response.SuccessWithValue)
+                {
+                    foreach (var story in response.Value)
+                    {
+                        _logger.LogInformation(" - {0}", story.Name);
+                    }
+                }
             }
         }
         else

@@ -8,9 +8,10 @@
     </MudStack>
     <MudTable Items="@_stories" Hover Breakpoint="Breakpoint.Sm" Loading="@StoryListState.Value.IsLoading">
         <HeaderContent>
-            <MudTh>Title</MudTh>
+            <MudTh><MudTableSortLabel SortBy="@((StoryRowDto _)=> _.Name)">Title</MudTableSortLabel></MudTh>
             <MudTh>Fandoms</MudTh>
             <MudTh>Author(s)</MudTh>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="@((StoryRowDto _)=> _.LastAuthored)">Last authored</MudTableSortLabel></MudTh>
             <MudTh></MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -22,6 +23,9 @@
             </MudTd>
             <MudTd DataLabel="Authors">
                 @LinkDisplayHelpers.AuthorIdsToSummaryString(context.Authors, AuthorListState.Value.Entities)
+            </MudTd>
+            <MudTd DataLabel="Last authored">
+                @context.LastAuthored.Humanize()
             </MudTd>
             <MudTd>
                 <div class="float-right favourite-container-visible">

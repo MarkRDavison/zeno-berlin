@@ -6,7 +6,7 @@ public static class AuthorListReducers
     public static AuthorListState FetchAuthorsListAction(AuthorListState state, FetchAuthorsListAction action)
     {
         return new AuthorListState(
-            true,
+            false,
             []);
     }
 
@@ -15,9 +15,11 @@ public static class AuthorListReducers
     {
         if (response.SuccessWithValue)
         {
+            var returnedAuthorIds = response.Value.Select(_ => _.AuthorId).ToHashSet();
+
             return new AuthorListState(
                 false,
-                response.Value);
+                [.. state.Entities.Where(_ => !returnedAuthorIds.Contains(_.AuthorId)), .. response.Value]);
         }
 
         return new AuthorListState(

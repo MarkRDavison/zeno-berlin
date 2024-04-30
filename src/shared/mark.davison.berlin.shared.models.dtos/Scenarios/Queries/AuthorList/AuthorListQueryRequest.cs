@@ -3,4 +3,5 @@
 [GetRequest(Path = "author-list-query")]
 public class AuthorListQueryRequest : IQuery<AuthorListQueryRequest, AuthorListQueryResponse>
 {
+    public List<Guid> AuthorIds { get; set; } = [];
 }

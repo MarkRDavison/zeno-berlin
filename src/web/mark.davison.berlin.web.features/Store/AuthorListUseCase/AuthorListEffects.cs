@@ -12,7 +12,10 @@ public class AuthorListEffects
     [EffectMethod]
     public async Task HandleFetchAuthorListActionAsync(FetchAuthorsListAction action, IDispatcher dispatcher)
     {
-        var queryRequest = new AuthorListQueryRequest();
+        var queryRequest = new AuthorListQueryRequest
+        {
+            AuthorIds = action.AuthorIds
+        };
 
         var queryResponse = await _repository.Get<AuthorListQueryResponse, AuthorListQueryRequest>(queryRequest, CancellationToken.None);
 

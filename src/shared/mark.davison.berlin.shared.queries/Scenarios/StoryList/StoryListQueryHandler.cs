@@ -43,7 +43,8 @@ public class StoryListQueryHandler : IQueryHandler<StoryListQueryRequest, StoryL
                             IsComplete = _.Update.Story!.Complete,
                             IsFavourite = _.Update.Story!.Favourite,
                             Fandoms = [.. _.Update.Story.StoryFandomLinks.Select(sfl => sfl.FandomId)],
-                            Authors = [.. _.Update.Story.StoryAuthorLinks.Select(sal => sal.AuthorId)]
+                            Authors = [.. _.Update.Story.StoryAuthorLinks.Select(sal => sal.AuthorId)],
+                            LastAuthored = _.Update.Story.LastAuthored
                         };
                     })
                     .ToList()

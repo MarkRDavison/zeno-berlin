@@ -13,8 +13,15 @@ public class AuthorListQueryHandler : IQueryHandler<AuthorListQueryRequest, Auth
     {
         await using (_repository.BeginTransaction())
         {
-            var Authors = await _repository.QueryEntities<Author>()
-                .Where(_ => _.UserId == currentUserContext.CurrentUser.Id)
+            var authorsQuery = _repository.QueryEntities<Author>()
+                .Where(_ => _.UserId == currentUserContext.CurrentUser.Id);
+
+            if (query.AuthorIds.Any())
+            {
+                authorsQuery = authorsQuery.Where(_ => query.AuthorIds.Contains(_.Id));
+            }
+
+            var authors = await authorsQuery
                 .Select(_ => new AuthorDto // TODO: Helper
                 {
                     AuthorId = _.Id,
@@ -26,7 +33,7 @@ public class AuthorListQueryHandler : IQueryHandler<AuthorListQueryRequest, Auth
 
             return new AuthorListQueryResponse
             {
-                Value = Authors
+                Value = authors
             };
         }
     }

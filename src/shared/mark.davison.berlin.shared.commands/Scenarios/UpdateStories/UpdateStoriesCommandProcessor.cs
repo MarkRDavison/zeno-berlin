@@ -84,7 +84,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                         IsComplete = _.Complete,
                         IsFavourite = _.Favourite,
                         Fandoms = [.. _.StoryFandomLinks.Select(_ => _.FandomId)],
-                        Authors = [.. _.StoryAuthorLinks.Select(_ => _.AuthorId)]
+                        Authors = [.. _.StoryAuthorLinks.Select(_ => _.AuthorId)],
+                        LastAuthored = _.LastAuthored
                     }
                 )]
             };

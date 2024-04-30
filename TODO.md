@@ -76,7 +76,6 @@ shared action/response are public, non shared ones that are same as shared, inte
 
 UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol out???
 navigating to /fandoms after initial load does not load them, so newly added stories wont have their fandoms show up till reload
-checking a story that doesnt have an author does not set it on the story, it does create the author
 
 ### DONE
 
@@ -104,3 +103,4 @@ The stylesheet https://fanfic.markdavison.kiwi/css/berlin.min.css was not loaded
  - nginx catch all is messing with this??? but it is still loading
 
 Hard refresh of anything but root gives nginx 404
+checking a story that doesnt have an author does not set it on the story, it does create the author

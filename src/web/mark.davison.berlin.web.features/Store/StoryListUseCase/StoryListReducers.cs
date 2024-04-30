@@ -91,7 +91,8 @@ public static class StoryListReducers
                 CurrentChapters = response.Value.CurrentChapters,
                 TotalChapters = response.Value.TotalChapters,
                 Fandoms = response.Value.Fandoms,
-                Authors = response.Value.Authors
+                Authors = response.Value.Authors,
+                LastAuthored = response.Value.LastAuthored
             }; // TODO: Helper??? if you ever cannot make one from the other need to fetch
 
             return new StoryListState(

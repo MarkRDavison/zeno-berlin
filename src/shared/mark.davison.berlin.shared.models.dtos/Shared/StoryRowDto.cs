@@ -10,4 +10,5 @@ public class StoryRowDto
     public int? TotalChapters { get; set; }
     public List<Guid> Fandoms { get; set; } = [];
     public List<Guid> Authors { get; set; } = [];
+    public DateOnly LastAuthored { get; set; }
 }
