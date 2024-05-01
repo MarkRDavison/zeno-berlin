@@ -1,4 +1,4 @@
-﻿namespace mark.davison.berlin.web.ui.Pages;
+﻿namespace mark.davison.berlin.web.components.Pages;
 
 public partial class Story
 {
@@ -121,7 +121,7 @@ public partial class Story
 
     private string _lastCheckedText => $"Last checked {Data.LastChecked.Humanize()}";
     private string _lastAuthoredText => $"Last authored {Data.LastAuthored.Humanize()}";
-    private string _chaptersText => $"Chapters: {Data.CurrentChapters}/{(Data.TotalChapters?.ToString() ?? "?")}";
+    private string _chaptersText => $"Chapters: {Data.CurrentChapters}/{Data.TotalChapters?.ToString() ?? "?"}";
 
-    private string UpdateChapterText(StoryManageUpdatesDto update) => $"{update.CurrentChapters}/{(update.TotalChapters?.ToString() ?? "?")}";
+    private string UpdateChapterText(StoryManageUpdatesDto update) => $"{update.CurrentChapters}/{update.TotalChapters?.ToString() ?? "?"}";
 }

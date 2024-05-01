@@ -1,6 +1,4 @@
-﻿using mark.davison.berlin.web.features.Store.DashboardListUseCase;
-
-namespace mark.davison.berlin.web.ui.Pages;
+﻿namespace mark.davison.berlin.web.components.Pages;
 
 public partial class Dashboard
 {
@@ -125,7 +123,7 @@ public partial class Dashboard
 
     private string StoryCardChapterText(DashboardTileDto tile)
     {
-        return $"Chapters: {tile.CurrentChapters}/{(tile.TotalChapters?.ToString() ?? "?")}";
+        return $"Chapters: {tile.CurrentChapters}/{tile.TotalChapters?.ToString() ?? "?"}";
     }
     private string StoryCardUpdatedText(DashboardTileDto tile)
     {

@@ -31,10 +31,10 @@
             }
             else 
             {
-                @foreach (var tile in _tiles) 
+                @foreach (var tile in _tiles)
                 {
-                    <MudItem xs="12" sm="6" md="4" lg="3">
-                        <MudPaper Class="story-card pa-2" @onclick="() => CardClick(tile.StoryId)">
+        <MudItem xs="12" sm="6" md="4" lg="3">
+                        <MudPaper Class="story-card pa-2" onclick="@(() => CardClick(tile.StoryId))">
                             <MudStack Row Class="fill-height">
                                 @if (tile.Temporary)
                                 {
@@ -43,7 +43,7 @@
                                 else
                                 {
                                     <MudStack Justify="Justify.FlexStart">
-                                        <MudText Class="story-card-name" Typo="Typo.h5">@tile.Name</MudText>
+                                       <MudText Class="story-card-name" Typo="Typo.h5">@tile.Name</MudText>
                                         <MudSpacer />
                                         <span>@LinkDisplayHelpers.FandomIdsToSummaryString(tile.Fandoms, FandomListState.Value.Entities)</span>
                                         <MudText Typo="Typo.body1">@StoryCardChapterText(tile)</MudText>
@@ -53,11 +53,11 @@
                                     <div class="float-right mr-2 favourite-container">
                                         @if (tile.Favourite)
                                         {
-                                            <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" @onclick="() => MudIconClick(tile.StoryId, false)" />
+                                            <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" onclick="@(() => MudIconClick(tile.StoryId, false))" />
                                         }
                                         else
                                         {
-                                            <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" @onclick="() => MudIconClick(tile.StoryId, true)" />
+                                            <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" onclick="@(() => MudIconClick(tile.StoryId, true))" />
                                         }
                                     </div>
                                 }
