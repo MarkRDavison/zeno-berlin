@@ -27,7 +27,13 @@ api:
       BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-berlin
       BERLIN__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
       BERLIN__PRODUCTION_MODE: true
+      BERLIN__STORY_UPDATE_CRON: '0 */3 * * *'
+      BERLIN__STORIES_PER_CRON_UPDATE: 20
       BERLIN__NOTIFICATIONS__CONSOLE__ENABLED: true
+      BERLIN__NOTIFICATIONS__MATRIX__ENABLED: true
+      BERLIN__NOTIFICATIONS__MATRIX__URL: 'https://matrix-client.matrix.org'
+      BERLIN__NOTIFICATIONS__MATRIX__ROOMID: '!miNmGSGPmCyiGcKdKD:matrix.org'
+      BERLIN__NOTIFICATIONS__MATRIX__SESSIONNAME: 'zeno-fanfic'
 bffweb:
   app: zeno-fanfic-bff
   replicas: 1
@@ -42,6 +48,8 @@ bffweb:
       - REDIS__PASSWORD
       - AUTH__CLIENT_SECRET
       - AUTH__SESSION_SECRET
+      - MATRIX__BOT_USERNAME
+      - MATRIX__BOT_PASSWORD
     public:
       BERLIN__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
       BERLIN__REDIS__PORT: '6379'
