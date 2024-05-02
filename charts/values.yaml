@@ -7,7 +7,7 @@ api:
   replicas: 1
   name: zeno-fanfic-api
   image: ghcr.io/markrdavison/markdavison-berlin-api
-  tag: v0.0.22
+  tag: v0.0.23
   port: 50000
   ingress:
     host: fanfic-api.markdavison.kiwi
@@ -29,19 +29,19 @@ api:
       BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-berlin
       BERLIN__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
       BERLIN__PRODUCTION_MODE: true
-      BERLIN__STORY_UPDATE_CRON: '0 */3 * * *'
+      BERLIN__STORY_UPDATE_CRON: 0 */3 * * *
       BERLIN__STORIES_PER_CRON_UPDATE: 20
       BERLIN__NOTIFICATIONS__CONSOLE__ENABLED: true
       BERLIN__NOTIFICATIONS__MATRIX__ENABLED: true
-      BERLIN__NOTIFICATIONS__MATRIX__URL: 'https://matrix-client.matrix.org'
+      BERLIN__NOTIFICATIONS__MATRIX__URL: https://matrix-client.matrix.org
       BERLIN__NOTIFICATIONS__MATRIX__ROOMID: '!miNmGSGPmCyiGcKdKD:matrix.org'
-      BERLIN__NOTIFICATIONS__MATRIX__SESSIONNAME: 'zeno-fanfic'
+      BERLIN__NOTIFICATIONS__MATRIX__SESSIONNAME: zeno-fanfic
 bffweb:
   app: zeno-fanfic-bff
   replicas: 1
   name: zeno-fanfic-bff
   image: ghcr.io/markrdavison/markdavison-berlin-bff-web
-  tag: v0.0.22
+  tag: v0.0.23
   port: 40000
   ingress:
     host: fanfic-bff.markdavison.kiwi
@@ -67,7 +67,7 @@ web:
   replicas: 1
   name: zeno-fanfic-web
   image: ghcr.io/markrdavison/markdavison-berlin-web
-  tag: v0.0.22
+  tag: v0.0.23
   port: 80
   ingress:
     host: fanfic.markdavison.kiwi
