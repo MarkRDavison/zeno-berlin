@@ -9,6 +9,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
     private readonly IFandomService _fandomService;
     private readonly IAuthorService _authorService;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IEnumerable<INotificationService> _notificationServices; // TODO: TEMP: REMOVE
 
     public UpdateStoriesCommandProcessor(
         ILogger<UpdateStoriesCommandProcessor> logger,
@@ -17,7 +18,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         INotificationHub notificationHub,
         IFandomService fandomService,
         IAuthorService authorService,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        IEnumerable<INotificationService> notificationServices)
     {
         _logger = logger;
         _repository = repository;
@@ -26,6 +28,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         _fandomService = fandomService;
         _authorService = authorService;
         _serviceProvider = serviceProvider;
+        _notificationServices = notificationServices;
     }
 
     public async Task<UpdateStoriesResponse> ProcessAsync(UpdateStoriesRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
@@ -202,7 +205,14 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
 
         _logger.LogInformation("Attempting to send notification for chapter {0} for {1}", info.CurrentChapters, info.Name);
 
+        foreach (var notificationService in _notificationServices)
+        {
+            _logger.LogInformation("Notification service: {0} enabled status: {1}", notificationService.Settings.SECTION, notificationService.Settings.ENABLED);
+        }
+
         var response = await _notificationHub.SendNotification(builder.ToString());
+
+        _logger.LogInformation("Notification response: {0}", System.Text.Json.JsonSerializer.Serialize(response));
 
         response.Errors.ForEach(_ => _logger.LogError(_));
         response.Warnings.ForEach(_ => _logger.LogWarning(_));
