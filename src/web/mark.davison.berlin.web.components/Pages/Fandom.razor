@@ -38,5 +38,16 @@ else {
         }
         </MudStack>
     }
+    <MudDivider />
+    <MudText Typo="Typo.subtitle1">Stories</MudText>
+    @if (!StoryListState.Value.IsLoading)
+    {
+    <ul>
+        @foreach (var story in _fandomStories)
+        {
+            <li><MudLink Href="@RouteHelpers.Story(story.StoryId)" Typo="Typo.body1">@story.Name</MudLink></li>
+        }
+    </ul>
+    }
 </MudStack>
 }

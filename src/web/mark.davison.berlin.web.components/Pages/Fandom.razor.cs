@@ -15,7 +15,24 @@ public partial class Fandom
     public required IState<FandomListState> FandomListState { get; set; }
 
     [Inject]
+    public required IState<StoryListState> StoryListState { get; set; }
+
+    [Inject]
+    public required IDispatcher Dispatcher { get; set; }
+
+    [Inject]
     public required IDialogService _dialogService { get; set; }
+
+    private IEnumerable<StoryRowDto> _fandomStories => StoryListState.Value.Stories.Where(_ => _.Fandoms.Any(f => f == Id));
+
+
+    protected override void OnParametersSet()
+    {
+        Dispatcher.Dispatch(new FetchStoryListAction
+        {
+            // TODO: Fandom id
+        });
+    }
 
     internal async Task OpenEditFandomModal()
     {

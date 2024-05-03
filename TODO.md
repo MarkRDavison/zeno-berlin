@@ -69,6 +69,8 @@ Story summary???
 If you are using the site while the cron job runs, stuff may be updated in the background, is this an issue???
 shared action/response are public, non shared ones that are same as shared, internal, keep within reducer/effect???
 
+On the author/fandom pages parent author/fandom is not taken into account when filtering stories to show
+
 ## BUGS
 
 UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol out???

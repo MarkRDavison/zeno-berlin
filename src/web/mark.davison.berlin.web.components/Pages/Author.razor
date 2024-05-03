@@ -10,6 +10,16 @@ else
 {
     <MudStack>
         <MudText Typo="Typo.h5">@Data?.Name</MudText>
-        <MudText Typo="Typo.subtitle1">TODO the rest of this</MudText>
+        <MudDivider />
+        <MudText Typo="Typo.subtitle1">Stories</MudText>
+        @if (!StoryListState.Value.IsLoading)
+        {
+        <ul>
+            @foreach (var story in _authorStories)
+            {
+                <li><MudLink Href="@RouteHelpers.Story(story.StoryId)" Typo="Typo.body1">@story.Name</MudLink></li>
+            }
+        </ul>
+        }
     </MudStack>
 }
