@@ -8,6 +8,7 @@ public class StoryRowDto
     public bool IsComplete { get; set; }
     public int CurrentChapters { get; set; }
     public int? TotalChapters { get; set; }
+    public int? ConsumedChapters { get; set; }
     public List<Guid> Fandoms { get; set; } = [];
     public List<Guid> Authors { get; set; } = [];
     public DateOnly LastAuthored { get; set; }

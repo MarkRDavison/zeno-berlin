@@ -81,6 +81,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                         Name = _.Name,
                         CurrentChapters = _.CurrentChapters,
                         TotalChapters = _.TotalChapters,
+                        ConsumedChapters = _.ConsumedChapters,
                         IsComplete = _.Complete,
                         IsFavourite = _.Favourite,
                         Fandoms = [.. _.StoryFandomLinks.Select(_ => _.FandomId)],

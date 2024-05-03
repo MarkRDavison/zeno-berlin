@@ -1,6 +1,4 @@
-﻿using mark.davison.berlin.web.features.Store.SharedStoryUseCase;
-
-namespace mark.davison.berlin.web.features.Store.DashboardListUseCase;
+﻿namespace mark.davison.berlin.web.features.Store.DashboardListUseCase;
 
 public static class DashboardListReducers
 {
@@ -73,6 +71,7 @@ public static class DashboardListReducers
                 Name = response.Value.Name,
                 CurrentChapters = response.Value.CurrentChapters,
                 TotalChapters = response.Value.TotalChapters,
+                ConsumedChapters = response.Value.ConsumedChapters,
                 Complete = response.Value.Complete,
                 Favourite = response.Value.Favourite,
                 LastAuthored = response.Value.LastAuthored,

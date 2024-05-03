@@ -8,6 +8,7 @@ public class StoryDto
     public string ExternalId { get; set; } = string.Empty;
     public int CurrentChapters { get; set; }
     public int? TotalChapters { get; set; }
+    public int? ConsumedChapters { get; set; }
     public bool Complete { get; set; }
     public List<Guid> Fandoms { get; set; } = [];
     public List<Guid> Authors { get; set; } = [];

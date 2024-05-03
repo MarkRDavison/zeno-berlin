@@ -40,6 +40,7 @@ public class StoryListQueryHandler : IQueryHandler<StoryListQueryRequest, StoryL
                             Name = _.Update.Story!.Name,
                             CurrentChapters = _.Update.Story!.CurrentChapters,
                             TotalChapters = _.Update.Story!.TotalChapters,
+                            ConsumedChapters = _.Update.Story!.ConsumedChapters,
                             IsComplete = _.Update.Story!.Complete,
                             IsFavourite = _.Update.Story!.Favourite,
                             Fandoms = [.. _.Update.Story.StoryFandomLinks.Select(sfl => sfl.FandomId)],

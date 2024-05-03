@@ -42,6 +42,7 @@ public class ManageStoryQueryHandler : IQueryHandler<ManageStoryQueryRequest, Ma
                     Address = story.Address,
                     CurrentChapters = story.CurrentChapters,
                     TotalChapters = story.TotalChapters,
+                    ConsumedChapters = story.ConsumedChapters,
                     Complete = story.Complete,
                     Favourite = story.Favourite,
                     UpdateTypeId = story.UpdateTypeId,

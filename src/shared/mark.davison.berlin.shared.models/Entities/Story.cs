@@ -32,6 +32,7 @@ public class Story : BerlinEntity
             ExternalId = ExternalId,
             CurrentChapters = CurrentChapters,
             TotalChapters = TotalChapters,
+            ConsumedChapters = ConsumedChapters,
             Complete = Complete,
             LastChecked = LastChecked,
             LastAuthored = LastAuthored,

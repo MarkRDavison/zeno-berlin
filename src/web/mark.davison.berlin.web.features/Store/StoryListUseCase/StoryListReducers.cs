@@ -88,6 +88,7 @@ public static class StoryListReducers
                 IsComplete = response.Value.Complete,
                 CurrentChapters = response.Value.CurrentChapters,
                 TotalChapters = response.Value.TotalChapters,
+                ConsumedChapters = response.Value.ConsumedChapters,
                 Fandoms = response.Value.Fandoms,
                 Authors = response.Value.Authors,
                 LastAuthored = response.Value.LastAuthored
