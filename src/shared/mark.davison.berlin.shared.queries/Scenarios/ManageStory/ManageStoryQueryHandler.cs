@@ -44,6 +44,7 @@ public class ManageStoryQueryHandler : IQueryHandler<ManageStoryQueryRequest, Ma
                     TotalChapters = story.TotalChapters,
                     Complete = story.Complete,
                     Favourite = story.Favourite,
+                    UpdateTypeId = story.UpdateTypeId,
                     LastChecked = story.LastChecked,
                     LastAuthored = story.LastAuthored,
                     FandomIds = [.. story.StoryFandomLinks.Select(_ => _.FandomId)],

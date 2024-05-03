@@ -9,4 +9,10 @@
         For=@(() => FormViewModel.StoryAddress)
         Immediate
         Required />
+    <Dropdown 
+        Id="add-story-form-update-type"
+        Label="Update type"
+        Items="@FormViewModel.UpdateTypeItems"
+        @bind-Value="FormViewModel.UpdateTypeId"
+        For=@(() => FormViewModel.UpdateTypeId) />
 </MudForm>

@@ -24,6 +24,15 @@ public class AddStoryCommandValidator : ICommandValidator<AddStoryCommandRequest
                     nameof(AddStoryCommandRequest.StoryAddress));
         }
 
+        if (request.UpdateTypeId is Guid updateTypeId &&
+            UpdateTypeConstants.AllIds.All(_ => _ != updateTypeId))
+        {
+            return ValidationMessages
+                .CreateErrorResponse<AddStoryCommandResponse>(
+                    ValidationMessages.INVALID_PROPERTY,
+                    nameof(AddStoryCommandRequest.UpdateTypeId));
+        }
+
         Site? site = null;
         var repository = _serviceProvider.GetRequiredService<IRepository>();
         await using (repository.BeginTransaction())

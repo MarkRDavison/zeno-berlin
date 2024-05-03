@@ -5,6 +5,7 @@ public class AddStoryCommandRequest : ICommand<AddStoryCommandRequest, AddStoryC
 {
     public string StoryAddress { get; set; } = string.Empty;
     public Guid? SiteId { get; set; }
+    public Guid? UpdateTypeId { get; set; }
     public bool Favourite { get; set; }
     public bool SuppressUpdateCreation { get; set; }
 }

@@ -6,6 +6,8 @@ public partial class Dashboard
     public required IState<DashboardListState> DashboardListState { get; set; }
     [Inject]
     public required IState<FandomListState> FandomListState { get; set; }
+    [Inject]
+    public required IState<StartupState> StartupState { get; set; }
 
     [Inject]
     public required IDialogService _dialogService { get; set; }
@@ -73,10 +75,15 @@ public partial class Dashboard
             FullWidth = true
         };
 
+        var instance = new AddStoryFormViewModel
+        {
+            UpdateTypes = [.. StartupState.Value.UpdateTypes]
+        };
+
         var param = new DialogParameters<Modal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>
         {
             { _ => _.PrimaryText, "Save" },
-            { _ => _.Instance, null }
+            { _ => _.Instance, instance }
         };
 
         var dialog = _dialogService.Show<Modal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>("Add Story", param, options);

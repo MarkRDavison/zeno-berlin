@@ -3,6 +3,11 @@
 public class AddStoryFormViewModel : IFormViewModel
 {
     public string StoryAddress { get; set; } = string.Empty;
+    public Guid? UpdateTypeId { get; set; }
+
+    public List<UpdateTypeDto> UpdateTypes { get; set; } = [];
+
+    public IEnumerable<DropdownItem> UpdateTypeItems => UpdateTypes.Select(_ => new DropdownItem { Id = _.Id, Name = _.Description });
 
     public bool Valid
     {

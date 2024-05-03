@@ -51,7 +51,7 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
                 CurrentChapters = info.CurrentChapters,
                 Name = info.Name,
                 TotalChapters = info.TotalChapters,
-                UpdateTypeId = UpdateTypeConstants.EachChapterId,
+                UpdateTypeId = request.UpdateTypeId ?? UpdateTypeConstants.EachChapterId,
                 LastChecked = _dateService.Now,
                 LastModified = _dateService.Now,
                 LastAuthored = info.Updated,

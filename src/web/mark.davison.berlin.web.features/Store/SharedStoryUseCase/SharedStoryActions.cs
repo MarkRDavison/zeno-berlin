@@ -34,6 +34,7 @@ public class UpdateStoryActionResponse : BaseActionResponse<StoryRowDto>
 public class AddStoryAction : BaseAction
 {
     public string StoryAddress { get; set; } = string.Empty;
+    public Guid? UpdateTypeId { get; set; }
 }
 
 public class AddStoryActionResponse : BaseActionResponse<StoryDto>

@@ -197,7 +197,8 @@ public class SharedStoryEffects
     {
         var commandRequest = new AddStoryCommandRequest
         {
-            StoryAddress = action.StoryAddress
+            StoryAddress = action.StoryAddress,
+            UpdateTypeId = action.UpdateTypeId
         };
 
         var commandResponse = await _repository.Post<AddStoryCommandResponse, AddStoryCommandRequest>(commandRequest, CancellationToken.None);

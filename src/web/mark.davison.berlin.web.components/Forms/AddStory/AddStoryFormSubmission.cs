@@ -17,7 +17,8 @@ public class AddStoryFormSubmission : IFormSubmission<AddStoryFormViewModel>
     {
         var action = new AddStoryAction
         {
-            StoryAddress = formViewModel.StoryAddress
+            StoryAddress = formViewModel.StoryAddress,
+            UpdateTypeId = formViewModel.UpdateTypeId
         };
 
         var response = await _storeHelper.DispatchAndWaitForResponse<AddStoryAction, AddStoryActionResponse>(action);

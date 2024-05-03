@@ -57,6 +57,7 @@ With the visual hint for unread chapters, have a user setting as to whether this
 ***
 ## Next
  - A way to add the update type to the stories, maybe on add as well as manage
+	- Make the check stories process respect this
  - Some concept of marking where you last were at??? So like opt in and say you've read up to chapter X, then when there are new updates it tells you how many you have to read, you can then set a new value/mark it read up to current etc???
 	- Icon next to favourite??? hit it when you are up to date, and if it has been set but not currently at the current chapter then show some visual hint
 ## MISC

@@ -17,6 +17,9 @@ public partial class Story
     public required IState<AuthorListState> AuthorListState { get; set; }
 
     [Inject]
+    public required IState<StartupState> StartupState { get; set; }
+
+    [Inject]
     public required IDispatcher Dispatcher { get; set; }
 
     [Inject]
@@ -148,6 +151,19 @@ public partial class Story
 
     private string _lastCheckedText => $"Last checked {Data.LastChecked.Humanize()}";
     private string _lastAuthoredText => $"Last authored {Data.LastAuthored.Humanize()}";
+    private string _updateTypeText
+    {
+        get
+        {
+            var updateType = StartupState.Value.UpdateTypes.FirstOrDefault(_ => _.Id == Data.UpdateTypeId);
+            if (updateType == null)
+            {
+                return string.Empty;
+            }
+
+            return $"Updates {updateType.Description.ToLower()}";
+        }
+    }
     private string _chaptersText => $"Chapters: {Data.CurrentChapters}/{Data.TotalChapters?.ToString() ?? "?"}";
 
     private string UpdateChapterText(StoryManageUpdatesDto update) => $"{update.CurrentChapters}/{update.TotalChapters?.ToString() ?? "?"}";
