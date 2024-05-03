@@ -54,11 +54,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                 {
                     if (cancellationToken.IsCancellationRequested) { break; }
 
-                    var update = await ProcessStory(site, story, currentUserContext, storyInfoProcessor, cancellationToken);
-                    if (update != null)
-                    {
-                        updates.Add(update);
-                    }
+                    var storyUpdates = await ProcessStory(site, story, currentUserContext, storyInfoProcessor, cancellationToken);
+                    updates.AddRange(storyUpdates);
                 }
             }
 
@@ -92,9 +89,9 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         }
     }
 
-    private async Task<StoryUpdate?> ProcessStory(Site site, Story story, ICurrentUserContext currentUserContext, IStoryInfoProcessor storyInfoProcessor, CancellationToken cancellationToken)
+    private async Task<List<StoryUpdate>> ProcessStory(Site site, Story story, ICurrentUserContext currentUserContext, IStoryInfoProcessor storyInfoProcessor, CancellationToken cancellationToken)
     {
-        StoryUpdate? update = null;
+        List<StoryUpdate> updates = [];
         var info = await storyInfoProcessor.ExtractStoryInfo(story.Address, cancellationToken);
 
         foreach (var fandomExternalName in info.Fandoms)
@@ -135,7 +132,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             story.Complete != info.IsCompleted ||
             story.Name != info.Name)
         {
-            update = new StoryUpdate
+            var update = new StoryUpdate
             {
                 Id = Guid.NewGuid(),
                 StoryId = story.Id,
@@ -146,6 +143,33 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                 LastAuthored = info.Updated,
                 LastModified = _dateService.Now
             };
+
+            updates.Add(update);
+
+            var lastUpdates = await _repository.QueryEntities<StoryUpdate>()
+                .Where(_ => _.StoryId == story.Id)
+                .OrderByDescending(_ => _.CurrentChapters)
+                .Take(1)
+                .ToListAsync();
+            var lastUpdate = lastUpdates.FirstOrDefault(); // TODO: FirstOrDefaultAsync fails with internal EF stuff
+
+            if (lastUpdate != null)
+            {
+                for (var chapter = lastUpdate.CurrentChapters + 1; chapter < update.CurrentChapters; ++chapter)
+                {
+                    updates.Add(new StoryUpdate
+                    {
+                        Id = Guid.NewGuid(),
+                        StoryId = story.Id,
+                        UserId = story.UserId,
+                        Complete = info.IsCompleted,
+                        CurrentChapters = chapter,
+                        TotalChapters = info.TotalChapters,
+                        LastAuthored = info.Updated,
+                        LastModified = update.LastModified
+                    });
+                }
+            }
 
             await ProcessNotification(site, story, info, cancellationToken);
         }
@@ -158,7 +182,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         story.LastModified = _dateService.Now;
         story.LastChecked = _dateService.Now;
 
-        return update;
+        return updates;
     }
 
     private async Task ProcessNotification(Site site, Story story, StoryInfoModel info, CancellationToken cancellationToken)
