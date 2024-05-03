@@ -104,7 +104,15 @@ public class UpdateStoriesCommandProcessorTests
             .SendNotification(Arg.Any<string>())
             .Returns(new Response());
 
-        _processor = new(_logger, _repository, _dateService, _notificationHub, _fandomService, _authorService, services.BuildServiceProvider());
+        _processor = new(
+            _logger,
+            _repository,
+            _dateService,
+            _notificationHub,
+            _fandomService,
+            _authorService,
+            services.BuildServiceProvider(),
+            Enumerable.Empty<INotificationService>());
     }
 
     [TestMethod]
