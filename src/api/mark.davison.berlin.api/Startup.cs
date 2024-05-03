@@ -17,6 +17,8 @@ public class Startup
         AppSettings = services.ConfigureSettingsServices<AppSettings>(Configuration);
         if (AppSettings == null) { throw new InvalidOperationException(); }
 
+        Console.WriteLine(AppSettings.DumpAppSettings(AppSettings.PRODUCTION_MODE));
+
         // TODO: retrieve these
         AppSettings.DATABASE.MigrationAssemblyNames.Add(
             DatabaseType.Postgres, "mark.davison.berlin.api.migrations.postgres");

@@ -191,6 +191,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             _ => _.StoryAuthorLinks.Select(_ => _.Author)
         };
 
+        var refreshOffset = TimeSpan.FromHours(12);// TODO: Configure/options
+
         if (request.StoryIds.Any())
         {
             var stories = await _repository.GetEntitiesAsync<Story>(
@@ -205,7 +207,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             int max = request.Amount <= 0
                 ? 2
                 : Math.Min(request.Amount, 10);
-            var refreshDate = _dateService.Now.AddDays(-1);// TODO: Configure/options
+            var refreshDate = _dateService.Now.Subtract(refreshOffset);
 
             var stories = await _repository.QueryEntities<Story>()
                 .Include(_ => _.StoryFandomLinks)

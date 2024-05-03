@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.bff.web;
+﻿using mark.davison.common.server.abstractions.Configuration;
+
+namespace mark.davison.berlin.bff.web;
 
 public class Startup
 {
@@ -16,6 +18,8 @@ public class Startup
     {
         var AppSettings = services.ConfigureSettingsServices<AppSettings>(Configuration);
         if (AppSettings == null) { throw new InvalidOperationException(); }
+
+        Console.WriteLine(AppSettings.DumpAppSettings(AppSettings.PRODUCTION_MODE));
 
         services
             .ConfigureHealthCheckServices();
