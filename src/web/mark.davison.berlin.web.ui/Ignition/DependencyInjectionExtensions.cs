@@ -1,4 +1,5 @@
 ﻿using Microsoft.JSInterop;
+using System.Net;
 
 namespace mark.davison.berlin.web.ui.Ignition;
 
@@ -17,6 +18,7 @@ public static class DependencyInjectionExtensions
             .AddSingleton<IClientNavigationManager, ClientNavigationManager>()
             .AddSingleton<IClientHttpRepository>(_ =>
             {
+                var context = _.GetRequiredService<IAuthenticationContext>();
                 var authConfig = _.GetRequiredService<IAuthenticationConfig>();
                 if (authConfig.BffBase == WebConstants.LocalBffRoot)
                 {
@@ -40,10 +42,25 @@ public static class DependencyInjectionExtensions
                     }
                 }
 
-                return new BerlinClientHttpRepository(
+                var clientHttpRepository = new BerlinClientHttpRepository(
                         _.GetRequiredService<IAuthenticationConfig>().BffBase,
                         _.GetRequiredService<IHttpClientFactory>(),
                         _.GetRequiredService<ILogger<BerlinClientHttpRepository>>());
+
+                clientHttpRepository.OnInvalidResponse += async (object? sender, HttpStatusCode status) =>
+                {
+                    if (status == HttpStatusCode.Unauthorized)
+                    {
+                        Console.Error.WriteLine("Received 401 - Validating auth state");
+                        await context.ValidateAuthState();
+                    }
+                    else
+                    {
+                        Console.Error.WriteLine("Received HttpStatusCode.{0} - Not handling...", status);
+                    }
+                };
+
+                return clientHttpRepository;
             })
             .UseClientCQRS(typeof(Program), typeof(FeaturesRootType))
             .AddHttpClient(WebConstants.ApiClientName)
