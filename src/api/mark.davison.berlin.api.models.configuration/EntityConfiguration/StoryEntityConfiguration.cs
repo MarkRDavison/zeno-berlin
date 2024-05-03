@@ -9,6 +9,7 @@ public class StoryEntityConfiguration : BerlinEntityConfiguration<Story>
         builder.Property(_ => _.ExternalId);
         builder.Property(_ => _.CurrentChapters);
         builder.Property(_ => _.TotalChapters);
+        builder.Property(_ => _.ConsumedChapters);
         builder.Property(_ => _.Complete);
         builder.Property(_ => _.Favourite);
         builder.Property(_ => _.LastChecked);

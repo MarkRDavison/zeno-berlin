@@ -7,7 +7,7 @@ public class Story : BerlinEntity
     public string ExternalId { get; set; } = string.Empty;
     public int CurrentChapters { get; set; }
     public int? TotalChapters { get; set; }
-    // public int? ConsumedChapters { get; set; } // ??? TODO:  This is how you mark where you are up to???
+    public int? ConsumedChapters { get; set; }
     public bool Complete { get; set; }
     public bool Favourite { get; set; }
     public DateTime LastChecked { get; set; }

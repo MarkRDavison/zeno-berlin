@@ -140,6 +140,9 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<bool>("Complete")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("ConsumedChapters")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
