@@ -21,6 +21,7 @@
         {
             _dispatcher.Dispatch(new FetchFandomsListAction());
             _dispatcher.Dispatch(new FetchAuthorsListAction());
+            _dispatcher.Dispatch(new FetchStartupAction());
         }
 
         await base.OnInitializedAsync();

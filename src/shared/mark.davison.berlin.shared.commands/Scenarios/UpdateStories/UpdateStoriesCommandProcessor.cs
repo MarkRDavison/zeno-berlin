@@ -200,6 +200,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         builder.AppendLine("|");
         builder.AppendLine("=======================================================");
 
+        _logger.LogInformation("Attempting to send notification for chapter {0} for {1}", info.CurrentChapters, info.Name);
+
         var response = await _notificationHub.SendNotification(builder.ToString());
 
         response.Errors.ForEach(_ => _logger.LogError(_));

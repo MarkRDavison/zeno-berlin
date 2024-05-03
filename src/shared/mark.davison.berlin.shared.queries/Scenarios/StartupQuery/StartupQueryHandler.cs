@@ -13,16 +13,14 @@ public class StartupQueryHandler : IQueryHandler<StartupQueryRequest, StartupQue
     {
         await using (_repository.BeginTransaction())
         {
-            //if (options == null)
-            //{
-            //    return new StartupQueryResponse
-            //    {
-            //        Errors = [ValidationMessages.MissingUserOptions]
-            //    };
-            //}
+            var updateTypes = await _repository.GetEntitiesAsync<UpdateType>(cancellation);
 
             return new StartupQueryResponse
             {
+                Value = new()
+                {
+                    UpdateTypes = [.. updateTypes.Select(_ => new UpdateTypeDto { Id = _.Id, Description = _.Description })]
+                }
             };
         }
     }

@@ -76,9 +76,9 @@ public class BerlinDataSeeder : IBerlinDataSeeder
     private async Task EnsureUpdateTypesSeeded(IRepository repository, User user, CancellationToken cancellationToken)
     {
         var updateTypes = new List<UpdateType> {
-            new UpdateType{ Id = UpdateTypeConstants.WhenCompleteId, Description = "When story completed" },
-            new UpdateType{ Id = UpdateTypeConstants.EachChapterId, Description = "When each chapter" },
-            new UpdateType{ Id = UpdateTypeConstants.MonthlyWithUpdateId, Description = "Monthly as long as at least one update has been made" },
+            new UpdateType{ Id = UpdateTypeConstants.WhenCompleteId, Description = "When story completed", UserId = user.Id },
+            new UpdateType{ Id = UpdateTypeConstants.EachChapterId, Description = "When each chapter", UserId = user.Id },
+            new UpdateType{ Id = UpdateTypeConstants.MonthlyWithUpdateId, Description = "Monthly as long as at least one update has been made", UserId = user.Id },
         };
 
         await EnsureSeeded(repository, updateTypes, cancellationToken);

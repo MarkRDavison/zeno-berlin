@@ -9,10 +9,12 @@ global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.AuthorList
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.DashboardList;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.FandomList;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.ManageStory;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.Startup;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Queries.StoryList;
 global using mark.davison.berlin.shared.models.dtos.Shared;
 global using mark.davison.berlin.web.features.Store.DashboardListUseCase;
 global using mark.davison.berlin.web.features.Store.ManageStoryUseCase;
+global using mark.davison.berlin.web.features.Store.SharedStoryUseCase;
 global using mark.davison.berlin.web.features.Store.StoryListUseCase;
 global using mark.davison.common.Changeset;
 global using mark.davison.common.client.abstractions.Repository;

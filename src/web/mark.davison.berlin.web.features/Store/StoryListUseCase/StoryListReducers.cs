@@ -1,6 +1,4 @@
-﻿using mark.davison.berlin.web.features.Store.SharedStoryUseCase;
-
-namespace mark.davison.berlin.web.features.Store.StoryListUseCase;
+﻿namespace mark.davison.berlin.web.features.Store.StoryListUseCase;
 
 public static class StoryListReducers
 {
