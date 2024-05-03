@@ -3,6 +3,7 @@
 public partial class Story
 {
     private bool _inProgress;
+
     [Parameter]
     public required Guid Id { get; set; }
 
@@ -52,9 +53,35 @@ public partial class Story
         });
     }
 
-    private async Task OpenDeleteConfirmationDialog()
+    private async Task AddStoryUpdate()
     {
         var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var instance = new AddStoryUpdateFormViewModel
+        {
+            StoryId = Id,
+            ExistingUpdates = [.. Data.Updates.Select(_ => new UpdateInfo(_.CurrentChapters, _.LastAuthored))]
+        };
+
+        var param = new DialogParameters<Modal<ModalViewModel<AddStoryUpdateFormViewModel, AddStoryUpdateForm>, AddStoryUpdateFormViewModel, AddStoryUpdateForm>>
+        {
+            { _ => _.PrimaryText, "Save" },
+            { _ => _.Instance, instance }
+        };
+
+        var dialog = DialogService.Show<Modal<ModalViewModel<AddStoryUpdateFormViewModel, AddStoryUpdateForm>, AddStoryUpdateFormViewModel, AddStoryUpdateForm>>("Add Story Update", param, options);
+
+        var result = await dialog.Result;
+    }
+
+    private async Task OpenDeleteConfirmationDialog()
+    {
+        var options = new DialogOptions // TODO: Standardize/settings service???
         {
             CloseOnEscapeKey = true,
             MaxWidth = MaxWidth.Small,

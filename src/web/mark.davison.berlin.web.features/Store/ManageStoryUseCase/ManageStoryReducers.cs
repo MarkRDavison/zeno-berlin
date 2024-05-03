@@ -40,4 +40,23 @@ public static class ManageStoryReducers
 
         return new(state.IsLoading, state.Data);
     }
+
+    [ReducerMethod]
+    public static ManageStoryState AddManageStoryUpdateActionResponse(ManageStoryState state, AddManageStoryUpdateActionResponse response)
+    {
+        if (response.SuccessWithValue &&
+            state.Data.StoryId == response.Value.StoryId)
+        {
+            state.Data.Updates.Add(new StoryManageUpdatesDto
+            {
+                CurrentChapters = response.Value.CurrentChapters,
+                TotalChapters = response.Value.TotalChapters,
+                Complete = response.Value.Complete,
+                LastAuthored = response.Value.UpdateDate,
+                LastChecked = new DateTime(response.Value.UpdateDate, TimeOnly.MinValue)
+            });
+        }
+
+        return new(state.IsLoading, state.Data);
+    }
 }

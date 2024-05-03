@@ -55,16 +55,8 @@ public partial class Dashboard
     private async Task EnsureStateLoaded(bool force)
     {
         var action = new FetchDashboardListAction();
-        if (force)
-        {
-            using (StoreHelper.Force())
-            {
-                await StoreHelper.DispatchWithThrottleAndWaitForResponse<
-                    FetchDashboardListAction,
-                    FetchDashboardListActionResponse>(DashboardListState.Value.LastLoaded, action);
-            }
-        }
-        else
+
+        using (StoreHelper.ConditionalForce(force))
         {
             await StoreHelper.DispatchWithThrottleAndWaitForResponse<
                 FetchDashboardListAction,

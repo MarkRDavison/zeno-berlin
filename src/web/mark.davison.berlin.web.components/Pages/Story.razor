@@ -70,8 +70,20 @@ else
         </MudStack>
         <MudDivider />
         <MudStack>
-            <MudText Typo="Typo.subtitle1">Updates</MudText>
-            <MudTable Items="@Data.Updates" Hover Breakpoint="Breakpoint.Sm" Loading="@FandomListState.Value.IsLoading">
+            <MudStack Row>
+                <MudText Typo="Typo.subtitle1">Updates</MudText>
+                <MudSpacer />
+                <MudButton
+                    ButtonType="ButtonType.Submit"
+                    Color="Color.Primary"
+                    StartIcon="@Icons.Material.Filled.Add"
+                    Variant="Variant.Filled"
+                    Size="Size.Large"
+                    Disabled="FandomListState.Value.IsLoading"
+                    IconSize="Size.Large"
+                    OnClick="@AddStoryUpdate">Add</MudButton>
+            </MudStack>
+            <MudTable Items="@Data.Updates.OrderByDescending(_ => _.CurrentChapters)" Hover Breakpoint="Breakpoint.Sm" Loading="@FandomListState.Value.IsLoading">
                 <HeaderContent>
                     <MudTh>Chapters</MudTh>
                     <MudTh>Last authored</MudTh>

@@ -13,10 +13,10 @@ public class StoreHelper : IStoreHelper
         private bool _disposedValue;
         private readonly StoreHelper _stateHelper;
 
-        public StoreHelperDisposable(StoreHelper stateHelper)
+        public StoreHelperDisposable(StoreHelper stateHelper, bool forced)
         {
             _stateHelper = stateHelper;
-            _stateHelper._force = true;
+            _stateHelper._force = forced;
         }
 
         protected virtual void Dispose(bool disposing)
@@ -49,7 +49,8 @@ public class StoreHelper : IStoreHelper
         _actionSubscriber = actionSubscriber;
     }
 
-    public IDisposable Force() => new StoreHelperDisposable(this);
+    public IDisposable Force() => ConditionalForce(true);
+    public IDisposable ConditionalForce(bool force) => new StoreHelperDisposable(this, force);
 
     private bool RequiresRefetch(DateTime stateLastModified, TimeSpan interval)
     {

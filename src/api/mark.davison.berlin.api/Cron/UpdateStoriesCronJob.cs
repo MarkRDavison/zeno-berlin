@@ -22,7 +22,7 @@ public class UpdateStoriesCronJob : CQRSCronJob<UpdateStoriesCronJob, UpdateStor
 
     protected override UpdateStoriesRequest CreateRequest()
     {
-        _logger.LogInformation("Beginning update stories for {0} stories", _appSettings.Value.STORIES_PER_CRON_UPDATE);
+        _logger.LogInformation("Beginning update stories for a maximum of {0} stories", _appSettings.Value.STORIES_PER_CRON_UPDATE);
         return new UpdateStoriesRequest { Amount = _appSettings.Value.STORIES_PER_CRON_UPDATE };
     }
 
@@ -41,14 +41,6 @@ public class UpdateStoriesCronJob : CQRSCronJob<UpdateStoriesCronJob, UpdateStor
                     response.SuccessWithValue
                         ? response.Value.Count
                         : _appSettings.Value.STORIES_PER_CRON_UPDATE);
-
-                if (response.SuccessWithValue)
-                {
-                    foreach (var story in response.Value)
-                    {
-                        _logger.LogInformation(" - {0}", story.Name);
-                    }
-                }
             }
         }
         else

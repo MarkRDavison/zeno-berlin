@@ -14,6 +14,9 @@ public static class DependencyInjectionExtensions
         services.AddTransient<ICommandProcessor<EditFandomCommandRequest, EditFandomCommandResponse>, EditFandomCommandProcessor>();
         services.AddTransient<ICommandProcessor<AddFandomCommandRequest, AddFandomCommandResponse>, AddFandomCommandProcessor>();
         services.AddTransient<ICommandValidator<AddFandomCommandRequest, AddFandomCommandResponse>, AddFandomCommandValidator>();
+        services.AddTransient<ICommandValidator<AddStoryUpdateCommandRequest, AddStoryUpdateCommandResponse>, AddStoryUpdateCommandValidator>();
+        services.AddTransient<ICommandProcessor<AddStoryUpdateCommandRequest, AddStoryUpdateCommandResponse>, AddStoryUpdateCommandProcessor>();
+
         return services;
     }
 }

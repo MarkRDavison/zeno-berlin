@@ -109,6 +109,7 @@ public class Startup
             MapProxyCQRSPost(endpoints, "/api/export-command");
             MapProxyCQRSPost(endpoints, "/api/add-fandom-command");
             MapProxyCQRSPost(endpoints, "/api/edit-fandom-command");
+            MapProxyCQRSPost(endpoints, "/api/add-story-update-command");
         });
     }
 

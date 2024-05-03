@@ -33,7 +33,7 @@ public class AddStoryCommandValidatorTests
         };
 
         _validationContext
-            .GetByProperty<Story, string>(
+            .GetByProperty<Story>(
                 Arg.Any<Expression<Func<Story, bool>>>(),
                 Arg.Is<string>(nameof(Story.ExternalId)),
                 Arg.Any<CancellationToken>())
@@ -197,7 +197,7 @@ public class AddStoryCommandValidatorTests
     {
         const string externalId = "1234";
         _validationContext
-            .GetByProperty<Story, string>(
+            .GetByProperty<Story>(
                 Arg.Any<Expression<Func<Story, bool>>>(),
                 Arg.Is<string>(nameof(Story.ExternalId)),
                 Arg.Any<CancellationToken>())

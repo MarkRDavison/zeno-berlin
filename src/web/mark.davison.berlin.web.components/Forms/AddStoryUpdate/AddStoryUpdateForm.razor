@@ -1,0 +1,28 @@
+﻿@inherits Form<AddStoryUpdateFormViewModel>
+
+<MudForm>
+    <MudNumericField  
+        id="add-story-update-form-current-chapters"
+        Label="Current chapters"
+        @bind-Value="FormViewModel.CurrentChapters"
+        For=@(() => FormViewModel.CurrentChapters)
+        Validation="@(new Func<int?, string?>(_ => FormViewModel.ValidateCurrentChapters()))"
+        HideSpinButtons
+        Immediate 
+        Required/>
+    <MudNumericField  
+        id="add-story-update-form-total-chapters"
+        Label="Total chapters"
+        @bind-Value="FormViewModel.TotalChapters"
+        For=@(() => FormViewModel.TotalChapters)
+        HideSpinButtons
+        Immediate />
+    <MudDatePicker
+        id="add-story-update-form-update-date"
+        Label="Update date"
+        @bind-Date="FormViewModel.UpdateDate"
+        For=@(() => FormViewModel.UpdateDate)
+        MinDate="@FormViewModel.MinDate"
+        MaxDate="@FormViewModel.MaxDate"
+        Required/>
+</MudForm>

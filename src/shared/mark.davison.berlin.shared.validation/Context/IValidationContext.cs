@@ -3,8 +3,9 @@
 public interface IValidationContext
 {
     Task<T?> GetById<T>(Guid id, CancellationToken cancellationToken) where T : BerlinEntity, new();
+    Task<T> GetByIdValidated<T>(Guid id, CancellationToken cancellationToken) where T : BerlinEntity, new();
 
-    Task<T?> GetByProperty<T, TProp>(Expression<Func<T, bool>> predicate, string name, CancellationToken cancellationToken)
+    Task<T?> GetByProperty<T>(Expression<Func<T, bool>> predicate, string name, CancellationToken cancellationToken)
         where T : BerlinEntity, new();
 
     Task<List<T>> GetAll<T>(CancellationToken cancellationToken) where T : BerlinEntity, new();

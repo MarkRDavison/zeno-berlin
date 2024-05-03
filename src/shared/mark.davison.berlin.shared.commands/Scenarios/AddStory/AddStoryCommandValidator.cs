@@ -83,7 +83,7 @@ public class AddStoryCommandValidator : ICommandValidator<AddStoryCommandRequest
                         nameof(AddStoryCommandRequest.StoryAddress));
             }
 
-            var existingStory = await _validationContext.GetByProperty<Story, string>(
+            var existingStory = await _validationContext.GetByProperty<Story>(
                 _ => _.ExternalId == externalId,
                 nameof(Story.ExternalId),
                 cancellationToken);

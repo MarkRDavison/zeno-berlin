@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.web.features.Store.ManageStoryUseCase;
+﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddStoryUpdate;
+
+namespace mark.davison.berlin.web.features.Store.ManageStoryUseCase;
 
 public class ManageStoryEffects
 {
@@ -30,7 +32,7 @@ public class ManageStoryEffects
     }
 
     [EffectMethod]
-    public Task HandleUpdateManageStoryActionResponse(UpdateManageStoryActionResponse response, IDispatcher dispatcher)
+    public Task HandleUpdateManageStoryActionResponseAsync(UpdateManageStoryActionResponse response, IDispatcher dispatcher)
     {
         var action = new FetchManageStoryAction
         {
@@ -42,5 +44,32 @@ public class ManageStoryEffects
         dispatcher.Dispatch(action);
 
         return Task.CompletedTask;
+    }
+
+    [EffectMethod]
+    public async Task HandleAddManageStoryUpdateActionAsync(AddManageStoryUpdateAction action, IDispatcher dispatcher)
+    {
+        var commandRequest = new AddStoryUpdateCommandRequest
+        {
+            StoryId = action.StoryId,
+            CurrentChapters = action.CurrentChapters,
+            TotalChapters = action.TotalChapters,
+            Complete = action.Complete,
+            UpdateDate = action.UpdateDate
+        };
+
+        var commandResponse = await _repository.Post<AddStoryUpdateCommandResponse, AddStoryUpdateCommandRequest>(commandRequest, CancellationToken.None);
+
+        // TODO: Framework to dispatch general ***something went wrong***
+
+        var response = new AddManageStoryUpdateActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            Value = commandResponse.Value
+        };
+
+        dispatcher.Dispatch(response);
     }
 }

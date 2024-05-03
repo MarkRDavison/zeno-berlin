@@ -1,5 +1,6 @@
 ﻿global using mark.davison.berlin.shared.commands.Scenarios.AddFandom;
 global using mark.davison.berlin.shared.commands.Scenarios.AddStory;
+global using mark.davison.berlin.shared.commands.Scenarios.AddStoryUpdate;
 global using mark.davison.berlin.shared.commands.Scenarios.DeleteStory;
 global using mark.davison.berlin.shared.commands.Scenarios.EditFandom;
 global using mark.davison.berlin.shared.commands.Scenarios.EditStory;
@@ -10,6 +11,7 @@ global using mark.davison.berlin.shared.logic.Models;
 global using mark.davison.berlin.shared.logic.StoryInfo;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddFandom;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddStory;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddStoryUpdate;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.DeleteStory;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.EditFandom;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.EditStory;

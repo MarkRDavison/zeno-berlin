@@ -27,3 +27,17 @@ public class UpdateManageStoryActionResponse : BaseActionResponse<StoryRowDto>
 {
     public Guid StoryId { get; set; }
 }
+
+public class AddManageStoryUpdateAction : BaseAction // TODO: Source gen to create this from command/query???
+{
+    public Guid StoryId { get; set; }
+    public int CurrentChapters { get; set; }
+    public int? TotalChapters { get; set; }
+    public bool Complete { get; set; }
+    public DateOnly UpdateDate { get; set; }
+}
+
+public class AddManageStoryUpdateActionResponse : BaseActionResponse<StoryUpdateDto>
+{
+
+}

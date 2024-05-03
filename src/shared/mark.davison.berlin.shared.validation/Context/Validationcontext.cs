@@ -48,8 +48,12 @@ public class ValidationContext : IValidationContext
 
         return entity;
     }
+    public async Task<T> GetByIdValidated<T>(Guid id, CancellationToken cancellationToken) where T : BerlinEntity, new()
+    {
+        return await GetById<T>(id, cancellationToken) ?? throw new InvalidOperationException("Failed to retrieve validated entity by id");
+    }
 
-    public async Task<T?> GetByProperty<T, TProp>(Expression<Func<T, bool>> predicate, string name, CancellationToken cancellationToken)
+    public async Task<T?> GetByProperty<T>(Expression<Func<T, bool>> predicate, string name, CancellationToken cancellationToken)
         where T : BerlinEntity, new()
     {
         T? entity;

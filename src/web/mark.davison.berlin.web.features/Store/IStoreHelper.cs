@@ -1,8 +1,9 @@
 ﻿namespace mark.davison.berlin.web.features.Store;
 
-public interface IStoreHelper
+public interface IStoreHelper // TODO: Move to common.
 {
     IDisposable Force();
+    IDisposable ConditionalForce(bool force);
     TimeSpan DefaultRefetchTimeSpan { get; }
 
     void Dispatch<TAction>(TAction action)

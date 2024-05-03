@@ -11,6 +11,7 @@ public static class ValidationMessages
     public const string SITE_STORY_MISMATCH = nameof(SITE_STORY_MISMATCH);
     public const string NO_ITEMS = nameof(NO_ITEMS);
     public const string FAILED_TO_IMPORT = nameof(FAILED_TO_IMPORT);
+    public const string OWNERSHIP_MISMATCH = nameof(OWNERSHIP_MISMATCH);
 
     public static string FormatMessageParameters(string message, params string[] parameters)
     {

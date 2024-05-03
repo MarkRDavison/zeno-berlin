@@ -9,6 +9,7 @@ global using mark.davison.berlin.web.components.CommonCandidates.Form;
 global using mark.davison.berlin.web.components.CommonCandidates.Navigation;
 global using mark.davison.berlin.web.components.Forms.AddFandom;
 global using mark.davison.berlin.web.components.Forms.AddStory;
+global using mark.davison.berlin.web.components.Forms.AddStoryUpdate;
 global using mark.davison.berlin.web.components.Forms.EditFandom;
 global using mark.davison.berlin.web.features.Store;
 global using mark.davison.berlin.web.features.Store.AuthorListUseCase;

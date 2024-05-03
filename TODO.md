@@ -90,6 +90,7 @@ DEPLOY TO K8S
 
 Authors
 
+Manually adding an update to a story
 
 ## BUGS
 
