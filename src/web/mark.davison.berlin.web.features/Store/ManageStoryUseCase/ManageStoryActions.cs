@@ -22,6 +22,16 @@ public class SetFavouriteManageStoryActionResponse : BaseActionResponse
     public Guid StoryId { get; set; }
     public bool IsFavourite { get; set; }
 }
+public class SetManageStoryConsumedChaptersAction : BaseAction
+{
+    public Guid StoryId { get; set; }
+    public int? ConsumedChapters { get; set; }
+}
+public class SetManageStoryConsumedChaptersActionResponse : BaseActionResponse
+{
+    public Guid StoryId { get; set; }
+    public int? ConsumedChapters { get; set; }
+}
 
 public class UpdateManageStoryActionResponse : BaseActionResponse<StoryRowDto>
 {

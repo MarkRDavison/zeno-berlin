@@ -73,7 +73,6 @@ public class SharedStoryEffects
         dispatcher.Dispatch(actionResponse);
     }
 
-
     [EffectMethod]
     public Task HandleSetStoryFavouriteActionResponseAsync(SetStoryFavouriteActionResponse response, IDispatcher dispatcher)
     {
@@ -99,6 +98,72 @@ public class SharedStoryEffects
         dispatcher.Dispatch(manageStoryResponse);
         dispatcher.Dispatch(storyListResponse);
         dispatcher.Dispatch(dashboardListResponse);
+
+        return Task.CompletedTask;
+    }
+
+    [EffectMethod]
+    public async Task HandleSetStoryConsumedChaptersActionAsync(SetStoryConsumedChaptersAction action, IDispatcher dispatcher)
+    {
+        // TODO: Can only change this from Story page, so no need to trigger other pages if they will just load data on init??
+        var manageStoryAction = new SetManageStoryConsumedChaptersAction
+        {
+            ActionId = action.ActionId,
+            StoryId = action.StoryId,
+            ConsumedChapters = action.ConsumedChapters
+        };
+
+        dispatcher.Dispatch(manageStoryAction);
+
+        var commandRequest = new EditStoryCommandRequest
+        {
+            StoryId = action.StoryId,
+            Changes =
+            [
+                new DiscriminatedPropertyChangeset
+                {
+                    Name = nameof(StoryDto.ConsumedChapters),
+                    PropertyType = typeof(int?).FullName!,
+                    Value = action.ConsumedChapters
+                }
+            ]
+        };
+
+        var commandResponse = await _repository.Post<EditStoryCommandResponse, EditStoryCommandRequest>(commandRequest, CancellationToken.None);
+
+        // TODO: Create response from response, copies Errors/Warnings in common
+        var actionResponse = new SetStoryConsumedChaptersActionResponse
+        {
+            ActionId = action.ActionId,
+            Errors = [.. commandResponse.Errors],
+            Warnings = [.. commandResponse.Warnings],
+            StoryId = action.StoryId,
+            ConsumedChapters = action.ConsumedChapters
+        };
+
+        if (!commandResponse.Success)
+        {
+            // TODO: Store original value so we can revert
+        }
+
+        dispatcher.Dispatch(actionResponse);
+    }
+
+    [EffectMethod]
+    public Task HandleSetStoryConsumedChaptersActionResponse(SetStoryConsumedChaptersActionResponse response, IDispatcher dispatcher)
+    {
+        // TODO: Can only change this from Story page, so no need to trigger other pages if they will just load data on init??
+        // TODO: Create response from response, copies Errors/Warnings in common
+        var manageStoryResponse = new SetManageStoryConsumedChaptersActionResponse
+        {
+            ActionId = response.ActionId,
+            StoryId = response.StoryId,
+            ConsumedChapters = response.ConsumedChapters,
+            Errors = [.. response.Errors],
+            Warnings = [.. response.Warnings]
+        };
+
+        dispatcher.Dispatch(manageStoryResponse);
 
         return Task.CompletedTask;
     }

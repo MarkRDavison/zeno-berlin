@@ -1,4 +1,5 @@
-﻿@attribute [Route(Routes.Story)]
+﻿@using mark.davison.berlin.web.components.CommonCandidates.ClickableIcon
+@attribute [Route(Routes.Story)]
 @inherits FluxorComponent
 
 @if (ManageStoryState.Value.IsLoading)
@@ -21,6 +22,15 @@ else
                     <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" onclick="@(() => FavouriteClick(true))" />
                 }
             </div>
+            <ClickableIcon 
+                Value="@_consumedChapterUpToDate"
+                ActiveIcon="@Icons.Material.Filled.CheckCircle"
+                InactiveIcon="@Icons.Material.Filled.CheckCircleOutline"
+                ActiveColour="lightgreen"
+                InactiveColour="lightgrey"
+                ActiveTooltip="You've read everything this story has!"
+                InactiveTooltip="You've got more to read!"
+                OnClick="@(async _ => await ConsumedChapterIconClick(_))"/>
             <MudIconButton Icon="@Icons.Material.Filled.ArrowOutward" Href="@Data.Address" Target="_blank"></MudIconButton>
             <MudText Class="muted-text" Typo="Typo.body2">@_lastCheckedText</MudText>
             <MudSpacer />

@@ -1,5 +1,16 @@
 ﻿namespace mark.davison.berlin.web.features.Store.SharedStoryUseCase;
 
+public class SetStoryConsumedChaptersAction : BaseAction
+{
+    public Guid StoryId { get; set; }
+    public int? ConsumedChapters { get; set; }
+}
+public class SetStoryConsumedChaptersActionResponse : BaseActionResponse
+{
+    public Guid StoryId { get; set; }
+    public int? ConsumedChapters { get; set; }
+}
+
 public class SetStoryFavouriteAction : BaseAction
 {
     public Guid StoryId { get; set; }

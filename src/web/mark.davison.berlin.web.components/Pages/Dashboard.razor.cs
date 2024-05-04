@@ -133,4 +133,14 @@ public partial class Dashboard
     {
         return $"Checked {tile.LastChecked.Humanize(dateToCompareAgainst: DateTime.Now)}";
     }
+
+    private string StoryCardClasses(DashboardTileDto tile)
+    {
+        var classes = "story-card pa-2";
+        if (tile.ConsumedChapters != null && tile.ConsumedChapters < tile.CurrentChapters)
+        {
+            classes += " unread";
+        }
+        return classes;
+    }
 }

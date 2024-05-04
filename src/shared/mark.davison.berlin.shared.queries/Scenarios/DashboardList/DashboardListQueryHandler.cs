@@ -41,6 +41,7 @@ public class DashboardListQueryHandler : IQueryHandler<DashboardListQueryRequest
                     Name = row.Update.Story.Name,
                     CurrentChapters = row.Update.Story.CurrentChapters,
                     TotalChapters = row.Update.Story.TotalChapters,
+                    ConsumedChapters = row.Update.Story.ConsumedChapters,
                     Complete = row.Update.Story.Complete,
                     Favourite = row.Update.Story.Favourite,
                     LastChecked = row.Update.Story.LastChecked,

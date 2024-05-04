@@ -28,16 +28,33 @@
                 @context.LastAuthored.Humanize()
             </MudTd>
             <MudTd>
-                <div class="float-right favourite-container-visible">
-                    @if (@context.IsFavourite)
+                <MudStack Row>
+                    @if (context.ConsumedChapters != null)
                     {
-                        <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" onclick="@(() => FavouriteClick(context.StoryId, false))" />
+                        @if (context.ConsumedChapters == context.CurrentChapters)
+                        {
+                            <MudTooltip Text="You've read everything this story has!" Placement="Placement.Top">
+                            <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Style="fill: lightgreen;" />
+                            </MudTooltip>
+                        }
+                        else
+                        {
+                            <MudTooltip Text="You've got more to read!" Placement="Placement.Top">
+                            <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline" Style="fill: lightgrey;" />
+                            </MudTooltip>
+                        }
                     }
-                    else
-                    {
-                        <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" onclick="@(() => FavouriteClick(context.StoryId, true))" />
-                    }
-                </div>
+                    <div class="float-right favourite-container-visible">
+                        @if (@context.IsFavourite)
+                        {
+                            <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" onclick="@(() => FavouriteClick(context.StoryId, false))" />
+                        }
+                        else
+                        {
+                            <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" onclick="@(() => FavouriteClick(context.StoryId, true))" />
+                        }
+                    </div>
+                </MudStack>
             </MudTd>
         </RowTemplate>
     </MudTable>

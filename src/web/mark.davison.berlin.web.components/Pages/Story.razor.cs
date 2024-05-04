@@ -56,6 +56,24 @@ public partial class Story
         });
     }
 
+    private async Task ConsumedChapterIconClick(bool set)
+    {
+        if (set)
+        {
+            Data.ConsumedChapters = Data.CurrentChapters;
+
+            var action = new SetStoryConsumedChaptersAction
+            {
+                StoryId = Id,
+                ConsumedChapters = Data.CurrentChapters
+            };
+
+            await StoreHelper.DispatchAndWaitForResponse<SetStoryConsumedChaptersAction, SetStoryConsumedChaptersActionResponse>(action);
+        }
+    }
+
+    private bool _consumedChapterUpToDate => Data.ConsumedChapters != null && Data.ConsumedChapters == Data.CurrentChapters;
+
     private async Task AddStoryUpdate()
     {
         var options = new DialogOptions

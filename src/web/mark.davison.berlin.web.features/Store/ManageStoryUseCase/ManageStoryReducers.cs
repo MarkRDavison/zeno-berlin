@@ -42,6 +42,28 @@ public static class ManageStoryReducers
     }
 
     [ReducerMethod]
+    internal static ManageStoryState SetManageStoryConsumedChaptersAction(ManageStoryState state, SetManageStoryConsumedChaptersAction action)
+    {
+        if (state.Data.StoryId == action.StoryId)
+        {
+            state.Data.ConsumedChapters = action.ConsumedChapters;
+        }
+
+        return new(state.IsLoading, state.Data);
+    }
+
+    [ReducerMethod]
+    internal static ManageStoryState SetManageStoryConsumedChaptersActionResponse(ManageStoryState state, SetManageStoryConsumedChaptersActionResponse response)
+    {
+        if (state.Data.StoryId == response.StoryId)
+        {
+            state.Data.ConsumedChapters = response.ConsumedChapters;
+        }
+
+        return new(state.IsLoading, state.Data);
+    }
+
+    [ReducerMethod]
     public static ManageStoryState AddManageStoryUpdateActionResponse(ManageStoryState state, AddManageStoryUpdateActionResponse response)
     {
         if (response.SuccessWithValue &&

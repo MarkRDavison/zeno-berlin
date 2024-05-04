@@ -2,7 +2,7 @@ $primary-text-colour: var(--mud-palette-text-primary);
 $secondary-text-colour: var(--mud-palette-text-secondary);
 $primary-hover: var(--mud-palette-primary-hover);
 $favourite-icon-colour: yellow;
-
+$unread-story-colour: lightgreen;
 /* GENERIC */
 
 h1:focus {
@@ -117,6 +117,11 @@ h1:focus {
 .story-card {
     @include favourite-container-container;
     aspect-ratio: 10/9;
+    border-left: thick solid transparent;
+
+    &.unread {
+        border-left-color: $unread-story-colour
+    }
 
     &:hover {
         background: $primary-hover;
@@ -132,4 +137,16 @@ h1:focus {
     -webkit-line-clamp: 2;
     display: -webkit-box;
     line-clamp: 2;
+}
+
+@mixin clickable-icon {
+    visibility: visible;
+}
+
+.clickable-icon-active {
+    @include clickable-icon;
+}
+.clickable-icon-inactive {
+    @include clickable-icon;
+    cursor: pointer;
 }
