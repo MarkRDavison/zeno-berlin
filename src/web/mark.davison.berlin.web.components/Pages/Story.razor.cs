@@ -100,6 +100,43 @@ public partial class Story
         var result = await dialog.Result;
     }
 
+    private async Task OpenEditStoryDialog()
+    {
+        var options = new DialogOptions // TODO: Standardize/settings service???
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Small,
+
+            FullWidth = false
+        };
+
+        var param = new DialogParameters<Modal<ModalViewModel<EditStoryFormViewModel, EditStoryForm>, EditStoryFormViewModel, EditStoryForm>>
+        {
+            { _ => _.PrimaryText, "Save" },
+            { _ => _.Instance, new EditStoryFormViewModel
+                {
+                    ConsumedChapters = Data.ConsumedChapters,
+                    CurrentChapters = Data.CurrentChapters,
+                    UpdateTypeId = Data.UpdateTypeId,
+                    UpdateTypes = [.. StartupState.Value.UpdateTypes],
+                    StoryId = Id
+                }
+            }
+        };
+
+        var dialog = DialogService.Show<Modal<ModalViewModel<EditStoryFormViewModel, EditStoryForm>, EditStoryFormViewModel, EditStoryForm>>("Edit story", param, options);
+
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            Dispatcher.Dispatch(new FetchManageStoryAction
+            {
+                StoryId = Id
+            });
+        }
+    }
+
     private async Task OpenDeleteConfirmationDialog()
     {
         var options = new DialogOptions // TODO: Standardize/settings service???

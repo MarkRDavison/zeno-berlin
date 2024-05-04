@@ -56,10 +56,7 @@ With the visual hint for unread chapters, have a user setting as to whether this
 
 ***
 ## Next
- - A way to add the update type to the stories, maybe on add as well as manage
-	- Make the check stories process respect this
- - Some concept of marking where you last were at??? So like opt in and say you've read up to chapter X, then when there are new updates it tells you how many you have to read, you can then set a new value/mark it read up to current etc???
-	- Icon next to favourite??? hit it when you are up to date, and if it has been set but not currently at the current chapter then show some visual hint
+	- Make the check stories process respect update type
 ## MISC
 
 Queries need to use ValidateAndProcessQueryHandler???
@@ -93,7 +90,11 @@ A way to manually add updates
 
 Stories that update multiple times at once?
  - Manually add missing updates so if chapter 22&23 at once, add  both updates at 23's update date.  But only notify of 23 and say 2! new chapters???
+ 
+ - Some concept of marking where you last were at??? So like opt in and say you've read up to chapter X, then when there are new updates it tells you how many you have to read, you can then set a new value/mark it read up to current etc???
+	- Icon next to favourite??? hit it when you are up to date, and if it has been set but not currently at the current chapter then show some visual hint
 
+ - A way to add the update type to the stories, maybe on add as well as manage
 ## BUGS
 
 Duplicated fandoms

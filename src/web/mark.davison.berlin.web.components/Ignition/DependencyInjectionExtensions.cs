@@ -12,6 +12,7 @@ public static class DependecyInjectionExtensions
         services.AddTransient<IFormSubmission<AddStoryFormViewModel>, AddStoryFormSubmission>();
         services.AddTransient<IFormSubmission<AddFandomFormViewModel>, AddFandomFormSubmission>();
         services.AddTransient<IFormSubmission<EditFandomFormViewModel>, EditFandomFormSubmission>();
+        services.AddTransient<IFormSubmission<EditStoryFormViewModel>, EditStoryFormSubmission>();
 
         return services;
     }

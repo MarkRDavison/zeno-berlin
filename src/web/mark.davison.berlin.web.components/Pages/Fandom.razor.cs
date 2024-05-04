@@ -57,7 +57,7 @@ public partial class Fandom
             }
         };
 
-        var dialog = _dialogService.Show<Modal<ModalViewModel<EditFandomFormViewModel, EditFandomForm>, EditFandomFormViewModel, EditFandomForm>>("EditFandom", param, options);
+        var dialog = _dialogService.Show<Modal<ModalViewModel<EditFandomFormViewModel, EditFandomForm>, EditFandomFormViewModel, EditFandomForm>>("Edit fandom", param, options);
 
         await dialog.Result;
     }

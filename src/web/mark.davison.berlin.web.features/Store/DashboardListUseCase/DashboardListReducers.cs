@@ -73,6 +73,7 @@ public static class DashboardListReducers
                 TotalChapters = response.Value.TotalChapters,
                 ConsumedChapters = response.Value.ConsumedChapters,
                 Complete = response.Value.Complete,
+                UpdateTypeId = response.Value.UpdateTypeId,
                 Favourite = response.Value.Favourite,
                 LastAuthored = response.Value.LastAuthored,
                 LastChecked = response.Value.LastChecked,

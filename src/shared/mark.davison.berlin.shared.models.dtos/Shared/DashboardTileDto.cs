@@ -9,6 +9,7 @@ public class DashboardTileDto
     public int? ConsumedChapters { get; set; }
     public bool Complete { get; set; }
     public bool Favourite { get; set; }
+    public Guid UpdateTypeId { get; set; }
     public DateTime LastChecked { get; set; }
     public DateOnly LastAuthored { get; set; }
     public List<Guid> Fandoms { get; set; } = [];

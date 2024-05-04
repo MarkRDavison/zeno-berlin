@@ -86,6 +86,7 @@ public static class StoryListReducers
                 Name = response.Value.Name,
                 IsFavourite = response.Value.Favourite,
                 IsComplete = response.Value.Complete,
+                UpdateTypeId = response.Value.UpdateTypeId,
                 CurrentChapters = response.Value.CurrentChapters,
                 TotalChapters = response.Value.TotalChapters,
                 ConsumedChapters = response.Value.ConsumedChapters,

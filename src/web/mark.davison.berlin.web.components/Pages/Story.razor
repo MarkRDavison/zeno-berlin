@@ -32,6 +32,7 @@ else
                 InactiveTooltip="You've got more to read!"
                 OnClick="@(async _ => await ConsumedChapterIconClick(_))"/>
             <MudIconButton Icon="@Icons.Material.Filled.ArrowOutward" Href="@Data.Address" Target="_blank"></MudIconButton>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" OnClick="@OpenEditStoryDialog"/>
             <MudText Class="muted-text" Typo="Typo.body2">@_lastCheckedText</MudText>
             <MudSpacer />
             <ProgressButton 
