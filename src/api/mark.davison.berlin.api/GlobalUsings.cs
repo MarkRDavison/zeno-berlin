@@ -11,6 +11,7 @@ global using mark.davison.berlin.shared.logic.Ignition;
 global using mark.davison.berlin.shared.logic.Settings;
 global using mark.davison.berlin.shared.models;
 global using mark.davison.berlin.shared.models.dtos;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.MonthlyNotifications;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.UpdateStories;
 global using mark.davison.berlin.shared.models.Entities;
 global using mark.davison.berlin.shared.queries;

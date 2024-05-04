@@ -10,6 +10,7 @@ public class UpdateStoriesCommandProcessorTests
     private readonly IFandomService _fandomService;
     private readonly IAuthorService _authorService;
     private readonly ICurrentUserContext _currentUserContext;
+    private readonly INotificationCreationService _notificationCreationService;
     private readonly UpdateStoriesCommandProcessor _processor;
 
     private readonly IStoryInfoProcessor _site1StoryInfoProcessor;
@@ -33,6 +34,7 @@ public class UpdateStoriesCommandProcessorTests
         _notificationHub = Substitute.For<INotificationHub>();
         _fandomService = Substitute.For<IFandomService>();
         _authorService = Substitute.For<IAuthorService>();
+        _notificationCreationService = Substitute.For<INotificationCreationService>();
         _currentUserContext = Substitute.For<ICurrentUserContext>();
 
         _dateService.Now.Returns(DateTime.Now);
@@ -111,6 +113,7 @@ public class UpdateStoriesCommandProcessorTests
             _notificationHub,
             _fandomService,
             _authorService,
+            _notificationCreationService,
             services.BuildServiceProvider(),
             Enumerable.Empty<INotificationService>());
     }

@@ -6,7 +6,8 @@ public static class DependencyInjectionExtensions
     {
         services
             .AddScoped<IFandomService, FandomService>()
-            .AddScoped<IAuthorService, AuthorService>();
+            .AddScoped<IAuthorService, AuthorService>()
+            .AddTransient<INotificationCreationService, NotificationCreationService>();
         return services;
     }
 }

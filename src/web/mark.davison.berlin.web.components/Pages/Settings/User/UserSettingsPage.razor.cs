@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.web.components.Pages.Settings.User;
+﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.SendNotification;
+
+namespace mark.davison.berlin.web.components.Pages.Settings.User;
 
 public partial class UserSettingsPage
 {
@@ -48,6 +50,23 @@ public partial class UserSettingsPage
         var fileStream = new MemoryStream(new UTF8Encoding(true).GetBytes(content));
         using var streamRef = new DotNetStreamReference(fileStream);
         await JSRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+
+    private async Task TestNotifications()
+    {
+        var response = await ClientHttpRepository.Post<SendNotificationCommandResponse, SendNotificationCommandRequest>(new SendNotificationCommandRequest
+        {
+            Message = "Test notification from client side :)"
+        }, CancellationToken.None);
+
+        if (response.Errors.Any())
+        {
+            Console.Error.WriteLine(string.Join(", ", response.Errors));
+        }
+        if (response.Warnings.Any())
+        {
+            Console.WriteLine(string.Join(", ", response.Warnings));
+        }
     }
 
     private async Task OpenImportDialog()

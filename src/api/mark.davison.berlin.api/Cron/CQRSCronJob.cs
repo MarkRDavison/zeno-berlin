@@ -2,7 +2,7 @@
 
 public abstract class CQRSCronJob<TCronJobService, TRequest, TResponse> : CronJobService
     where TRequest : class, ICommand<TRequest, TResponse>, new()
-    where TResponse : class, new()
+    where TResponse : Response, new()
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
     protected CQRSCronJob(
@@ -35,8 +35,18 @@ public abstract class CQRSCronJob<TCronJobService, TRequest, TResponse> : CronJo
 
         var request = CreateRequest();
 
-        var response = await handler.Handle(request, currentUserContext, cancellationToken);
+        try
+        {
+            var response = await handler.Handle(request, currentUserContext, cancellationToken);
 
-        await HandleResponse(response);
+            await HandleResponse(response);
+        }
+        catch (Exception e)
+        {
+            await HandleResponse(new TResponse
+            {
+                Errors = [e.Message, e.StackTrace!]
+            });
+        }
     }
 }

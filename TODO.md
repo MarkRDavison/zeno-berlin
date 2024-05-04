@@ -56,7 +56,7 @@ With the visual hint for unread chapters, have a user setting as to whether this
 
 ***
 ## Next
-	- Make the check stories process respect update type
+
 ## MISC
 
 Queries need to use ValidateAndProcessQueryHandler???
@@ -95,6 +95,7 @@ Stories that update multiple times at once?
 	- Icon next to favourite??? hit it when you are up to date, and if it has been set but not currently at the current chapter then show some visual hint
 
  - A way to add the update type to the stories, maybe on add as well as manage
+	- Make the check stories process respect update type
 ## BUGS
 
 Duplicated fandoms

@@ -8,6 +8,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
     private readonly INotificationHub _notificationHub;
     private readonly IFandomService _fandomService;
     private readonly IAuthorService _authorService;
+    private readonly INotificationCreationService _notificationCreationService;
     private readonly IServiceProvider _serviceProvider;
     private readonly IEnumerable<INotificationService> _notificationServices; // TODO: TEMP: REMOVE
 
@@ -18,6 +19,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         INotificationHub notificationHub,
         IFandomService fandomService,
         IAuthorService authorService,
+        INotificationCreationService notificationCreationService,
         IServiceProvider serviceProvider,
         IEnumerable<INotificationService> notificationServices)
     {
@@ -27,6 +29,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         _notificationHub = notificationHub;
         _fandomService = fandomService;
         _authorService = authorService;
+        _notificationCreationService = notificationCreationService;
         _serviceProvider = serviceProvider;
         _notificationServices = notificationServices;
     }
@@ -192,18 +195,17 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
 
     private async Task ProcessNotification(Site site, Story story, StoryInfoModel info, CancellationToken cancellationToken)
     {
-        // TODO: Look at story.UpdateType to determine if the notification should be sent 
-        var builder = new StringBuilder();
+        if (story.UpdateTypeId == UpdateTypeConstants.MonthlyWithUpdateId)
+        {
+            return;
+        }
+        if (story.UpdateTypeId == UpdateTypeConstants.WhenCompleteId &&
+            (story.Complete || !info.IsCompleted))
+        {
+            return;
+        }
 
-        builder.AppendLine("==================== STORY UPDATED ====================");
-        builder.AppendLine("|");
-        builder.AppendLine($"|  Name: {info.Name}{(info.Name == story.Name ? string.Empty : $" - previously {story.Name}")}");
-        builder.AppendLine($"|  Chapters: {info.CurrentChapters}/{(info.TotalChapters?.ToString() ?? "?")} - previously {story.CurrentChapters}/{(story.TotalChapters?.ToString() ?? "?")}");
-        builder.AppendLine($"|  Status: {(info.IsCompleted ? "Complete" : "In progress")} - previously {(story.Complete ? "Complete" : "In progress")}");
-        builder.AppendLine($"|  Site: {site.LongName}({site.ShortName})");
-        builder.AppendLine($"|  Url: {story.Address}");
-        builder.AppendLine("|");
-        builder.AppendLine("=======================================================");
+        var notificationText = _notificationCreationService.CreateNotification(site, story, info);
 
         _logger.LogInformation("Attempting to send notification for chapter {0} for {1}", info.CurrentChapters, info.Name);
 
@@ -212,7 +214,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             _logger.LogInformation("Notification service: {0} enabled status: {1}", notificationService.Settings.SECTION, notificationService.Settings.ENABLED);
         }
 
-        var response = await _notificationHub.SendNotification(builder.ToString());
+        var response = await _notificationHub.SendNotification(notificationText);
 
         _logger.LogInformation("Notification response: {0}", System.Text.Json.JsonSerializer.Serialize(response));
 
