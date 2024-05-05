@@ -31,13 +31,13 @@ public partial class FandomsPage
             FullWidth = true
         };
 
-        var param = new DialogParameters<Modal<ModalViewModel<AddFandomFormViewModel, AddFandomForm>, AddFandomFormViewModel, AddFandomForm>>
+        var param = new DialogParameters<FormModal<ModalViewModel<AddFandomFormViewModel, AddFandomForm>, AddFandomFormViewModel, AddFandomForm>>
         {
             { _ => _.PrimaryText, "Save" },
             { _ => _.Instance, null }
         };
 
-        var dialog = DialogService.Show<Modal<ModalViewModel<AddFandomFormViewModel, AddFandomForm>, AddFandomFormViewModel, AddFandomForm>>("Add Fandom", param, options);
+        var dialog = DialogService.Show<FormModal<ModalViewModel<AddFandomFormViewModel, AddFandomForm>, AddFandomFormViewModel, AddFandomForm>>("Add Fandom", param, options);
 
         await dialog.Result;
     }

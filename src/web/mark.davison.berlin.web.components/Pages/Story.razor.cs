@@ -89,13 +89,13 @@ public partial class Story
             ExistingUpdates = [.. Data.Updates.Select(_ => new UpdateInfo(_.CurrentChapters, _.LastAuthored))]
         };
 
-        var param = new DialogParameters<Modal<ModalViewModel<AddStoryUpdateFormViewModel, AddStoryUpdateForm>, AddStoryUpdateFormViewModel, AddStoryUpdateForm>>
+        var param = new DialogParameters<FormModal<ModalViewModel<AddStoryUpdateFormViewModel, AddStoryUpdateForm>, AddStoryUpdateFormViewModel, AddStoryUpdateForm>>
         {
             { _ => _.PrimaryText, "Save" },
             { _ => _.Instance, instance }
         };
 
-        var dialog = DialogService.Show<Modal<ModalViewModel<AddStoryUpdateFormViewModel, AddStoryUpdateForm>, AddStoryUpdateFormViewModel, AddStoryUpdateForm>>("Add Story Update", param, options);
+        var dialog = DialogService.Show<FormModal<ModalViewModel<AddStoryUpdateFormViewModel, AddStoryUpdateForm>, AddStoryUpdateFormViewModel, AddStoryUpdateForm>>("Add Story Update", param, options);
 
         var result = await dialog.Result;
     }
@@ -110,7 +110,7 @@ public partial class Story
             FullWidth = false
         };
 
-        var param = new DialogParameters<Modal<ModalViewModel<EditStoryFormViewModel, EditStoryForm>, EditStoryFormViewModel, EditStoryForm>>
+        var param = new DialogParameters<FormModal<ModalViewModel<EditStoryFormViewModel, EditStoryForm>, EditStoryFormViewModel, EditStoryForm>>
         {
             { _ => _.PrimaryText, "Save" },
             { _ => _.Instance, new EditStoryFormViewModel
@@ -124,7 +124,7 @@ public partial class Story
             }
         };
 
-        var dialog = DialogService.Show<Modal<ModalViewModel<EditStoryFormViewModel, EditStoryForm>, EditStoryFormViewModel, EditStoryForm>>("Edit story", param, options);
+        var dialog = DialogService.Show<FormModal<ModalViewModel<EditStoryFormViewModel, EditStoryForm>, EditStoryFormViewModel, EditStoryForm>>("Edit story", param, options);
 
         var result = await dialog.Result;
 

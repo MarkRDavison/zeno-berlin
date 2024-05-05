@@ -58,7 +58,7 @@ With the visual hint for unread chapters, have a user setting as to whether this
 ## Next
 
 ## MISC
-
+S
 Queries need to use ValidateAndProcessQueryHandler???
 Method for a fandom to be auto assigned as a parent for a new fandom? Wildcard/rules etc
 Consistency around naming of bool IsComplete vs Complete etc
@@ -72,6 +72,15 @@ On the author/fandom pages parent author/fandom is not taken into account when f
 
 UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol out???
 navigating to /fandoms after initial load does not load them, so newly added stories wont have their fandoms show up till reload
+
+
+
+
+
+
+
+
+
 
 ### DONE
 

@@ -10,22 +10,6 @@
             window.ENV = {};
             return window.ENV.BFF_BASE_URI;
         }
-        // TODO: Move these to mark.davison.common.client.js ???
-        window.downloadFileFromStream = async (fileName, contentStreamReference) => {
-            const arrayBuffer = await contentStreamReference.arrayBuffer();
-            const blob = new Blob([arrayBuffer]);
-            const url = URL.createObjectURL(blob);
-            const anchorElement = document.createElement('a');
-            anchorElement.href = url;
-
-            if (fileName) {
-                anchorElement.download = fileName;
-            }
-
-            anchorElement.click();
-            anchorElement.remove();
-            URL.revokeObjectURL(url);
-        }
 
     </script>
     <base href="/" />
@@ -82,7 +66,8 @@
         }
     </style>
     <link rel="stylesheet" href="css/app.min.css" type="text/css" />
-    <link rel="stylesheet" href="_content/MudBlazor/MudBlazor.min.css" type="text/css"/>
+    <link rel="stylesheet" href="_content/MudBlazor/MudBlazor.min.css" type="text/css" />
+    <link rel="stylesheet" href="_content/markdavison.common.client/css/mark.davison.common.client.css" type="text/css" />
 </head>
 
 <body>
@@ -98,6 +83,7 @@
     </div>
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="_content/markdavison.common.client/js/mark.davison.common.client.js"></script>
 </body>
 
 </html>

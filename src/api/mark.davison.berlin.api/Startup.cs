@@ -1,8 +1,4 @@
-﻿using mark.davison.common.server.abstractions.Notifications;
-using mark.davison.common.server.abstractions.Notifications.Console;
-using mark.davison.common.server.abstractions.Notifications.Matrix;
-
-namespace mark.davison.berlin.api;
+﻿namespace mark.davison.berlin.api;
 
 [UseCQRSServer(typeof(DtosRootType), typeof(CommandsRootType), typeof(QueriesRootType))]
 public class Startup
@@ -74,7 +70,6 @@ public class Startup
             .UseDataSeeders()
             .UseValidation()
             .UseBerlinLogic()
-            .UseBerlinCommands()
             .UseSharedServices()
             .UseSharedServerServices()
             .UseRateLimiter()
@@ -82,25 +77,7 @@ public class Startup
             .UseMatrixClient()
             .UseMatrixNotifications()
             .UseConsoleNotifications()
-            .UseCronJobs(AppSettings)
-            .AddSingleton<INotificationService>(_ => _.GetRequiredService<IMatrixNotificationService>()) // TODO: Update common library
-            .AddSingleton<INotificationService>(_ => _.GetRequiredService<IConsoleNotificationService>());// TODO: Update common library
-
-        /*
-         
-    public static IServiceCollection UseConsoleNotifications(this IServiceCollection services)
-    {
-        services.AddSingleton<IConsoleNotificationService, ConsoleNotificationService>();
-        return services;
-    }
-
-    public static IServiceCollection UseMatrixNotifications(this IServiceCollection services)
-    {
-        services.AddSingleton<IMatrixNotificationService, MatrixNotificationService>();
-        services.UseMatrixClient();
-        return services;
-    }
-         */
+            .UseCronJobs(AppSettings);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

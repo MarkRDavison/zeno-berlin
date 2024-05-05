@@ -25,7 +25,7 @@ public partial class Dashboard
         .Select(_ => DashboardListState.Value.Entities.FirstOrDefault(s => s.StoryId == _))
         .OfType<DashboardTileDto>();
 
-    protected override async Task OnInitializedAsync() // TODO: Framework class for these helpers??? base class???
+    protected override async Task OnInitializedAsync()
     {
         await EnsureStateLoaded(true);
     }
@@ -35,7 +35,6 @@ public partial class Dashboard
         await EnsureStateLoaded(false);
     }
 
-    // TODO: ORRRRRRR Should there be something like, when changing the favourite flag, have 2 fields, one is actual up to date, one is what we sort on and gets synced on init?
     protected override void OnAfterRender(bool firstRender)
     {
         if (!_loaded && !DashboardListState.Value.IsLoading)
@@ -80,13 +79,13 @@ public partial class Dashboard
             UpdateTypes = [.. StartupState.Value.UpdateTypes]
         };
 
-        var param = new DialogParameters<Modal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>
+        var param = new DialogParameters<FormModal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>
         {
             { _ => _.PrimaryText, "Save" },
             { _ => _.Instance, instance }
         };
 
-        var dialog = _dialogService.Show<Modal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>("Add Story", param, options);
+        var dialog = _dialogService.Show<FormModal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>("Add Story", param, options);
 
         var result = await dialog.Result;
 

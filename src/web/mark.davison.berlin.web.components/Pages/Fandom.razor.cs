@@ -43,7 +43,7 @@ public partial class Fandom
             FullWidth = true
         };
 
-        var param = new DialogParameters<Modal<ModalViewModel<EditFandomFormViewModel, EditFandomForm>, EditFandomFormViewModel, EditFandomForm>>
+        var param = new DialogParameters<FormModal<ModalViewModel<EditFandomFormViewModel, EditFandomForm>, EditFandomFormViewModel, EditFandomForm>>
         {
             { _ => _.PrimaryText, "Save" },
             { _ => _.Instance, new EditFandomFormViewModel
@@ -57,7 +57,7 @@ public partial class Fandom
             }
         };
 
-        var dialog = _dialogService.Show<Modal<ModalViewModel<EditFandomFormViewModel, EditFandomForm>, EditFandomFormViewModel, EditFandomForm>>("Edit fandom", param, options);
+        var dialog = _dialogService.Show<FormModal<ModalViewModel<EditFandomFormViewModel, EditFandomForm>, EditFandomFormViewModel, EditFandomForm>>("Edit fandom", param, options);
 
         await dialog.Result;
     }

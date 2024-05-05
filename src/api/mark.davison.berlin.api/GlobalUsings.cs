@@ -5,7 +5,6 @@ global using mark.davison.berlin.api.Data;
 global using mark.davison.berlin.api.Ignition;
 global using mark.davison.berlin.api.persistence;
 global using mark.davison.berlin.shared.commands;
-global using mark.davison.berlin.shared.commands.Igntion;
 global using mark.davison.berlin.shared.constants;
 global using mark.davison.berlin.shared.logic.Ignition;
 global using mark.davison.berlin.shared.logic.Settings;

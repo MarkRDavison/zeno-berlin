@@ -49,8 +49,6 @@ public class BerlinApiWebApplicationFactory : WebApplicationFactory<Startup>, IC
             .AddHttpClient()
             .AddHttpContextAccessor();
 
-        //services.UseCQRSServer();
-        //services.AddCommandCQRS();
         services.AddScoped<ICurrentUserContext, CurrentUserContext>(_ =>
         {
             var context = new CurrentUserContext();

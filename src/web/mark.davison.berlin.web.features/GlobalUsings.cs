@@ -18,7 +18,5 @@ global using mark.davison.berlin.web.features.Store.SharedStoryUseCase;
 global using mark.davison.berlin.web.features.Store.StoryListUseCase;
 global using mark.davison.common.Changeset;
 global using mark.davison.common.client.abstractions.Repository;
-global using mark.davison.common.CQRS;
-global using mark.davison.common.Services;
+global using mark.davison.common.client.abstractions.Store;
 global using System.Collections.ObjectModel;
-global using System.Diagnostics.CodeAnalysis;
