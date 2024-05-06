@@ -45,7 +45,7 @@ public class Startup
         services.AddCors(options =>
             options.AddPolicy("AllowOrigin", _ => _
                 .SetIsOriginAllowedToAllowWildcardSubdomains()
-                .SetIsOriginAllowed(_ => true)
+                .SetIsOriginAllowed(_ => true)// TODO: Config driven
                 .AllowAnyMethod()
                 .AllowCredentials()
                 .AllowAnyHeader()

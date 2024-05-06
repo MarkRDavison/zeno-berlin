@@ -1,5 +1,4 @@
-﻿
-namespace mark.davison.berlin.shared.commands.Scenarios.Import;
+﻿namespace mark.davison.berlin.shared.commands.Scenarios.Import;
 
 public class ImportCommandHandler : ValidateAndProcessCommandHandler<ImportCommandRequest, ImportCommandResponse>
 {
