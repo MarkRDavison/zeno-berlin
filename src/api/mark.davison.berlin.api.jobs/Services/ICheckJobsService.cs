@@ -2,5 +2,5 @@
 
 public interface ICheckJobsService
 {
-    Task<(bool LockAcquired, Job? job)> CheckForAvailableJob(CancellationToken cancellationToken);
+    Task<(bool LockAcquired, Job? job)> CheckForAvailableJob(HashSet<Guid> ignoreIds, CancellationToken cancellationToken);
 }

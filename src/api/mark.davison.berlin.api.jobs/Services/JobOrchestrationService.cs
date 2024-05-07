@@ -1,10 +1,8 @@
 ﻿using mark.davison.berlin.shared.constants;
-using mark.davison.common;
 using mark.davison.common.CQRS;
 using mark.davison.common.server.abstractions.CQRS;
 using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 
 namespace mark.davison.berlin.api.jobs.Services;
 
@@ -16,6 +14,9 @@ public class JobOrchestrationService : IJobOrchestrationService
     private readonly IDateService _dateService;
     private readonly AppSettings _appSettings;
     private readonly ILogger<JobOrchestrationService> _logger;
+
+    private bool _inProgress;
+    private DateTime _inProgressSet;
 
     public JobOrchestrationService(
         IRedisService redisService,
@@ -40,37 +41,61 @@ public class JobOrchestrationService : IJobOrchestrationService
 
     public async Task RunAnyAvailableJobs(CancellationToken cancellationToken)
     {
-        var backoffIncrement = TimeSpan.FromSeconds(Random.Shared.Next(5, 10)); // TODO: Config???
-        var timesBackedOff = 3;// TODO: Config???
-        while (true)
+        if (_inProgress)
         {
-            var (lockAcquired, job) = await _checkJobsService.CheckForAvailableJob(CancellationToken.None);
-
-            if (job == null)
+            if (_inProgressSet.AddMinutes(30) < _dateService.Now)
             {
-                if (!lockAcquired)
-                {
-                    if (timesBackedOff > 0)
-                    {
-                        timesBackedOff--;
-                        await Task.Delay(backoffIncrement);
-                        _logger.LogInformation("Failed to acquire a lock to check for jobs, waiting to check again");
-                        continue;
-                    }
-
-                    _logger.LogInformation("No jobs found to perform after trying multiple times");
-                    return;
-                }
-
-                _logger.LogInformation("No jobs found to perform");
                 return;
             }
 
-            _logger.LogInformation("Found job ({0}) to perform", job.Id);
+            _inProgressSet = _dateService.Now;
+            _inProgress = true;
+        }
+        var backoffIncrement = TimeSpan.FromSeconds(Random.Shared.Next(5, 10)); // TODO: Config???
+        var timesBackedOff = 3;// TODO: Config???
 
-            var performedJob = await PerformJob(job, cancellationToken);
+        HashSet<Guid> performed = new();
 
-            // TODO: Save something back to redis to indicate that this is done?? Save querying db constantly???
+        try
+        {
+            while (true)
+            {
+                var (lockAcquired, job) = await _checkJobsService.CheckForAvailableJob(performed, CancellationToken.None);
+
+                if (job == null)
+                {
+                    if (!lockAcquired)
+                    {
+                        if (timesBackedOff > 0)
+                        {
+                            timesBackedOff--;
+                            await Task.Delay(backoffIncrement);
+                            _logger.LogInformation("Failed to acquire a lock to check for jobs, waiting to check again");
+                            continue;
+                        }
+
+                        _logger.LogInformation("No jobs found to perform after trying multiple times");
+                        return;
+                    }
+
+                    _logger.LogInformation("No jobs found to perform");
+                    return;
+                }
+
+                _logger.LogInformation("Found job ({0}) to perform, status: {1}", job.Id, job.Status);
+
+                var performedJob = await PerformJob(job, cancellationToken);
+
+                performed.Add(job.Id);
+                // TODO: Save something back to redis to indicate that this is done?? Save querying db constantly???
+
+                // TODO: This seems to keep picking up this completed job next time around
+            }
+        }
+        finally
+        {
+            _inProgressSet = DateTime.MinValue;
+            _inProgress = false;
         }
     }
 
@@ -117,7 +142,7 @@ public class JobOrchestrationService : IJobOrchestrationService
         return (type, responseType);
     }
 
-    private static async Task<object> PerformCommand<TResponse, TRequest>(TRequest request, ICommandHandler<TRequest, TResponse> handler, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
+    private static async Task<object> PerformCommand<TRequest, TResponse>(TRequest request, ICommandHandler<TRequest, TResponse> handler, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
         where TRequest : class, ICommand<TRequest, TResponse>, new() where TResponse : Response, new()
     {
         return await handler.Handle(request, currentUserContext, cancellationToken);
@@ -125,7 +150,11 @@ public class JobOrchestrationService : IJobOrchestrationService
 
     private static async Task<Job> SaveJob(Job job, IRepository repository, CancellationToken cancellationToken)
     {
-        return await repository.UpsertEntityAsync(job, cancellationToken) ?? job;
+        var jobo = await repository.UpsertEntityAsync(job, cancellationToken) ?? job;
+
+        await repository.CommitTransactionAsync();
+
+        return jobo;
     }
 
     public async Task<Job> PerformJob(Job job, CancellationToken cancellationToken)
@@ -154,11 +183,12 @@ public class JobOrchestrationService : IJobOrchestrationService
 
             try
             {
+                var options = JsonSerializerOptions.Default;
+                options.MakeReadOnly();
                 request = JsonSerializer.Deserialize(
                     job.JobRequest,
-                    JsonTypeInfo.CreateJsonTypeInfo(
-                        requestType,
-                        SerializationHelpers.CreateStandardSerializationOptions()));
+                    requestType,
+                    options);
             }
             catch (Exception e)
             {
@@ -214,7 +244,11 @@ public class JobOrchestrationService : IJobOrchestrationService
                     job.LastModified = _dateService.Now;
                     job.JobResponse = JsonSerializer.Serialize(responseObject);
 
-                    return await SaveJob(job, repository, cancellationToken);
+                    var jobo = await SaveJob(job, repository, cancellationToken);
+
+                    Console.WriteLine("Finished job: {0} with status {1}", job.Id, job.Status);
+
+                    return jobo;
                 }
             }
 

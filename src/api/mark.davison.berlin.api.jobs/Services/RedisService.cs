@@ -78,21 +78,24 @@ public class RedisService : IRedisService
                 RedisChannel.Pattern("__keyspace@0__:*"),
                 async (channel, redisType) =>
                 {
-                    var redisKey = GetKey(channel);
-
-                    if (_callbacks.TryGetValue(redisType, out var typeCallbacks))
+                    if ((string?)channel is string channelString && (string?)redisType is string redisTypeString)
                     {
-                        if (typeCallbacks.TryGetValue(redisKey, out var keyCallback))
+                        var redisKey = GetKey(channelString);
+
+                        if (_callbacks.TryGetValue(redisTypeString, out var typeCallbacks))
                         {
-                            await keyCallback().ContinueWith(_ =>
+                            if (typeCallbacks.TryGetValue(redisKey, out var keyCallback))
                             {
-                                if (_.IsFaulted && _.Exception != null)
+                                await keyCallback().ContinueWith(_ =>
                                 {
-                                    // TODO: Logger
-                                    Console.WriteLine(_.Exception.Message);
-                                    Console.WriteLine(_.Exception.StackTrace);
-                                }
-                            });
+                                    if (_.IsFaulted && _.Exception != null)
+                                    {
+                                        // TODO: Logger
+                                        Console.WriteLine(_.Exception.Message);
+                                        Console.WriteLine(_.Exception.StackTrace);
+                                    }
+                                });
+                            }
                         }
                     }
                 });

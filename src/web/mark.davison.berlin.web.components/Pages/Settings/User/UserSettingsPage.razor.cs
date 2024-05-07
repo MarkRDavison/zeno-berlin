@@ -22,7 +22,37 @@ public partial class UserSettingsPage
     {
         _inProgress = true;
 
-        var response = await ClientHttpRepository.Post<ExportCommandResponse, ExportCommandRequest>(CancellationToken.None);
+        var request = new ExportCommandRequest
+        {
+            UseJob = true
+        };
+
+
+        var response = await ClientHttpRepository.Post<ExportCommandResponse, ExportCommandRequest>(request, CancellationToken.None);
+
+        if (!response.Success || response.JobId == null)
+        {
+            Console.Error.WriteLine("Failed to submit the job as expected");
+            return;
+        }
+
+        request.JobId = response.JobId;
+
+        int maxTime = 500;
+        const int Delay = 2;
+        while (maxTime > 0)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(Delay));
+            maxTime -= Delay;
+
+            response = await ClientHttpRepository.Post<ExportCommandResponse, ExportCommandRequest>(request, CancellationToken.None);
+
+            if (response.JobStatus == "Complete" ||
+                response.JobStatus == "Errored")
+            {
+                break;
+            }
+        }
 
         if (response.SuccessWithValue)
         {

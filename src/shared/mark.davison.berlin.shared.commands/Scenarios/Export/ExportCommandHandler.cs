@@ -1,5 +1,4 @@
-﻿
-namespace mark.davison.berlin.shared.commands.Scenarios.Export;
+﻿namespace mark.davison.berlin.shared.commands.Scenarios.Export;
 
 public class ExportCommandHandler : ValidateAndProcessCommandHandler<ExportCommandRequest, ExportCommandResponse>
 {

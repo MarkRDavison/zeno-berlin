@@ -232,6 +232,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         };
 
         var refreshOffset = TimeSpan.FromHours(12);// TODO: Configure/options
+        var refreshOffsetFav = TimeSpan.FromHours(3);// TODO: Configure/options
 
         if (request.StoryIds.Any())
         {
@@ -248,13 +249,16 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                 ? 2
                 : Math.Min(request.Amount, 10);
             var refreshDate = _dateService.Now.Subtract(refreshOffset);
+            var refreshDateFav = _dateService.Now.Subtract(refreshOffsetFav);
 
             var stories = await _repository.QueryEntities<Story>()
                 .Include(_ => _.StoryFandomLinks)
                 .ThenInclude(_ => _.Fandom)
                 .Include(_ => _.StoryAuthorLinks)
                 .ThenInclude(_ => _.Author)
-                .Where(_ => !_.Complete && _.LastChecked <= refreshDate)
+                .Where(_ => !_.Complete &&
+                    ((!_.Favourite && _.LastChecked <= refreshDate) ||
+                    (_.Favourite && _.LastChecked <= refreshDateFav)))
                 .OrderBy(_ => _.LastChecked)
                 .Take(max)
                 .ToListAsync(cancellationToken);

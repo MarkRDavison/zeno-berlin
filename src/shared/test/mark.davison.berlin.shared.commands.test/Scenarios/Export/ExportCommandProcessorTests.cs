@@ -3,7 +3,7 @@
 [TestClass]
 public class ExportCommandProcessorTests
 {
-    private readonly IReadonlyRepository _repository;
+    private readonly IRepository _repository;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly ExportCommandProcessor _processor;
     private readonly User _currentUser;
@@ -14,7 +14,7 @@ public class ExportCommandProcessorTests
         {
             Id = Guid.NewGuid()
         };
-        _repository = Substitute.For<IReadonlyRepository>();
+        _repository = Substitute.For<IRepository>();
         _currentUserContext = Substitute.For<ICurrentUserContext>();
         _currentUserContext.CurrentUser.Returns(_currentUser);
 
