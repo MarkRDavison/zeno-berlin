@@ -7,7 +7,8 @@ public static class DependencyInjectionExtensions
         services
             .AddScoped<IFandomService, FandomService>()
             .AddScoped<IAuthorService, AuthorService>()
-            .AddTransient<INotificationCreationService, NotificationCreationService>();
+            .AddTransient<INotificationCreationService, NotificationCreationService>()
+            .AddSingleton<IDistributedPubSub, DistributedPubSub>(); // TODO: To Common
         return services;
     }
 }

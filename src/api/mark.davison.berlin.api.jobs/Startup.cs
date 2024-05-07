@@ -1,5 +1,4 @@
-﻿using mark.davison.berlin.api.jobs.Cron;
-using StackExchange.Redis;
+﻿using StackExchange.Redis;
 
 namespace mark.davison.berlin.api.jobs;
 
@@ -58,19 +57,12 @@ public class Startup
 
         services.UseCQRSServer();
         services
-            .AddCronJob<CheckJobsCronJob>(_ =>
-            {
-                _.TimeZoneInfo = TimeZoneInfo.Local;
-                _.CronExpression = AppSettings.JOB_CHECK_RATE;
-            })
             .AddHttpClient()
             .AddHttpContextAccessor()
             .UseRateLimiter()
             .UseNotificationHub()
             .AddScoped<ICurrentUserContext>(_ => new CurrentUserContext
             {
-                // TODO: Hydrate this based on the job context???
-                // every day cron crap runs as this, but actually running the job runs as the user
                 CurrentUser = new() // TODO: Fetch on startup???
                 {
                     Id = Guid.Empty,

@@ -1,4 +1,7 @@
-﻿namespace mark.davison.berlin.api;
+﻿using mark.davison.shared.server.services.Helpers;
+using StackExchange.Redis;
+
+namespace mark.davison.berlin.api;
 
 [UseCQRSServer(typeof(DtosRootType), typeof(CommandsRootType), typeof(QueriesRootType))]
 public class Startup
@@ -76,8 +79,26 @@ public class Startup
             .UseNotificationHub()
             .UseMatrixClient()
             .UseMatrixNotifications()
-            .UseConsoleNotifications()
-            .UseCronJobs(AppSettings);
+            .UseConsoleNotifications();
+
+        {
+
+            var config = new ConfigurationOptions
+            {
+                EndPoints = { AppSettings.REDIS.HOST + ":" + AppSettings.REDIS.PORT },
+                Password = AppSettings.REDIS.PASSWORD
+            };
+
+            IConnectionMultiplexer redis = ConnectionMultiplexer.Connect(config);
+            services
+                .AddStackExchangeRedisCache(_ =>
+                {
+                    _.InstanceName = "BERLIN_JOBS_" + (AppSettings.PRODUCTION_MODE ? "prod_" : "dev_");
+                    _.Configuration = redis.Configuration;
+                })
+                .AddSingleton(redis)
+                .AddSingleton<IRedisService, RedisService>();
+        }
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -259,8 +259,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                 .Where(_ => !_.Complete &&
                     ((!_.Favourite && _.LastChecked <= refreshDate) ||
                     (_.Favourite && _.LastChecked <= refreshDateFav)))
-                .OrderBy(_ => _.LastChecked)
-                .Take(max)
+                .OrderBy(_ => _.LastChecked) // TODO: Order by !fav, where fav OR refresh??? 
+                .Take(max) // So either its a non fav and needs checking, or everything else fills up on the favourites
                 .ToListAsync(cancellationToken);
             return stories;
         }

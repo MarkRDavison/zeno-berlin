@@ -1,6 +1,6 @@
 ﻿using StackExchange.Redis;
 
-namespace mark.davison.berlin.api.jobs.Services;
+namespace mark.davison.shared.server.services.Helpers;
 
 internal class RedisLockDisposable : IRedisLockDisposable
 {
@@ -66,6 +66,23 @@ public class RedisService : IRedisService
         }
 
         return channel;
+    }
+
+    public async Task SetValueAsync(string key, string value, CancellationToken cancellationToken)
+    {
+        var database = _redis.GetDatabase();
+        await database.StringSetAsync(key, value);
+    }
+
+    public async Task SetValueAsync(string key, string value, TimeSpan expiry, CancellationToken cancellationToken)
+    {
+        var database = _redis.GetDatabase();
+        await database.StringSetAsync(key, value, expiry);
+    }
+    public async Task<string?> GetStringValueAsync(string key, CancellationToken cancellationToken)
+    {
+        var database = _redis.GetDatabase();
+        return await database.StringGetAsync(key);
     }
 
     public async Task SubscribeToKeyAsync(string key, string type, Func<Task> callback)

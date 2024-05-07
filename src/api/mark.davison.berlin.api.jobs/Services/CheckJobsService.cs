@@ -1,6 +1,4 @@
-﻿using mark.davison.berlin.shared.constants;
-
-namespace mark.davison.berlin.api.jobs.Services;
+﻿namespace mark.davison.berlin.api.jobs.Services;
 
 public class CheckJobsService : ICheckJobsService
 {
@@ -20,6 +18,12 @@ public class CheckJobsService : ICheckJobsService
         _appSettings = options.Value;
         _serviceScopeFactory = serviceScopeFactory;
     }
+
+    // TODO: What to do if you have a crash in the middle of a job? restarting????
+    // Will need an admin page for outstanding jobs. A NEW APP :)
+    //  - Ability to remove job history etc
+    //  - Trigger job to restart
+    //  - Remove failed jobs/edit and restart????
 
     public async Task<(bool LockAcquired, Job? job)> CheckForAvailableJob(HashSet<Guid> ignoreIds, CancellationToken cancellationToken)
     {

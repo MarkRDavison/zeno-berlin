@@ -1,5 +1,4 @@
-﻿using mark.davison.berlin.shared.constants;
-using mark.davison.common.CQRS;
+﻿using mark.davison.common.CQRS;
 using mark.davison.common.server.abstractions.CQRS;
 using System.Reflection;
 using System.Text.Json;
@@ -41,9 +40,11 @@ public class JobOrchestrationService : IJobOrchestrationService
 
     public async Task RunAnyAvailableJobs(CancellationToken cancellationToken)
     {
+        var inProgressTimeout = TimeSpan.FromMinutes(120);
+
         if (_inProgress)
         {
-            if (_inProgressSet.AddMinutes(30) < _dateService.Now)
+            if (_inProgressSet.Add(inProgressTimeout) < _dateService.Now)
             {
                 return;
             }
@@ -51,6 +52,7 @@ public class JobOrchestrationService : IJobOrchestrationService
             _inProgressSet = _dateService.Now;
             _inProgress = true;
         }
+
         var backoffIncrement = TimeSpan.FromSeconds(Random.Shared.Next(5, 10)); // TODO: Config???
         var timesBackedOff = 3;// TODO: Config???
 

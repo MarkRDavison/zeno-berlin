@@ -22,6 +22,11 @@ public partial class UserSettingsPage
     {
         _inProgress = true;
 
+        // TODO: Framework helper for this long polling
+        /*
+         * Also need toast/jobs page???
+         * 
+         */
         var request = new ExportCommandRequest
         {
             UseJob = true

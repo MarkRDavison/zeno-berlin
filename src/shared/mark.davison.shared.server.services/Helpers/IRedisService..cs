@@ -1,5 +1,4 @@
-﻿namespace mark.davison.berlin.api.jobs.Services;
-
+﻿namespace mark.davison.shared.server.services.Helpers;
 
 public interface IRedisLockDisposable : IAsyncDisposable
 {
@@ -9,6 +8,11 @@ public interface IRedisLockDisposable : IAsyncDisposable
 
 public interface IRedisService
 {
+    Task SetValueAsync(string key, string value, CancellationToken cancellationToken);
+    Task SetValueAsync(string key, string value, TimeSpan expiry, CancellationToken cancellationToken);
+
+    Task<string?> GetStringValueAsync(string key, CancellationToken cancellationToken);
+
     Task<IRedisLockDisposable> LockAsync(string key, string value);
     Task<IRedisLockDisposable> LockAsync(string key, string value, TimeSpan expiry);
 
