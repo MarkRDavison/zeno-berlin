@@ -33,6 +33,61 @@ jobs:
             ghcr.io/markrdavison/markdavison-berlin-api:latest
             ghcr.io/markrdavison/markdavison-berlin-api:${{ github.event.release.tag_name }}
             
+  build-and-push-image-api-jobs:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4      
+        
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.MRD_GITHUB_PAT }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          file: ./Docker/api-jobs.dockerfile
+          context: ./src
+          push: true
+          tags: |
+            ghcr.io/markrdavison/markdavison-berlin-api-jobs:latest
+            ghcr.io/markrdavison/markdavison-berlin-api-jobs:${{ github.event.release.tag_name }}
+  
+  build-and-push-image-api-orchestrator:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4      
+        
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.MRD_GITHUB_PAT }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          file: ./Docker/api-orchestrator.dockerfile
+          context: ./src
+          push: true
+          tags: |
+            ghcr.io/markrdavison/markdavison-berlin-api-jobs:latest
+            ghcr.io/markrdavison/markdavison-berlin-api-jobs:${{ github.event.release.tag_name }}
 
   build-and-push-image-bff-web:
     runs-on: ubuntu-latest
@@ -113,6 +168,8 @@ jobs:
           changes: |
             {
               "api.tag": "${{ github.event.release.tag_name }}",
+              "apijobs.tag": "${{ github.event.release.tag_name }}",
+              "apiorchestrator.tag": "${{ github.event.release.tag_name }}",
               "bffweb.tag": "${{ github.event.release.tag_name }}",
               "web.tag": "${{ github.event.release.tag_name }}"
             }

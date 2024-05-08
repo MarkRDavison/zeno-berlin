@@ -16,6 +16,7 @@ api:
       - AUTH__CLIENT_SECRET
       - DATABASE__DB_USERNAME
       - DATABASE__DB_PASSWORD
+      - REDIS__PASSWORD
       - NOTIFICATIONS__MATRIX__USERNAME
       - NOTIFICATIONS__MATRIX__PASSWORD
     public:
@@ -36,6 +37,11 @@ api:
       BERLIN__NOTIFICATIONS__MATRIX__URL: https://matrix-client.matrix.org
       BERLIN__NOTIFICATIONS__MATRIX__ROOMID: '!miNmGSGPmCyiGcKdKD:matrix.org'
       BERLIN__NOTIFICATIONS__MATRIX__SESSIONNAME: zeno-fanfic
+      BERLIN__REDIS__HOST: redis.markdavison.kiwi
+apijobs:
+  tag: v0.0.28
+apiorchestrator:
+  tag: v0.0.28
 bffweb:
   app: zeno-fanfic-bff
   replicas: 1
