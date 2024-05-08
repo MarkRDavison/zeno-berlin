@@ -76,6 +76,13 @@ Async background job processing
  - Remove the cron jobs from the api move them to the jobs api
 	- Need coordination to not duplicate job creation
 	    - Have ANOTHER container, that doesnt get duplicates, orcherstrator? runs cron, create jobs???
+ - Create docker files for job runner and job orchestrator
+ - Create K8s yamls for new containers
+	- remove existing params for old containers
+	- add redis to all etc???
+ - trial scaling api/job runner containers :)
+
+Investigate distributed pub sub or is redis fine for this???
 
 ## BUGS
 
@@ -92,6 +99,10 @@ navigating to /fandoms after initial load does not load them, so newly added sto
 
 
 ### DONE
+
+## Bigger things
+Get rid of IRepository, investigate dbcontext and transactions but use a prebuilt solution
+Get proper auth going
 
 ## Features
 

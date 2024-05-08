@@ -1,4 +1,5 @@
-﻿using mark.davison.common.client.Ignition;
+﻿using mark.davison.berlin.web.services.CommonCandidates;
+using mark.davison.common.client.Ignition;
 
 namespace mark.davison.berlin.web.components.Ignition;
 
@@ -9,7 +10,7 @@ public static class DependecyInjectionExtensions
         IAuthenticationConfig authConfig)
     {
         services.UseCommonClient(authConfig, typeof(Routes));
-
+        services.AddSingleton<IClientJobHttpRepository, ClientJobHttpRepository>();
         return services;
     }
 }

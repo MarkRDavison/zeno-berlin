@@ -8,6 +8,7 @@
  * For server cron jobs you should not submit through here, just create the 'Job' record.
  * You can trigger one of these from a cron, just dont set UseJob, because then the job will create a job
  */
+
 public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, TResponseData> : ICommandHandler<TRequest, TResponse>
     where TRequest : class, ICommand<TRequest, TResponse>, IJobRequest, new()
     where TResponse : Response<TResponseData>, IJobResponse, new()
@@ -74,12 +75,13 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
 
     private async Task<TResponse> HandleCreateJob(TRequest command, ICurrentUserContext currentUserContext, CancellationToken cancellation)
     {
-        command.UseJob = false; // When this is picked up and run. It should just be regular
+        // When this is picked up and run. It should just be regular job
+        command.UseJob = false;
         var job = await _repository.UpsertEntityAsync(new Job
         {
             Id = Guid.NewGuid(),
             ContextUserId = currentUserContext.CurrentUser.Id,
-            JobType = typeof(ExportCommandRequest).AssemblyQualifiedName!,
+            JobType = typeof(TRequest).AssemblyQualifiedName!,
             JobRequest = JsonSerializer.Serialize(command),
             Status = JobStatusConstants.Submitted,
             SubmittedAt = DateTime.UtcNow,
@@ -123,6 +125,7 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
 
         var message = existingJob.Status switch
         {
+            // TODO: Constants for these descriptions?
             JobStatusConstants.Submitted => "Waiting to be picked up",
             JobStatusConstants.Running => "Still running",
             JobStatusConstants.Selected => "Still running",
@@ -138,8 +141,15 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
             return response;
         }
 
-        response.Value = JsonSerializer.Deserialize<TResponseData>(existingJob.JobResponse);
+        var responseJob = JsonSerializer.Deserialize<TResponse>(existingJob.JobResponse);
+        if (responseJob == null)
+        {
+            responseJob = new TResponse();
+            responseJob.Errors.Add("Failed to extract the completion result");
+        }
 
-        return response;
+        responseJob.JobStatus = existingJob.Status;
+
+        return responseJob;
     }
 }

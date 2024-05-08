@@ -12,7 +12,6 @@ public class ImportCommandValidator : ICommandValidator<ImportCommandRequest, Im
 
     public async Task<ImportCommandResponse> ValidateAsync(ImportCommandRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
     {
-
         var existingStories = await _validationContext.GetAllForUserId<Story>(currentUserContext.CurrentUser.Id, cancellationToken);
 
         var existingAddresses = existingStories.Select(_ => _.Address).ToHashSet();

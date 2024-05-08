@@ -152,11 +152,15 @@ public class JobOrchestrationService : IJobOrchestrationService
 
     private static async Task<Job> SaveJob(Job job, IRepository repository, CancellationToken cancellationToken)
     {
-        var jobo = await repository.UpsertEntityAsync(job, cancellationToken) ?? job;
 
-        await repository.CommitTransactionAsync();
+        await using (repository.BeginTransaction())
+        {
+            var jobo = await repository.UpsertEntityAsync(job, cancellationToken) ?? job;
 
-        return jobo;
+            await repository.CommitTransactionAsync();
+
+            return jobo;
+        }
     }
 
     public async Task<Job> PerformJob(Job job, CancellationToken cancellationToken)
@@ -165,104 +169,101 @@ public class JobOrchestrationService : IJobOrchestrationService
 
         var repository = scope.ServiceProvider.GetRequiredService<IRepository>();
 
-        await using (repository.BeginTransaction())
+        job.StartedAt = _dateService.Now;
+
+        var requestType = Type.GetType(job.JobType);
+        if (requestType == null)
         {
-            job.StartedAt = _dateService.Now;
-
-            var requestType = Type.GetType(job.JobType);
-            if (requestType == null)
-            {
-                job.Status = JobStatusConstants.Errored;
-                job.JobResponse = JsonSerializer.Serialize(new Response
-                {
-                    Errors = ["Failed to deserialize job, type not recongnised"]
-                });
-
-                return await SaveJob(job, repository, cancellationToken);
-            }
-
-            object? request = null;
-
-            try
-            {
-                var options = JsonSerializerOptions.Default;
-                options.MakeReadOnly();
-                request = JsonSerializer.Deserialize(
-                    job.JobRequest,
-                    requestType,
-                    options);
-            }
-            catch (Exception e)
-            {
-                job.Status = JobStatusConstants.Errored;
-                job.LastModified = _dateService.Now;
-                job.JobResponse = JsonSerializer.Serialize(new Response
-                {
-                    Errors = ["Failed to deserialize job", e.Message]
-                });
-            }
-
-            if (request == null)
-            {
-                return await SaveJob(job, repository, cancellationToken);
-            }
-
-            var (extractedRequestType, extractedResponseType) = ExtractCommandRequestResponseTypes(request.GetType());
-
-            if (extractedRequestType == null || extractedResponseType == null)
-            {
-                job.Status = JobStatusConstants.Errored;
-                job.LastModified = _dateService.Now;
-                job.JobResponse = JsonSerializer.Serialize(new Response
-                {
-                    Errors = ["Unknown job type", request.GetType().FullName ?? request.GetType().Name]
-                });
-                return await SaveJob(job, repository, cancellationToken);
-            }
-
-            var handlerType = ConstructCommandHandlerType(extractedRequestType, extractedResponseType);
-
-            var handler = scope.ServiceProvider.GetRequiredService(handlerType);
-
-            var currentUserContext = scope.ServiceProvider.GetRequiredService<ICurrentUserContext>();
-            if (job.ContextUser != null)
-            {
-                currentUserContext.CurrentUser = job.ContextUser;
-            }
-
-            var methodInfo = typeof(JobOrchestrationService).GetMethod(nameof(PerformCommand), BindingFlags.Static | BindingFlags.NonPublic)!;
-
-            var method = methodInfo.MakeGenericMethod(extractedRequestType, extractedResponseType);
-
-            var responseTask = method.Invoke(null, [request, handler, currentUserContext, CancellationToken.None]);
-
-            if (responseTask is Task<object> t)
-            {
-                var responseObject = await t;
-
-                if (responseObject is Response responseValue)
-                {
-                    job.Status = JobStatusConstants.Complete;
-                    job.LastModified = _dateService.Now;
-                    job.JobResponse = JsonSerializer.Serialize(responseObject);
-
-                    var jobo = await SaveJob(job, repository, cancellationToken);
-
-                    Console.WriteLine("Finished job: {0} with status {1}", job.Id, job.Status);
-
-                    return jobo;
-                }
-            }
-
             job.Status = JobStatusConstants.Errored;
-            job.LastModified = _dateService.Now;
             job.JobResponse = JsonSerializer.Serialize(new Response
             {
-                Errors = ["Technical error submitting job to handler"]
+                Errors = ["Failed to deserialize job, type not recongnised"]
             });
 
             return await SaveJob(job, repository, cancellationToken);
         }
+
+        object? request = null;
+
+        try
+        {
+            var options = JsonSerializerOptions.Default;
+            options.MakeReadOnly();
+            request = JsonSerializer.Deserialize(
+                job.JobRequest,
+                requestType,
+                options);
+        }
+        catch (Exception e)
+        {
+            job.Status = JobStatusConstants.Errored;
+            job.LastModified = _dateService.Now;
+            job.JobResponse = JsonSerializer.Serialize(new Response
+            {
+                Errors = ["Failed to deserialize job", e.Message]
+            });
+        }
+
+        if (request == null)
+        {
+            return await SaveJob(job, repository, cancellationToken);
+        }
+
+        var (extractedRequestType, extractedResponseType) = ExtractCommandRequestResponseTypes(request.GetType());
+
+        if (extractedRequestType == null || extractedResponseType == null)
+        {
+            job.Status = JobStatusConstants.Errored;
+            job.LastModified = _dateService.Now;
+            job.JobResponse = JsonSerializer.Serialize(new Response
+            {
+                Errors = ["Unknown job type", request.GetType().FullName ?? request.GetType().Name]
+            });
+            return await SaveJob(job, repository, cancellationToken);
+        }
+
+        var handlerType = ConstructCommandHandlerType(extractedRequestType, extractedResponseType);
+
+        var handler = scope.ServiceProvider.GetRequiredService(handlerType);
+
+        var currentUserContext = scope.ServiceProvider.GetRequiredService<ICurrentUserContext>();
+        if (job.ContextUser != null)
+        {
+            currentUserContext.CurrentUser = job.ContextUser;
+        }
+
+        var methodInfo = typeof(JobOrchestrationService).GetMethod(nameof(PerformCommand), BindingFlags.Static | BindingFlags.NonPublic)!;
+
+        var method = methodInfo.MakeGenericMethod(extractedRequestType, extractedResponseType);
+
+        var responseTask = method.Invoke(null, [request, handler, currentUserContext, CancellationToken.None]);
+
+        if (responseTask is Task<object> t)
+        {
+            var responseObject = await t;
+
+            if (responseObject is Response responseValue)
+            {
+                job.Status = JobStatusConstants.Complete;
+                job.LastModified = _dateService.Now;
+                job.JobResponse = JsonSerializer.Serialize(responseObject);
+
+                var jobo = await SaveJob(job, repository, cancellationToken);
+
+                Console.WriteLine("Finished job: {0} with status {1}", job.Id, job.Status);
+
+                return jobo;
+            }
+        }
+
+        job.Status = JobStatusConstants.Errored;
+        job.LastModified = _dateService.Now;
+        job.JobResponse = JsonSerializer.Serialize(new Response
+        {
+            Errors = ["Technical error submitting job to handler"]
+        });
+
+        return await SaveJob(job, repository, cancellationToken);
     }
 
     public async Task InitialiseJobMonitoring()

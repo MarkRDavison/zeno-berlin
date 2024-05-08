@@ -55,8 +55,7 @@ public class CheckJobsService : ICheckJobsService
                     .Include(_ => _.ContextUser)
                     .Where(_ =>
                         !idsToIgnore.Contains(_.Id) &&
-                        (_.Status == JobStatusConstants.Submitted && _.PerformerId == string.Empty) ||
-                        (_.Status == JobStatusConstants.Selected && _.PerformerId == Environment.MachineName))
+                        (_.Status == JobStatusConstants.Submitted && _.PerformerId == string.Empty))
                     .OrderBy(_ => _.SubmittedAt)
                     .Take(1)
                     .ToListAsync(cancellationToken); // TODO: EF testing stuff/FirstOrDefaultAsync not working

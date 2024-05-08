@@ -1,4 +1,5 @@
 ﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.SendNotification;
+using mark.davison.berlin.web.services.CommonCandidates;
 
 namespace mark.davison.berlin.web.components.Pages.Settings.User;
 
@@ -8,6 +9,8 @@ public partial class UserSettingsPage
 
     [Inject]
     public required IClientHttpRepository ClientHttpRepository { get; set; }
+    [Inject]
+    public required IClientJobHttpRepository ClientJobHttpRepository { get; set; }
 
     [Inject]
     public required IJSRuntime JSRuntime { get; set; }
@@ -22,42 +25,16 @@ public partial class UserSettingsPage
     {
         _inProgress = true;
 
-        // TODO: Framework helper for this long polling
-        /*
-         * Also need toast/jobs page???
-         * 
-         */
         var request = new ExportCommandRequest
         {
-            UseJob = true
+            UseJob = true,
+            TriggerImmediateJob = true
         };
 
-
-        var response = await ClientHttpRepository.Post<ExportCommandResponse, ExportCommandRequest>(request, CancellationToken.None);
-
-        if (!response.Success || response.JobId == null)
-        {
-            Console.Error.WriteLine("Failed to submit the job as expected");
-            return;
-        }
-
-        request.JobId = response.JobId;
-
-        int maxTime = 500;
-        const int Delay = 2;
-        while (maxTime > 0)
-        {
-            await Task.Delay(TimeSpan.FromSeconds(Delay));
-            maxTime -= Delay;
-
-            response = await ClientHttpRepository.Post<ExportCommandResponse, ExportCommandRequest>(request, CancellationToken.None);
-
-            if (response.JobStatus == "Complete" ||
-                response.JobStatus == "Errored")
-            {
-                break;
-            }
-        }
+        var response = await ClientJobHttpRepository.PostLongPolling<ExportCommandResponse, ExportCommandRequest, SerialisedtDataDto>(
+            request,
+            TimeSpan.FromSeconds(2),
+            CancellationToken.None);
 
         if (response.SuccessWithValue)
         {
@@ -66,7 +43,7 @@ public partial class UserSettingsPage
                 WriteIndented = true
             });
 
-            var filename = $"fanfic_export_{DateTime.Today.ToShortDateString()}_{DateTime.Now.ToLocalTime().ToLongTimeString()}.json".Replace(" ", "_");
+            var filename = $"fanfic_export_{DateTime.Today.ToShortDateString()}_{DateTime.Now.ToLocalTime().ToLongTimeString()}.json".Replace(" ", "_").Replace(":", "_");
             await DownloadContent(content, filename);
             Snackbar.Add($"Exported '{filename}'", Severity.Success);
         }
@@ -130,23 +107,36 @@ public partial class UserSettingsPage
     {
         var request = new ImportCommandRequest
         {
+            UseJob = true,
+            TriggerImmediateJob = true,
             Data = data
         };
 
-        var response = await ClientHttpRepository.Post<ImportCommandResponse, ImportCommandRequest>(request, CancellationToken.None);
-
-        if (response.Success)
-        {
-            if (response.Imported == 0)
+        return await ClientJobHttpRepository.PostSetupBackgroundJob<ImportCommandResponse, ImportCommandRequest, ImportSummary>(
+            request,
+            response =>
             {
-                Snackbar.Add("No new stories imported", Severity.Normal);
-            }
-            else
-            {
-                Snackbar.Add($"Imported {response.Imported} stories", Severity.Success);
-            }
-        }
+                if (response.SuccessWithValue)
+                {
+                    if (response.Value.Imported == 0)
+                    {
+                        Snackbar.Add("No new stories imported", Severity.Normal);
+                    }
+                    else
+                    {
+                        Snackbar.Add($"Imported {response.Value.Imported} stories", Severity.Success);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add("Failed to import stories", Severity.Error);
+                    Console.Error.WriteLine(string.Join(", ", response.Errors));
+                }
 
-        return response;
+                return Task.CompletedTask;
+            },
+            CancellationToken.None);
+
+
     }
 }

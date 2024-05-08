@@ -1,4 +1,6 @@
-﻿using StackExchange.Redis;
+﻿using mark.davison.berlin.shared.logic.Ignition;
+using mark.davison.shared.services.Ignition;
+using StackExchange.Redis;
 
 namespace mark.davison.berlin.api.jobs;
 
@@ -53,7 +55,15 @@ public class Startup
             .AddScoped<IReadonlyRepository>(_ => _.GetRequiredService<IRepository>());
 
         services.AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc));
-        services.UseValidation().UseSharedServerServices(); // TODO: Consolidate whatever you need to connect to db, run cqrs etc???
+        services.UseValidation()
+            .UseBerlinLogic()
+            .UseSharedServices()
+            .UseSharedServerServices()
+            .UseRateLimiter()
+            .UseNotificationHub()
+            .UseMatrixClient()
+            .UseMatrixNotifications()
+            .UseConsoleNotifications(); // TODO: Consolidate whatever you need to connect to db, run cqrs etc???
 
         services.UseCQRSServer();
         services
