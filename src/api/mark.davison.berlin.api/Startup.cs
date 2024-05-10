@@ -100,10 +100,6 @@ public class Startup
                 .AddSingleton(redis)
                 .AddSingleton<IRedisService, RedisService>();
         }
-        else
-        {
-            throw new InvalidOperationException("Must specify some redis/distributed pub sub");
-        }
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
