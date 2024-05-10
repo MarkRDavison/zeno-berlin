@@ -105,16 +105,14 @@ public partial class UserSettingsPage
 
     private async Task<Response> ImportData(SerialisedtDataDto data)
     {
-        var request = new ImportCommandRequest
-        {
-            UseJob = true,
-            TriggerImmediateJob = true,
-            Data = data
-        };
-
         return await ClientJobHttpRepository.PostSetupBackgroundJob<ImportCommandResponse, ImportCommandRequest, ImportSummary>(
-            request,
-            response =>
+            new ImportCommandRequest
+            {
+                UseJob = true,
+                TriggerImmediateJob = true,
+                Data = data
+            },
+            (ImportCommandResponse response) =>
             {
                 if (response.SuccessWithValue)
                 {

@@ -5,14 +5,14 @@ public class MonthlyNotificationsCron : BaseCQRSCron<MonthlyNotificationsCommand
     public MonthlyNotificationsCron(
         IScheduleConfig<MonthlyNotificationsCron> scheduleConfig,
         IDateService dateService,
-        IRedisService redisService,
+        IDistributedPubSub distributedPubSubService,
         IServiceScopeFactory serviceScopeFactory,
         ILogger<MonthlyNotificationsCron> logger,
         IOptions<AppSettings> appSettings
     ) : base(
         scheduleConfig,
         dateService,
-        redisService,
+        distributedPubSubService,
         serviceScopeFactory,
         logger,
         appSettings)

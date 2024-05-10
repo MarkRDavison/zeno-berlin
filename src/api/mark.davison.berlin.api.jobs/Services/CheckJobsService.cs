@@ -2,18 +2,18 @@
 
 public class CheckJobsService : ICheckJobsService
 {
-    private readonly IRedisService _redisService;
+    private readonly ILockService _lockService;
     private readonly IDateService _dateService;
     private readonly AppSettings _appSettings;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
     public CheckJobsService(
-        IRedisService redisService,
+        ILockService lockService,
         IDateService dateService,
         IOptions<AppSettings> options,
         IServiceScopeFactory serviceScopeFactory)
     {
-        _redisService = redisService;
+        _lockService = lockService;
         _dateService = dateService;
         _appSettings = options.Value;
         _serviceScopeFactory = serviceScopeFactory;
@@ -36,7 +36,7 @@ public class CheckJobsService : ICheckJobsService
 
         var idsToIgnore = ignoreIds.ToList();
 
-        await using (var lockInfo = await _redisService.LockAsync(
+        await using (var lockInfo = await _lockService.LockAsync(
             BerlinSyncLockKey,
             BerlinSyncLockValue,
             TimeSpan.FromSeconds(100)))

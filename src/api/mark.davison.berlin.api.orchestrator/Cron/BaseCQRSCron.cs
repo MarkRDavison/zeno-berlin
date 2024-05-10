@@ -7,7 +7,7 @@ public abstract class BaseCQRSCron<TRequest, TResponse, TCron> : CronJobService
     where TResponse : Response, new()
 {
     private readonly IDateService _dateService;
-    private readonly IRedisService _redisService;
+    private readonly IDistributedPubSub _distributedPubSubService;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ILogger _logger;
     private readonly AppSettings _appSettings;
@@ -15,7 +15,7 @@ public abstract class BaseCQRSCron<TRequest, TResponse, TCron> : CronJobService
     protected BaseCQRSCron(
         IScheduleConfig<TCron> scheduleConfig,
         IDateService dateService,
-        IRedisService redisService,
+        IDistributedPubSub distributedPubSubService,
         IServiceScopeFactory serviceScopeFactory,
         ILogger logger,
         IOptions<AppSettings> appSettings
@@ -24,7 +24,7 @@ public abstract class BaseCQRSCron<TRequest, TResponse, TCron> : CronJobService
         scheduleConfig.TimeZoneInfo)
     {
         _dateService = dateService;
-        _redisService = redisService;
+        _distributedPubSubService = distributedPubSubService;
         _serviceScopeFactory = serviceScopeFactory;
         _logger = logger;
         _appSettings = appSettings.Value;
@@ -55,7 +55,7 @@ public abstract class BaseCQRSCron<TRequest, TResponse, TCron> : CronJobService
 
         if (TriggerJobCheck)
         {
-            await _redisService.SetValueAsync(_appSettings.JOB_CHECK_EVENT_KEY_NAME, "CHECK", TimeSpan.FromSeconds(10), cancellationToken);
+            await _distributedPubSubService.TriggerNotificationAsync(_appSettings.JOB_CHECK_EVENT_KEY_NAME, cancellationToken);
         }
     }
 

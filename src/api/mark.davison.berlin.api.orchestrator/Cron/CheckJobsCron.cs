@@ -2,21 +2,21 @@
 
 public class CheckJobsCron : CronJobService
 {
-    private readonly IRedisService _redisService;
+    private readonly IDistributedPubSub _distributedPubSubService;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ILogger<CheckJobsCron> _logger;
     private readonly AppSettings _appSettings;
 
     public CheckJobsCron(
         IScheduleConfig<CheckJobsCron> scheduleConfig,
-        IRedisService redisService,
+        IDistributedPubSub distributedPubSubService,
         IServiceScopeFactory serviceScopeFactory,
         ILogger<CheckJobsCron> logger,
         IOptions<AppSettings> appSettings) : base(
         scheduleConfig.CronExpression,
         scheduleConfig.TimeZoneInfo)
     {
-        _redisService = redisService;
+        _distributedPubSubService = distributedPubSubService;
         _serviceScopeFactory = serviceScopeFactory;
         _logger = logger;
         _appSettings = appSettings.Value;
@@ -44,7 +44,7 @@ public class CheckJobsCron : CronJobService
                 return;
             }
 
-            await _redisService.SetValueAsync(_appSettings.JOB_CHECK_EVENT_KEY_NAME, "CHECK", TimeSpan.FromSeconds(10), cancellationToken);
+            await _distributedPubSubService.TriggerNotificationAsync(_appSettings.JOB_CHECK_EVENT_KEY_NAME, cancellationToken);
         }
     }
 }

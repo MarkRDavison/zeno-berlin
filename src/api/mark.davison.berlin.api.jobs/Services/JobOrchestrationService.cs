@@ -1,13 +1,8 @@
-﻿using mark.davison.common.CQRS;
-using mark.davison.common.server.abstractions.CQRS;
-using System.Reflection;
-using System.Text.Json;
-
-namespace mark.davison.berlin.api.jobs.Services;
+﻿namespace mark.davison.berlin.api.jobs.Services;
 
 public class JobOrchestrationService : IJobOrchestrationService
 {
-    private readonly IRedisService _redisService;
+    private readonly IDistributedPubSub _distributedPubSubService;
     private readonly ICheckJobsService _checkJobsService;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IDateService _dateService;
@@ -18,14 +13,14 @@ public class JobOrchestrationService : IJobOrchestrationService
     private DateTime _inProgressSet;
 
     public JobOrchestrationService(
-        IRedisService redisService,
+        IDistributedPubSub distributedPubSubService,
         ICheckJobsService checkJobsService,
         IServiceScopeFactory serviceScopeFactory,
         IDateService dateService,
         IOptions<AppSettings> options,
         ILogger<JobOrchestrationService> logger)
     {
-        _redisService = redisService;
+        _distributedPubSubService = distributedPubSubService;
         _checkJobsService = checkJobsService;
         _serviceScopeFactory = serviceScopeFactory;
         _dateService = dateService;
@@ -268,9 +263,8 @@ public class JobOrchestrationService : IJobOrchestrationService
 
     public async Task InitialiseJobMonitoring()
     {
-        await _redisService.SubscribeToKeyAsync(
+        await _distributedPubSubService.SubscribeToKeyAsync(
             _appSettings.JOB_CHECK_EVENT_KEY_NAME,
-            "set",
             OnJobCheckEvent);
     }
 }

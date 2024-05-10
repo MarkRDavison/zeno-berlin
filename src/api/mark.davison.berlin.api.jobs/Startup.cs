@@ -58,7 +58,7 @@ public class Startup
         services.UseValidation()
             .UseBerlinLogic()
             .UseSharedServices()
-            .UseSharedServerServices()
+            .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
             .UseRateLimiter()
             .UseNotificationHub()
             .UseMatrixClient()

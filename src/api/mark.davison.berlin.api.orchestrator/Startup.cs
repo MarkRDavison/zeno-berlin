@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.api.orchestrator;
+﻿using mark.davison.shared.server.services.Igntion;
+
+namespace mark.davison.berlin.api.orchestrator;
 
 public class Startup
 {
@@ -54,7 +56,8 @@ public class Startup
             })
             .AddSingleton(redis)
             .AddSingleton<IRedisService, RedisService>()
-            .AddHostedService<HostedService>();
+            .AddHostedService<HostedService>()
+            .UseSharedServerServices(true);
 
         services.AddCronJob<CheckJobsCron>(_ =>
         {

@@ -5,14 +5,14 @@ public class UpdateStoriesCron : BaseCQRSCron<UpdateStoriesRequest, UpdateStorie
     public UpdateStoriesCron(
         IScheduleConfig<UpdateStoriesCron> scheduleConfig,
         IDateService dateService,
-        IRedisService redisService,
+        IDistributedPubSub distributedPubSubService,
         IServiceScopeFactory serviceScopeFactory,
         ILogger<UpdateStoriesCron> logger,
         IOptions<AppSettings> appSettings
     ) : base(
         scheduleConfig,
         dateService,
-        redisService,
+        distributedPubSubService,
         serviceScopeFactory,
         logger,
         appSettings)

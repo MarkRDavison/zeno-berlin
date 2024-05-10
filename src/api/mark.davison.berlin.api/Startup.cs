@@ -74,13 +74,14 @@ public class Startup
             .UseValidation()
             .UseBerlinLogic()
             .UseSharedServices()
-            .UseSharedServerServices()
+            .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
             .UseRateLimiter()
             .UseNotificationHub()
             .UseMatrixClient()
             .UseMatrixNotifications()
             .UseConsoleNotifications();
 
+        if (!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
         {
 
             var config = new ConfigurationOptions
@@ -98,6 +99,10 @@ public class Startup
                 })
                 .AddSingleton(redis)
                 .AddSingleton<IRedisService, RedisService>();
+        }
+        else
+        {
+            throw new InvalidOperationException("Must specify some redis/distributed pub sub");
         }
     }
 
