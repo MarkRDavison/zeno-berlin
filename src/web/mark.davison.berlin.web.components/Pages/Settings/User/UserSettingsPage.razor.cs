@@ -1,7 +1,4 @@
-﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.SendNotification;
-using mark.davison.berlin.web.services.CommonCandidates;
-
-namespace mark.davison.berlin.web.components.Pages.Settings.User;
+﻿namespace mark.davison.berlin.web.components.Pages.Settings.User;
 
 public partial class UserSettingsPage
 {

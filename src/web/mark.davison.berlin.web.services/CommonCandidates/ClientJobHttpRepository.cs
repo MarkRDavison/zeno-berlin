@@ -1,6 +1,4 @@
-﻿using mark.davison.common.client.abstractions.Repository;
-
-namespace mark.davison.berlin.web.services.CommonCandidates;
+﻿namespace mark.davison.berlin.web.services.CommonCandidates;
 
 public class ClientJobHttpRepository : IClientJobHttpRepository
 {

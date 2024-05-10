@@ -1,6 +1,4 @@
-﻿using mark.davison.berlin.shared.models.dtos;
-
-namespace mark.davison.berlin.api.orchestrator.Cron;
+﻿namespace mark.davison.berlin.api.orchestrator.Cron;
 
 public abstract class BaseCQRSCron<TRequest, TResponse, TCron> : CronJobService
     where TRequest : class, ICommand<TRequest, TResponse>, new()

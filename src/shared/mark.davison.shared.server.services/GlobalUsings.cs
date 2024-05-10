@@ -1,7 +1,6 @@
 ﻿global using mark.davison.berlin.shared.constants;
 global using mark.davison.berlin.shared.logic.Models;
 global using mark.davison.berlin.shared.models.dtos;
-global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.Export;
 global using mark.davison.berlin.shared.models.Entities;
 global using mark.davison.berlin.shared.validation;
 global using mark.davison.common.CQRS;
@@ -14,5 +13,6 @@ global using mark.davison.common.Services;
 global using mark.davison.shared.server.services.Helpers;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
+global using StackExchange.Redis;
 global using System.Text;
 global using System.Text.Json;

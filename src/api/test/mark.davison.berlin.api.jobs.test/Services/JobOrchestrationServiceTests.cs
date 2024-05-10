@@ -1,6 +1,3 @@
-using mark.davison.berlin.api.jobs.Services;
-using mark.davison.common.server.abstractions.CQRS;
-
 namespace mark.davison.berlin.api.jobs.test.Services;
 
 [TestClass]

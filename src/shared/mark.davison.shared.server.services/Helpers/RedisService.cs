@@ -1,6 +1,4 @@
-﻿using StackExchange.Redis;
-
-namespace mark.davison.shared.server.services.Helpers;
+﻿namespace mark.davison.shared.server.services.Helpers;
 
 internal class RedisLockDisposable : IRedisLockDisposable
 {

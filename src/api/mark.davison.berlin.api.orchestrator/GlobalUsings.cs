@@ -2,6 +2,7 @@
 global using mark.davison.berlin.api.orchestrator.Cron;
 global using mark.davison.berlin.api.persistence;
 global using mark.davison.berlin.shared.constants;
+global using mark.davison.berlin.shared.models.dtos;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.MonthlyNotifications;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.UpdateStories;
 global using mark.davison.berlin.shared.models.Entities;
@@ -15,6 +16,7 @@ global using mark.davison.common.server.Configuration;
 global using mark.davison.common.server.Cron;
 global using mark.davison.common.Services;
 global using mark.davison.shared.server.services.Helpers;
+global using mark.davison.shared.server.services.Igntion;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;

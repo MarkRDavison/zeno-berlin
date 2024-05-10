@@ -1,8 +1,4 @@
-﻿using mark.davison.berlin.shared.logic.Ignition;
-using mark.davison.shared.services.Ignition;
-using StackExchange.Redis;
-
-namespace mark.davison.berlin.api.jobs;
+﻿namespace mark.davison.berlin.api.jobs;
 
 [UseCQRSServer(typeof(DtosRootType), typeof(CommandsRootType), typeof(QueriesRootType))]
 public class Startup

@@ -1,7 +1,4 @@
-﻿using mark.davison.shared.server.services.Helpers;
-using StackExchange.Redis;
-
-namespace mark.davison.berlin.api;
+﻿namespace mark.davison.berlin.api;
 
 [UseCQRSServer(typeof(DtosRootType), typeof(CommandsRootType), typeof(QueriesRootType))]
 public class Startup

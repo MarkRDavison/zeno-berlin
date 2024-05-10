@@ -1,7 +1,4 @@
-﻿using mark.davison.berlin.web.services.CommonCandidates;
-using mark.davison.common.client.Ignition;
-
-namespace mark.davison.berlin.web.components.Ignition;
+﻿namespace mark.davison.berlin.web.components.Ignition;
 
 public static class DependecyInjectionExtensions
 {
