@@ -251,16 +251,16 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             var refreshDate = _dateService.Now.Subtract(refreshOffset);
             var refreshDateFav = _dateService.Now.Subtract(refreshOffsetFav);
 
+            // TODO: Order by !fav, where fav OR refresh??? 
+            // So either its a non fav and needs checking, or everything else fills up on the favourites
             var stories = await _repository.QueryEntities<Story>()
                 .Include(_ => _.StoryFandomLinks)
                 .ThenInclude(_ => _.Fandom)
                 .Include(_ => _.StoryAuthorLinks)
                 .ThenInclude(_ => _.Author)
-                .Where(_ => !_.Complete &&
-                    ((!_.Favourite && _.LastChecked <= refreshDate) ||
-                    (_.Favourite && _.LastChecked <= refreshDateFav)))
-                .OrderBy(_ => _.LastChecked) // TODO: Order by !fav, where fav OR refresh??? 
-                .Take(max) // So either its a non fav and needs checking, or everything else fills up on the favourites
+                .Where(_ => !_.Complete && _.LastChecked <= refreshDate)
+                .OrderBy(_ => _.LastChecked)
+                .Take(max)
                 .ToListAsync(cancellationToken);
             return stories;
         }
