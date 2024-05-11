@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using mark.davison.berlin.api.persistence;
 
@@ -10,9 +11,11 @@ using mark.davison.berlin.api.persistence;
 namespace mark.davison.berlin.api.migrations.sqlite.Migrations
 {
     [DbContext(typeof(BerlinDbContext))]
-    partial class BerlinDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240511003750_AddJob")]
+    partial class AddJob
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.4");

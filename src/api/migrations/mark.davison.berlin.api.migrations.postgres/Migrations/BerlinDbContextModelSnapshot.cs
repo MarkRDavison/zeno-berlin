@@ -100,6 +100,64 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.ToTable("Fandoms");
                 });
 
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Job", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ContextUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("FinishedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("JobRequest")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("JobResponse")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("JobType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PerformerId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("SelectedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContextUserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Job");
+                });
+
             modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Site", b =>
                 {
                     b.Property<Guid>("Id")
@@ -400,6 +458,25 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .IsRequired();
 
                     b.Navigation("ParentFandom");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Job", b =>
+                {
+                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "ContextUser")
+                        .WithMany()
+                        .HasForeignKey("ContextUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ContextUser");
 
                     b.Navigation("User");
                 });
