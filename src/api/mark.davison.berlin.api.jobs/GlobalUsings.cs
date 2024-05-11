@@ -23,6 +23,7 @@ global using mark.davison.common.server.Configuration;
 global using mark.davison.common.server.Health;
 global using mark.davison.common.Services;
 global using mark.davison.common.source.generators.CQRS;
+global using mark.davison.shared.server.services.CommonCandiates;
 global using mark.davison.shared.server.services.Helpers;
 global using mark.davison.shared.server.services.Igntion;
 global using mark.davison.shared.services.Ignition;

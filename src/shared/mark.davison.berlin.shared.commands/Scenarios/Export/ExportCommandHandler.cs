@@ -5,13 +5,13 @@ public class ExportCommandHandler : ValidateAndProcessJobCommandHandler<ExportCo
     public ExportCommandHandler(
         ICommandProcessor<ExportCommandRequest, ExportCommandResponse> processor,
         IRepository repository,
-        IDistributedPubSub distributedPubSub
+        IDistributedPubSub distributedPubSub,
+        IOptions<JobAppSettings> jobOptions
     ) : base(
         processor,
         repository,
-        distributedPubSub)
+        distributedPubSub,
+        jobOptions)
     {
     }
-
-    protected override string NotificationKey => "jobeventkeyberlin_DEV".ToUpperInvariant(); // TODO: From config/a constant
 }

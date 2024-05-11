@@ -264,7 +264,7 @@ public class JobOrchestrationService : IJobOrchestrationService
     public async Task InitialiseJobMonitoring()
     {
         await _distributedPubSubService.SubscribeToKeyAsync(
-            _appSettings.JOB_CHECK_EVENT_KEY_NAME,
+            _appSettings.JOBS.JOB_CHECK_EVENT_KEY,
             OnJobCheckEvent);
     }
 }

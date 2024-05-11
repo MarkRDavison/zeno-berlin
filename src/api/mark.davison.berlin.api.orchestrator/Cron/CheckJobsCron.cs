@@ -44,7 +44,7 @@ public class CheckJobsCron : CronJobService
                 return;
             }
 
-            await _distributedPubSubService.TriggerNotificationAsync(_appSettings.JOB_CHECK_EVENT_KEY_NAME, cancellationToken);
+            await _distributedPubSubService.TriggerNotificationAsync(_appSettings.JOBS.JOB_CHECK_EVENT_KEY, cancellationToken);
         }
     }
 }

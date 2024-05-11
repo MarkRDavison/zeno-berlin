@@ -15,6 +15,7 @@ global using mark.davison.common.server.abstractions.Repository;
 global using mark.davison.common.server.Configuration;
 global using mark.davison.common.server.Cron;
 global using mark.davison.common.Services;
+global using mark.davison.shared.server.services.CommonCandiates;
 global using mark.davison.shared.server.services.Helpers;
 global using mark.davison.shared.server.services.Igntion;
 global using Microsoft.EntityFrameworkCore;

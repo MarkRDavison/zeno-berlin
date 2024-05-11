@@ -18,31 +18,34 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
     private readonly ICommandValidator<TRequest, TResponse>? _validator;
     private readonly IRepository _repository;
     private readonly IDistributedPubSub _distributedPubSub;
+    private readonly IOptions<JobAppSettings> _jobOptions;
 
     public ValidateAndProcessJobCommandHandler(
         ICommandProcessor<TRequest, TResponse> processor,
         IRepository repository,
-        IDistributedPubSub distributedPubSub)
+        IDistributedPubSub distributedPubSub,
+        IOptions<JobAppSettings> jobOptions)
     {
         _processor = processor;
         _validator = null;
         _repository = repository;
         _distributedPubSub = distributedPubSub;
+        _jobOptions = jobOptions;
     }
 
     public ValidateAndProcessJobCommandHandler(
         ICommandProcessor<TRequest, TResponse> processor,
         ICommandValidator<TRequest, TResponse> validator,
         IRepository repository,
-        IDistributedPubSub distributedPubSub)
+        IDistributedPubSub distributedPubSub,
+        IOptions<JobAppSettings> jobOptions)
     {
         _processor = processor;
         _validator = validator;
         _repository = repository;
         _distributedPubSub = distributedPubSub;
+        _jobOptions = jobOptions;
     }
-
-    protected abstract string NotificationKey { get; }
 
     public async Task<TResponse> Handle(TRequest command, ICurrentUserContext currentUserContext, CancellationToken cancellation)
     {
@@ -100,7 +103,7 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
 
         if (command.TriggerImmediateJob)
         {
-            await _distributedPubSub.TriggerNotificationAsync(NotificationKey, cancellation);
+            await _distributedPubSub.TriggerNotificationAsync(_jobOptions.Value.JOB_CHECK_EVENT_KEY, cancellation);
         }
 
         return new TResponse

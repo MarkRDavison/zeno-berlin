@@ -29,4 +29,5 @@ global using mark.davison.shared.server.services.Helpers;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
+global using Microsoft.Extensions.Options;
 global using System.Linq.Expressions;

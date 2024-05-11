@@ -6,14 +6,14 @@ public class ImportCommandHandler : ValidateAndProcessJobCommandHandler<ImportCo
         ICommandProcessor<ImportCommandRequest, ImportCommandResponse> processor,
         ICommandValidator<ImportCommandRequest, ImportCommandResponse> validator,
         IRepository repository,
-        IDistributedPubSub distributedPubSub
+        IDistributedPubSub distributedPubSub,
+        IOptions<JobAppSettings> jobOptions
     ) : base(
         processor,
         validator,
         repository,
-        distributedPubSub)
+        distributedPubSub,
+        jobOptions)
     {
     }
-
-    protected override string NotificationKey => "jobeventkeyberlin_DEV".ToUpperInvariant(); // TODO: From config/a constant
 }
