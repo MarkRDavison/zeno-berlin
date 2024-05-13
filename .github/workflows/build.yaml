@@ -38,7 +38,7 @@ jobs:
         working-directory: ./src
         run: dotnet test --filter "TestCategory!=UI"
     
-  build-and-image-api:
+  build-image-api:
     runs-on: ubuntu-latest
 
     permissions:
@@ -55,7 +55,7 @@ jobs:
           context: ./src
           push: false
             
-  build-and-image-api-jobs:
+  build-image-api-jobs:
     runs-on: ubuntu-latest
 
     permissions:
@@ -72,7 +72,7 @@ jobs:
           context: ./src
           push: false
   
-  build-and-image-api-orchestrator:
+  build-image-api-orchestrator:
     runs-on: ubuntu-latest
 
     permissions:
@@ -89,7 +89,7 @@ jobs:
           context: ./src
           push: false
 
-  build-and-image-bff-web:
+  build-image-bff-web:
     runs-on: ubuntu-latest
 
     permissions:
@@ -106,7 +106,7 @@ jobs:
           context: ./src
           push: false
 
-  build-and-image-web:
+  build-image-web:
     runs-on: ubuntu-latest
 
     permissions:

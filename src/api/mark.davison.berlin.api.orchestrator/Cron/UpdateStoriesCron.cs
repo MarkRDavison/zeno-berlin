@@ -18,4 +18,12 @@ public class UpdateStoriesCron : BaseCQRSCron<UpdateStoriesRequest, UpdateStorie
         appSettings)
     {
     }
+
+    protected override UpdateStoriesRequest CreateRequest()
+    {
+        return new UpdateStoriesRequest
+        {
+            Amount = _appSettings.STORIES_PER_CRON_UPDATE
+        };
+    }
 }

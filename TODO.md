@@ -138,3 +138,4 @@ The stylesheet https://fanfic.markdavison.kiwi/css/berlin.min.css was not loaded
 
 Hard refresh of anything but root gives nginx 404
 checking a story that doesnt have an author does not set it on the story, it does create the author
+Trying to add an update before the first one currently recorded doesnt work

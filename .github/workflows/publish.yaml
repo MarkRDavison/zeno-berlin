@@ -86,8 +86,8 @@ jobs:
           context: ./src
           push: true
           tags: |
-            ghcr.io/markrdavison/markdavison-berlin-api-jobs:latest
-            ghcr.io/markrdavison/markdavison-berlin-api-jobs:${{ github.event.release.tag_name }}
+            ghcr.io/markrdavison/markdavison-berlin-api-orchestrator:latest
+            ghcr.io/markrdavison/markdavison-berlin-api-orchestrator:${{ github.event.release.tag_name }}
 
   build-and-push-image-bff-web:
     runs-on: ubuntu-latest
