@@ -68,41 +68,21 @@ shared action/response are public, non shared ones that are same as shared, inte
 On the author/fandom pages parent author/fandom is not taken into account when filtering stories to show
 
 
-Async background job processing
- - Runs as a separate container, can scale up
- - Subscribes to redis for notifications on checking for jobs
- - Reads from database for jobs
-	- Deconflicts with other job containers to not duplicate
- - Remove the cron jobs from the api move them to the jobs api
-	- Need coordination to not duplicate job creation
-	    - Have ANOTHER container, that doesnt get duplicates, orcherstrator? runs cron, create jobs???
- - Create docker files for job runner and job orchestrator
- - Create K8s yamls for new containers
-	- remove existing params for old containers
-	- add redis to all etc???
- - trial scaling api/job runner containers :)
-
-Investigate distributed pub sub or is redis fine for this???
-
 ## BUGS
 
 UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol out???
 navigating to /fandoms after initial load does not load them, so newly added stories wont have their fandoms show up till reload
 
+duplicate story gives no response exit in the console.  Message bar on modal??? or use snackbar
 
-
-
-
-
-
-
-
-
-### DONE
 
 ## Bigger things
 Get rid of IRepository, investigate dbcontext and transactions but use a prebuilt solution
 Get proper auth going
+
+
+
+### DONE
 
 ## Features
 
@@ -125,6 +105,23 @@ Stories that update multiple times at once?
 
  - A way to add the update type to the stories, maybe on add as well as manage
 	- Make the check stories process respect update type
+
+Async background job processing
+ - Runs as a separate container, can scale up
+ - Subscribes to redis for notifications on checking for jobs
+ - Reads from database for jobs
+	- Deconflicts with other job containers to not duplicate
+ - Remove the cron jobs from the api move them to the jobs api
+	- Need coordination to not duplicate job creation
+	    - Have ANOTHER container, that doesnt get duplicates, orcherstrator? runs cron, create jobs???
+ - Create docker files for job runner and job orchestrator
+ - Create K8s yamls for new containers
+	- remove existing params for old containers
+	- add redis to all etc???
+ - trial scaling api/job runner containers :)
+
+Investigate distributed pub sub or is redis fine for this???
+
 ## BUGS
 
 Duplicated fandoms

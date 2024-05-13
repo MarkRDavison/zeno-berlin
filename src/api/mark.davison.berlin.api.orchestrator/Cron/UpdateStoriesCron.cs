@@ -21,6 +21,7 @@ public class UpdateStoriesCron : BaseCQRSCron<UpdateStoriesRequest, UpdateStorie
 
     protected override UpdateStoriesRequest CreateRequest()
     {
+        _logger.LogInformation("Creating job for updating stories");
         return new UpdateStoriesRequest
         {
             Amount = _appSettings.STORIES_PER_CRON_UPDATE

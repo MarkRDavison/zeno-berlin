@@ -7,7 +7,7 @@ public abstract class BaseCQRSCron<TRequest, TResponse, TCron> : CronJobService
     private readonly IDateService _dateService;
     private readonly IDistributedPubSub _distributedPubSubService;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private readonly ILogger _logger;
+    protected readonly ILogger _logger;
     protected readonly AppSettings _appSettings;
 
     protected BaseCQRSCron(
