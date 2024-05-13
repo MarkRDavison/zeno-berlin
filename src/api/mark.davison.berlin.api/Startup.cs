@@ -45,7 +45,7 @@ public class Startup
         services.AddCors(options =>
             options.AddPolicy("AllowOrigin", _ => _
                 .SetIsOriginAllowedToAllowWildcardSubdomains()
-                .SetIsOriginAllowed(_ => true)
+                .SetIsOriginAllowed(_ => true)// TODO: Config driven
                 .AllowAnyMethod()
                 .AllowCredentials()
                 .AllowAnyHeader()
@@ -71,13 +71,32 @@ public class Startup
             .UseValidation()
             .UseBerlinLogic()
             .UseSharedServices()
-            .UseSharedServerServices()
+            .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
             .UseRateLimiter()
             .UseNotificationHub()
             .UseMatrixClient()
             .UseMatrixNotifications()
-            .UseConsoleNotifications()
-            .UseCronJobs(AppSettings);
+            .UseConsoleNotifications();
+
+        if (!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
+        {
+
+            var config = new ConfigurationOptions
+            {
+                EndPoints = { AppSettings.REDIS.HOST + ":" + AppSettings.REDIS.PORT },
+                Password = AppSettings.REDIS.PASSWORD
+            };
+
+            IConnectionMultiplexer redis = ConnectionMultiplexer.Connect(config);
+            services
+                .AddStackExchangeRedisCache(_ =>
+                {
+                    _.InstanceName = "BERLIN_JOBS_" + (AppSettings.PRODUCTION_MODE ? "prod_" : "dev_");
+                    _.Configuration = redis.Configuration;
+                })
+                .AddSingleton(redis)
+                .AddSingleton<IRedisService, RedisService>();
+        }
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

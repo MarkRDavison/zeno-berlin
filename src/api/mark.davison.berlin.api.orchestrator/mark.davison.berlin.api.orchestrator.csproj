@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.commands\mark.davison.berlin.shared.commands.csproj" />
+    <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.queries\mark.davison.berlin.shared.queries.csproj" />
+    <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.validation\mark.davison.berlin.shared.validation.csproj" />
+    <ProjectReference Include="..\..\shared\mark.davison.shared.server.services\mark.davison.shared.server.services.csproj" />
+    <ProjectReference Include="..\mark.davison.berlin.api.persistence\mark.davison.berlin.api.persistence.csproj" />
+    <ProjectReference Include="..\migrations\mark.davison.berlin.api.migrations.postgres\mark.davison.berlin.api.migrations.postgres.csproj" />
+    <ProjectReference Include="..\migrations\mark.davison.berlin.api.migrations.sqlite\mark.davison.berlin.api.migrations.sqlite.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.Development.json" Condition="Exists('appsettings.Development.json')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

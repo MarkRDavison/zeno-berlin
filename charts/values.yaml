@@ -16,6 +16,40 @@ api:
       - AUTH__CLIENT_SECRET
       - DATABASE__DB_USERNAME
       - DATABASE__DB_PASSWORD
+      - REDIS__PASSWORD
+      - NOTIFICATIONS__MATRIX__USERNAME
+      - NOTIFICATIONS__MATRIX__PASSWORD
+    public:
+      BERLIN__AUTH__CLIENT_ID: zeno-berlin
+      BERLIN__AUTH__SESSION_NAME: zeno-berlin-prod-session
+      BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-berlin
+      BERLIN__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
+      BERLIN__DATABASE__DATABASE_TYPE: postgres
+      BERLIN__DATABASE__DB_DATABASE: fanfic
+      BERLIN__DATABASE__DB_PORT: 5432
+      BERLIN__DATABASE__DB_HOST: postgres.markdavison.kiwi
+      BERLIN__REDIS__HOST: redis.markdavison.kiwi
+      BERLIN__AO3__RATE_DELAY: 4
+      BERLIN__NOTIFICATIONS__CONSOLE__ENABLED: true
+      BERLIN__NOTIFICATIONS__MATRIX__ENABLED: true
+      BERLIN__NOTIFICATIONS__MATRIX__URL: https://matrix-client.matrix.org
+      BERLIN__NOTIFICATIONS__MATRIX__ROOMID: '!miNmGSGPmCyiGcKdKD:matrix.org'
+      BERLIN__NOTIFICATIONS__MATRIX__SESSIONNAME: zeno-fanfic
+      BERLIN__JOBS__JOB_CHECK_EVENT_KEY: jobeventkeyberlinproduction
+      BERLIN__PRODUCTION_MODE: true
+      BERLIN__URL: http://0.0.0.0:50000
+apijobs:
+  app: zeno-fanfic-api-jobs
+  replicas: 1
+  name: zeno-fanfic-api-jobs
+  image: ghcr.io/markrdavison/markdavison-berlin-api-jobs
+  tag: v0.0.28
+  port: 50001
+  env:
+    secret:
+      - DATABASE__DB_USERNAME
+      - DATABASE__DB_PASSWORD
+      - REDIS__PASSWORD
       - NOTIFICATIONS__MATRIX__USERNAME
       - NOTIFICATIONS__MATRIX__PASSWORD
     public:
@@ -23,19 +57,35 @@ api:
       BERLIN__DATABASE__DB_DATABASE: fanfic
       BERLIN__DATABASE__DB_PORT: 5432
       BERLIN__DATABASE__DB_HOST: postgres.markdavison.kiwi
-      BERLIN__URL: http://0.0.0.0:50000
-      BERLIN__AUTH__CLIENT_ID: zeno-berlin
-      BERLIN__AUTH__SESSION_NAME: zeno-berlin-prod-session
-      BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-berlin
-      BERLIN__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
+      BERLIN__REDIS__HOST: redis.markdavison.kiwi
+      BERLIN__JOBS__JOB_CHECK_EVENT_KEY: jobeventkeyberlinproduction
       BERLIN__PRODUCTION_MODE: true
-      BERLIN__STORY_UPDATE_CRON: 0 */3 * * *
+      BERLIN__URL: http://0.0.0.0:50001
+apiorchestrator:
+  app: zeno-fanfic-api-orchestrator
+  replicas: 1
+  name: zeno-fanfic-api-orchestrator
+  image: ghcr.io/markrdavison/markdavison-berlin-api-orchestrator
+  tag: v0.0.28
+  port: 50001
+  env:
+    secret:
+      - DATABASE__DB_USERNAME
+      - DATABASE__DB_PASSWORD
+      - REDIS__PASSWORD
+    public:
+      BERLIN__DATABASE__DATABASE_TYPE: postgres
+      BERLIN__DATABASE__DB_DATABASE: fanfic
+      BERLIN__DATABASE__DB_PORT: 5432
+      BERLIN__DATABASE__DB_HOST: postgres.markdavison.kiwi
+      BERLIN__REDIS__HOST: redis.markdavison.kiwi
+      BERLIN__JOBS__JOB_CHECK_EVENT_KEY: jobeventkeyberlinproduction
       BERLIN__STORIES_PER_CRON_UPDATE: 20
-      BERLIN__NOTIFICATIONS__CONSOLE__ENABLED: true
-      BERLIN__NOTIFICATIONS__MATRIX__ENABLED: true
-      BERLIN__NOTIFICATIONS__MATRIX__URL: https://matrix-client.matrix.org
-      BERLIN__NOTIFICATIONS__MATRIX__ROOMID: '!miNmGSGPmCyiGcKdKD:matrix.org'
-      BERLIN__NOTIFICATIONS__MATRIX__SESSIONNAME: zeno-fanfic
+      BERLIN__JOB_CHECK_RATE: "*/15 * * * *"
+      BERLIN__MONTHLY_STORY_NOTIFICATIONS_RATE: "0 8 1,15 * *"
+      BERLIN__STORY_UPDATE_RATE: "0 3 * * *"
+      BERLIN__CRON_TIMEZONE: LOCAL
+      BERLIN__PRODUCTION_MODE: true
 bffweb:
   app: zeno-fanfic-bff
   replicas: 1
@@ -52,16 +102,15 @@ bffweb:
       - AUTH__SESSION_SECRET
     public:
       BERLIN__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
-      BERLIN__REDIS__PORT: '6379'
+      BERLIN__AUTH__CLIENT_ID: zeno-berlin
+      BERLIN__AUTH__SESSION_NAME: zeno-berlin-prod-session
+      BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-berlin
+      BERLIN__REDIS__HOST: redis.markdavison.kiwi
       BERLIN__WEB_ORIGIN: https://fanfic.markdavison.kiwi
       BERLIN__BFF_ORIGIN: https://fanfic-bff.markdavison.kiwi
       BERLIN__API_ORIGIN: https://fanfic-api.markdavison.kiwi
-      BERLIN__AUTH__SESSION_NAME: zeno-berlin-prod-session
-      BERLIN__REDIS__HOST: redis.markdavison.kiwi
-      BERLIN__AUTH__CLIENT_ID: zeno-berlin
-      BERLIN__URL: http://0.0.0.0:40000
-      BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-berlin
       BERLIN__PRODUCTION_MODE: true
+      BERLIN__URL: http://0.0.0.0:40000
 web:
   app: zeno-fanfic-web
   replicas: 1

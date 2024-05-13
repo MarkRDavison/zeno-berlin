@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.apiorchestrator.app}}-dep
+  labels:
+    app.kubernetes.io/name: {{ .Values.apiorchestrator.app }}-dep
+    app.kubernetes.io/version: {{ .Values.apiorchestrator.tag }}
+    app.kubernetes.io/part-of: zeno-fanfic
+spec:
+  replicas: {{ .Values.apiorchestrator.replicas }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name:  {{ .Values.apiorchestrator.app }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.apiorchestrator.app }}
+        app.kubernetes.io/version: {{ .Values.apiorchestrator.tag }}
+        app.kubernetes.io/part-of: zeno-fanfic
+    spec:
+      containers:
+      - name: {{ .Values.apiorchestrator.name }}
+        image: {{ .Values.apiorchestrator.image }}:{{ .Values.apiorchestrator.tag }}
+        imagePullPolicy: Always
+        env:
+        {{- include "helpers.list-api-orchestrator-deployment-env-variables" . | indent 10 }}

@@ -232,6 +232,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         };
 
         var refreshOffset = TimeSpan.FromHours(12);// TODO: Configure/options
+        var refreshOffsetFav = TimeSpan.FromHours(3);// TODO: Configure/options
 
         if (request.StoryIds.Any())
         {
@@ -248,7 +249,10 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                 ? 2
                 : Math.Min(request.Amount, 10);
             var refreshDate = _dateService.Now.Subtract(refreshOffset);
+            var refreshDateFav = _dateService.Now.Subtract(refreshOffsetFav);
 
+            // TODO: Order by !fav, where fav OR refresh??? 
+            // So either its a non fav and needs checking, or everything else fills up on the favourites
             var stories = await _repository.QueryEntities<Story>()
                 .Include(_ => _.StoryFandomLinks)
                 .ThenInclude(_ => _.Fandom)

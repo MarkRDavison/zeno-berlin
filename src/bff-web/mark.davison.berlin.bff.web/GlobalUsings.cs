@@ -6,6 +6,7 @@ global using mark.davison.common;
 global using mark.davison.common.CQRS;
 global using mark.davison.common.server;
 global using mark.davison.common.server.abstractions.Authentication;
+global using mark.davison.common.server.abstractions.Configuration;
 global using mark.davison.common.server.abstractions.Repository;
 global using mark.davison.common.server.Authentication;
 global using mark.davison.common.server.Configuration;

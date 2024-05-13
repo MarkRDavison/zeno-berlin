@@ -95,6 +95,64 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.ToTable("Fandoms");
                 });
 
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Job", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ContextUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("FinishedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JobRequest")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JobResponse")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JobType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PerformerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("SelectedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContextUserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Job");
+                });
+
             modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Site", b =>
                 {
                     b.Property<Guid>("Id")
@@ -395,6 +453,25 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .IsRequired();
 
                     b.Navigation("ParentFandom");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Job", b =>
+                {
+                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "ContextUser")
+                        .WithMany()
+                        .HasForeignKey("ContextUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ContextUser");
 
                     b.Navigation("User");
                 });

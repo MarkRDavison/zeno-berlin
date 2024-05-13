@@ -1,6 +1,4 @@
-﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddStoryUpdate;
-
-namespace mark.davison.berlin.web.features.Store.ManageStoryUseCase;
+﻿namespace mark.davison.berlin.web.features.Store.ManageStoryUseCase;
 
 public class ManageStoryEffects
 {

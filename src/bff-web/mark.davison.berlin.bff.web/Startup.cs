@@ -1,6 +1,4 @@
-﻿using mark.davison.common.server.abstractions.Configuration;
-
-namespace mark.davison.berlin.bff.web;
+﻿namespace mark.davison.berlin.bff.web;
 
 public class Startup
 {

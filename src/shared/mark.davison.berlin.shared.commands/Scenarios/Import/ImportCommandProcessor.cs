@@ -15,7 +15,10 @@ public class ImportCommandProcessor : ICommandProcessor<ImportCommandRequest, Im
 
     public async Task<ImportCommandResponse> ProcessAsync(ImportCommandRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
     {
-        var response = new ImportCommandResponse();
+        var response = new ImportCommandResponse
+        {
+            Value = new()
+        };
 
         if (!request.Data.Stories.Any())
         {
@@ -52,7 +55,7 @@ public class ImportCommandProcessor : ICommandProcessor<ImportCommandRequest, Im
                     continue;
                 }
 
-                response.Imported++;
+                response.Value.Imported++;
 
                 foreach (var update in story.Updates)
                 {

@@ -1,6 +1,7 @@
 ﻿global using Fluxor;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddFandom;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddStory;
+global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddStoryUpdate;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.DeleteStory;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.EditFandom;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.EditStory;

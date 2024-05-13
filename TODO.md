@@ -58,7 +58,6 @@ With the visual hint for unread chapters, have a user setting as to whether this
 ## Next
 
 ## MISC
-S
 Queries need to use ValidateAndProcessQueryHandler???
 Method for a fandom to be auto assigned as a parent for a new fandom? Wildcard/rules etc
 Consistency around naming of bool IsComplete vs Complete etc
@@ -67,6 +66,23 @@ If you are using the site while the cron job runs, stuff may be updated in the b
 shared action/response are public, non shared ones that are same as shared, internal, keep within reducer/effect???
 
 On the author/fandom pages parent author/fandom is not taken into account when filtering stories to show
+
+
+Async background job processing
+ - Runs as a separate container, can scale up
+ - Subscribes to redis for notifications on checking for jobs
+ - Reads from database for jobs
+	- Deconflicts with other job containers to not duplicate
+ - Remove the cron jobs from the api move them to the jobs api
+	- Need coordination to not duplicate job creation
+	    - Have ANOTHER container, that doesnt get duplicates, orcherstrator? runs cron, create jobs???
+ - Create docker files for job runner and job orchestrator
+ - Create K8s yamls for new containers
+	- remove existing params for old containers
+	- add redis to all etc???
+ - trial scaling api/job runner containers :)
+
+Investigate distributed pub sub or is redis fine for this???
 
 ## BUGS
 
@@ -83,6 +99,10 @@ navigating to /fandoms after initial load does not load them, so newly added sto
 
 
 ### DONE
+
+## Bigger things
+Get rid of IRepository, investigate dbcontext and transactions but use a prebuilt solution
+Get proper auth going
 
 ## Features
 
@@ -118,3 +138,4 @@ The stylesheet https://fanfic.markdavison.kiwi/css/berlin.min.css was not loaded
 
 Hard refresh of anything but root gives nginx 404
 checking a story that doesnt have an author does not set it on the story, it does create the author
+Trying to add an update before the first one currently recorded doesnt work

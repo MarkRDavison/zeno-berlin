@@ -1,6 +1,4 @@
-﻿using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.SendNotification;
-
-namespace mark.davison.berlin.web.components.Pages.Settings.User;
+﻿namespace mark.davison.berlin.web.components.Pages.Settings.User;
 
 public partial class UserSettingsPage
 {
@@ -8,6 +6,8 @@ public partial class UserSettingsPage
 
     [Inject]
     public required IClientHttpRepository ClientHttpRepository { get; set; }
+    [Inject]
+    public required IClientJobHttpRepository ClientJobHttpRepository { get; set; }
 
     [Inject]
     public required IJSRuntime JSRuntime { get; set; }
@@ -22,7 +22,16 @@ public partial class UserSettingsPage
     {
         _inProgress = true;
 
-        var response = await ClientHttpRepository.Post<ExportCommandResponse, ExportCommandRequest>(CancellationToken.None);
+        var request = new ExportCommandRequest
+        {
+            UseJob = true,
+            TriggerImmediateJob = true
+        };
+
+        var response = await ClientJobHttpRepository.PostLongPolling<ExportCommandResponse, ExportCommandRequest, SerialisedtDataDto>(
+            request,
+            TimeSpan.FromSeconds(2),
+            CancellationToken.None);
 
         if (response.SuccessWithValue)
         {
@@ -31,7 +40,7 @@ public partial class UserSettingsPage
                 WriteIndented = true
             });
 
-            var filename = $"fanfic_export_{DateTime.Today.ToShortDateString()}_{DateTime.Now.ToLocalTime().ToLongTimeString()}.json".Replace(" ", "_");
+            var filename = $"fanfic_export_{DateTime.Today.ToShortDateString()}_{DateTime.Now.ToLocalTime().ToLongTimeString()}.json".Replace(" ", "_").Replace(":", "_");
             await DownloadContent(content, filename);
             Snackbar.Add($"Exported '{filename}'", Severity.Success);
         }
@@ -93,25 +102,36 @@ public partial class UserSettingsPage
 
     private async Task<Response> ImportData(SerialisedtDataDto data)
     {
-        var request = new ImportCommandRequest
-        {
-            Data = data
-        };
-
-        var response = await ClientHttpRepository.Post<ImportCommandResponse, ImportCommandRequest>(request, CancellationToken.None);
-
-        if (response.Success)
-        {
-            if (response.Imported == 0)
+        return await ClientJobHttpRepository.PostSetupBackgroundJob<ImportCommandResponse, ImportCommandRequest, ImportSummary>(
+            new ImportCommandRequest
             {
-                Snackbar.Add("No new stories imported", Severity.Normal);
-            }
-            else
+                UseJob = true,
+                TriggerImmediateJob = true,
+                Data = data
+            },
+            (ImportCommandResponse response) =>
             {
-                Snackbar.Add($"Imported {response.Imported} stories", Severity.Success);
-            }
-        }
+                if (response.SuccessWithValue)
+                {
+                    if (response.Value.Imported == 0)
+                    {
+                        Snackbar.Add("No new stories imported", Severity.Normal);
+                    }
+                    else
+                    {
+                        Snackbar.Add($"Imported {response.Value.Imported} stories", Severity.Success);
+                    }
+                }
+                else
+                {
+                    Snackbar.Add("Failed to import stories", Severity.Error);
+                    Console.Error.WriteLine(string.Join(", ", response.Errors));
+                }
 
-        return response;
+                return Task.CompletedTask;
+            },
+            CancellationToken.None);
+
+
     }
 }

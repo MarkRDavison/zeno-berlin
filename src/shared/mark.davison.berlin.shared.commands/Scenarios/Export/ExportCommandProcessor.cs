@@ -2,10 +2,10 @@
 
 public class ExportCommandProcessor : ICommandProcessor<ExportCommandRequest, ExportCommandResponse>
 {
-    private readonly IReadonlyRepository _repository;
+    private readonly IRepository _repository;
 
     public ExportCommandProcessor(
-        IReadonlyRepository repository)
+        IRepository repository)
     {
         _repository = repository;
     }
