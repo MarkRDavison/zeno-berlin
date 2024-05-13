@@ -7,7 +7,7 @@ api:
   replicas: 1
   name: zeno-fanfic-api
   image: ghcr.io/markrdavison/markdavison-berlin-api
-  tag: v0.0.29
+  tag: v0.0.30
   port: 50000
   ingress:
     host: fanfic-api.markdavison.kiwi
@@ -43,7 +43,7 @@ apijobs:
   replicas: 1
   name: zeno-fanfic-api-jobs
   image: ghcr.io/markrdavison/markdavison-berlin-api-jobs
-  tag: v0.0.28
+  tag: v0.0.30
   port: 50001
   env:
     secret:
@@ -66,7 +66,7 @@ apiorchestrator:
   replicas: 1
   name: zeno-fanfic-api-orchestrator
   image: ghcr.io/markrdavison/markdavison-berlin-api-orchestrator
-  tag: v0.0.28
+  tag: v0.0.30
   port: 50001
   env:
     secret:
@@ -81,9 +81,9 @@ apiorchestrator:
       BERLIN__REDIS__HOST: redis.markdavison.kiwi
       BERLIN__JOBS__JOB_CHECK_EVENT_KEY: jobeventkeyberlinproduction
       BERLIN__STORIES_PER_CRON_UPDATE: 20
-      BERLIN__JOB_CHECK_RATE: "*/15 * * * *"
-      BERLIN__MONTHLY_STORY_NOTIFICATIONS_RATE: "0 8 1,15 * *"
-      BERLIN__STORY_UPDATE_RATE: "0 3 * * *"
+      BERLIN__JOB_CHECK_RATE: '*/15 * * * *'
+      BERLIN__MONTHLY_STORY_NOTIFICATIONS_RATE: 0 8 1,15 * *
+      BERLIN__STORY_UPDATE_RATE: 0 3 * * *
       BERLIN__CRON_TIMEZONE: LOCAL
       BERLIN__PRODUCTION_MODE: true
 bffweb:
@@ -91,7 +91,7 @@ bffweb:
   replicas: 1
   name: zeno-fanfic-bff
   image: ghcr.io/markrdavison/markdavison-berlin-bff-web
-  tag: v0.0.29
+  tag: v0.0.30
   port: 40000
   ingress:
     host: fanfic-bff.markdavison.kiwi
@@ -116,7 +116,7 @@ web:
   replicas: 1
   name: zeno-fanfic-web
   image: ghcr.io/markrdavison/markdavison-berlin-web
-  tag: v0.0.29
+  tag: v0.0.30
   port: 80
   ingress:
     host: fanfic.markdavison.kiwi
