@@ -60,7 +60,7 @@ apijobs:
       BERLIN__REDIS__HOST: redis.markdavison.kiwi
       BERLIN__JOBS__JOB_CHECK_EVENT_KEY: jobeventkeyberlinproduction
       BERLIN__PRODUCTION_MODE: true
-      BERLIN__URL: http://0.0.0.0:50001
+      BERLIN__JOB_URL: http://0.0.0.0:50001
 apiorchestrator:
   app: zeno-fanfic-api-orchestrator
   replicas: 1
