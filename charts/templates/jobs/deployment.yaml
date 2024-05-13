@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.apijobs.app}}-dep
+  labels:
+    app.kubernetes.io/name: {{ .Values.apijobs.app }}-dep
+    app.kubernetes.io/version: {{ .Values.apijobs.tag }}
+    app.kubernetes.io/part-of: zeno-fanfic
+spec:
+  replicas: {{ .Values.apijobs.replicas }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name:  {{ .Values.apijobs.app }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Values.apijobs.app }}
+        app.kubernetes.io/version: {{ .Values.apijobs.tag }}
+        app.kubernetes.io/part-of: zeno-fanfic
+    spec:
+      containers:
+      - name: {{ .Values.apijobs.name }}
+        image: {{ .Values.apijobs.image }}:{{ .Values.apijobs.tag }}
+        imagePullPolicy: Always
+        startupProbe:
+          httpGet:
+            path: /health/startup
+            port: {{ .Values.apijobs.port }}
+          failureThreshold: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health/liveness
+            port: {{ .Values.apijobs.port }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health/readiness
+            port: {{ .Values.apijobs.port }}
+          successThreshold: 3
+        ports:
+        - containerPort: {{ .Values.apijobs.port }}
+        env:
+        {{- include "helpers.list-api-jobs-deployment-env-variables" . | indent 10 }}
