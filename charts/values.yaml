@@ -58,6 +58,11 @@ apijobs:
       BERLIN__DATABASE__DB_PORT: 5432
       BERLIN__DATABASE__DB_HOST: postgres.markdavison.kiwi
       BERLIN__REDIS__HOST: redis.markdavison.kiwi
+      BERLIN__NOTIFICATIONS__CONSOLE__ENABLED: true
+      BERLIN__NOTIFICATIONS__MATRIX__ENABLED: true
+      BERLIN__NOTIFICATIONS__MATRIX__URL: https://matrix-client.matrix.org
+      BERLIN__NOTIFICATIONS__MATRIX__ROOMID: '!miNmGSGPmCyiGcKdKD:matrix.org'
+      BERLIN__NOTIFICATIONS__MATRIX__SESSIONNAME: zeno-fanfic
       BERLIN__JOBS__JOB_CHECK_EVENT_KEY: jobeventkeyberlinproduction
       BERLIN__PRODUCTION_MODE: true
       BERLIN__JOB_URL: http://0.0.0.0:50001

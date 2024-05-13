@@ -21,6 +21,8 @@ global using mark.davison.common.server.abstractions.Repository;
 global using mark.davison.common.server.Authentication;
 global using mark.davison.common.server.Configuration;
 global using mark.davison.common.server.Health;
+global using mark.davison.common.server.Notifications.Console;
+global using mark.davison.common.server.Notifications.Matrix;
 global using mark.davison.common.Services;
 global using mark.davison.common.source.generators.CQRS;
 global using mark.davison.shared.server.services.CommonCandiates;
