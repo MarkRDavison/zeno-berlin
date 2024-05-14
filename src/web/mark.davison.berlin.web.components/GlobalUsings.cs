@@ -5,6 +5,7 @@ global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.Export;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.Import;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.SendNotification;
 global using mark.davison.berlin.shared.models.dtos.Shared;
+global using mark.davison.berlin.shared.validation;
 global using mark.davison.berlin.web.components.Forms.AddFandom;
 global using mark.davison.berlin.web.components.Forms.AddStory;
 global using mark.davison.berlin.web.components.Forms.AddStoryUpdate;
