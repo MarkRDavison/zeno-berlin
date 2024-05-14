@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.DashboardListUseCase;
 
-public class DashboardListEffects
+public sealed class DashboardListEffects
 {
     private readonly IClientHttpRepository _repository;
 

@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.jobs.Services;
 
-public class JobOrchestrationService : IJobOrchestrationService
+public sealed class JobOrchestrationService : IJobOrchestrationService
 {
     private readonly IDistributedPubSub _distributedPubSubService;
     private readonly ICheckJobsService _checkJobsService;

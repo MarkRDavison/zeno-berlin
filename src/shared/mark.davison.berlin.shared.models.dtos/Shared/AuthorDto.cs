@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.models.dtos.Shared;
 
-public class AuthorDto
+public sealed class AuthorDto
 {
     public Guid AuthorId { get; set; }
     public Guid? ParentAuthorId { get; set; }

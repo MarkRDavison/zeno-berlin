@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.shared.commands.test.Scenarios.MonthlyNotifications;
 
 [TestClass]
-public class MonthlyNotificationsCommandProcessorTests
+public sealed class MonthlyNotificationsCommandProcessorTests
 {
     private readonly IReadonlyRepository _repository;
     private readonly IDateService _dateService;

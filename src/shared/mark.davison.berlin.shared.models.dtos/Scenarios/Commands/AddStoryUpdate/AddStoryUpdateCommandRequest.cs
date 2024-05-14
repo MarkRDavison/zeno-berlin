@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddStoryUpdate;
 
 [PostRequest(Path = "add-story-update-command")]
-public class AddStoryUpdateCommandRequest : ICommand<AddStoryUpdateCommandRequest, AddStoryUpdateCommandResponse>
+public sealed class AddStoryUpdateCommandRequest : ICommand<AddStoryUpdateCommandRequest, AddStoryUpdateCommandResponse>
 {
     public Guid StoryId { get; set; }
     public int CurrentChapters { get; set; }

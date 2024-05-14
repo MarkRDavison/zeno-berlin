@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.shared.commands.test.Scenarios.AddStory;
 
 [TestClass]
-public class AddStoryCommandValidatorTests
+public sealed class AddStoryCommandValidatorTests
 {
     private readonly IValidationContext _validationContext;
     private readonly ICurrentUserContext _currentUserContext;

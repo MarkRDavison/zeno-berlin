@@ -1,15 +1,15 @@
 ﻿namespace mark.davison.berlin.web.features.Store.FandomListUseCase;
 
-public class FetchFandomsListAction : BaseAction
+public sealed class FetchFandomsListAction : BaseAction
 {
 }
 
-public class FetchFandomsListActionResponse : BaseActionResponse<List<FandomDto>>
+public sealed class FetchFandomsListActionResponse : BaseActionResponse<List<FandomDto>>
 {
 
 }
 
-public class EditFandomListAction : BaseAction
+public sealed class EditFandomListAction : BaseAction
 {
     public Guid FandomId { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -17,19 +17,19 @@ public class EditFandomListAction : BaseAction
     public Guid? ParentFandomId { get; set; }
 }
 
-public class EditFandomListActionResponse : BaseActionResponse<FandomDto>
+public sealed class EditFandomListActionResponse : BaseActionResponse<FandomDto>
 {
 
 }
 
-public class AddFandomListAction : BaseAction
+public sealed class AddFandomListAction : BaseAction
 {
     public string Name { get; set; } = string.Empty;
     public bool IsHidden { get; set; }
     public Guid? ParentFandomId { get; set; }
 }
 
-public class AddFandomListActionResponse : BaseActionResponse<FandomDto>
+public sealed class AddFandomListActionResponse : BaseActionResponse<FandomDto>
 {
 
 }

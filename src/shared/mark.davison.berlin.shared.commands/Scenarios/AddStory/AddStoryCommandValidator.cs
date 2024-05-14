@@ -1,9 +1,9 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.AddStory;
 
-public class AddStoryCommandValidator : ICommandValidator<AddStoryCommandRequest, AddStoryCommandResponse>
+public sealed class AddStoryCommandValidator : ICommandValidator<AddStoryCommandRequest, AddStoryCommandResponse>
 {
     private readonly IValidationContext _validationContext;
-    protected readonly IServiceProvider _serviceProvider;
+    private readonly IServiceProvider _serviceProvider;
 
     public AddStoryCommandValidator(
         IValidationContext validationContext,

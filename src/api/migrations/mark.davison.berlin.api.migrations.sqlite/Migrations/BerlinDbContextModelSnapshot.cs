@@ -317,6 +317,12 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ChapterAddress")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ChapterTitle")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Complete")
                         .HasColumnType("INTEGER");
 

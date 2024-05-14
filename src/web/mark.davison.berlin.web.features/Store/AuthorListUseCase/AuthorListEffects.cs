@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.AuthorListUseCase;
 
-public class AuthorListEffects
+public sealed class AuthorListEffects
 {
     private readonly IClientHttpRepository _repository;
 

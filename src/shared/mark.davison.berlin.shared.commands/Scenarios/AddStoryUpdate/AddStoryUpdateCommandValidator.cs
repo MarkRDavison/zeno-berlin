@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.AddStoryUpdate;
 
-public class AddStoryUpdateCommandValidator : ICommandValidator<AddStoryUpdateCommandRequest, AddStoryUpdateCommandResponse>
+public sealed class AddStoryUpdateCommandValidator : ICommandValidator<AddStoryUpdateCommandRequest, AddStoryUpdateCommandResponse>
 {
     private readonly IValidationContext _validationContext;
 

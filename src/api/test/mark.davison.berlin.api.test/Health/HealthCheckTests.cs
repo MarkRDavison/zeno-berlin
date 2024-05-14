@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.api.test.Health;
 
 [TestClass]
-public class HealthCheckTests : ApiIntegrationTestBase
+public sealed class HealthCheckTests : ApiIntegrationTestBase
 {
     [TestMethod]
     public async Task HealthCheck_ReturnsHealthy()

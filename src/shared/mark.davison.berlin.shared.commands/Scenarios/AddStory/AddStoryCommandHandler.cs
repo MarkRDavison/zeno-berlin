@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.AddStory;
 
-public class AddStoryCommandHandler : ValidateAndProcessCommandHandler<AddStoryCommandRequest, AddStoryCommandResponse>
+public sealed class AddStoryCommandHandler : ValidateAndProcessCommandHandler<AddStoryCommandRequest, AddStoryCommandResponse>
 {
     public AddStoryCommandHandler(
         ICommandProcessor<AddStoryCommandRequest, AddStoryCommandResponse> processor,

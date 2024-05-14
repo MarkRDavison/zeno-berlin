@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.ManageStoryUseCase;
 
-public class ManageStoryEffects
+public sealed class ManageStoryEffects
 {
     private readonly IClientHttpRepository _repository;
 

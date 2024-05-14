@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.components.Forms.AddStory;
 
-public class AddStoryFormViewModel : IFormViewModel
+public sealed class AddStoryFormViewModel : IFormViewModel
 {
     public string StoryAddress { get; set; } = string.Empty;
     public Guid? UpdateTypeId { get; set; }

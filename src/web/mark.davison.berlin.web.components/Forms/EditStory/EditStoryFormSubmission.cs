@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.components.Forms.EditStory;
 
-public class EditStoryFormSubmission : IFormSubmission<EditStoryFormViewModel>
+public sealed class EditStoryFormSubmission : IFormSubmission<EditStoryFormViewModel>
 {
     private readonly IClientHttpRepository _repository;
 

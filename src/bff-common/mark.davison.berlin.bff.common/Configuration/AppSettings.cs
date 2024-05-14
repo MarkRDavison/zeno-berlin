@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.bff.common.Configuration;
 
 [ExcludeFromCodeCoverage]
-public class AppSettings : IAppSettings
+public sealed class AppSettings : IAppSettings
 {
     public string SECTION => "BERLIN";
     public AuthAppSettings AUTH { get; set; } = new();

@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.queries.Scenarios.DashboardList;
 
-public class DashboardListQueryHandler : IQueryHandler<DashboardListQueryRequest, DashboardListQueryResponse>
+public sealed class DashboardListQueryHandler : IQueryHandler<DashboardListQueryRequest, DashboardListQueryResponse>
 {
     public IReadonlyRepository _repository;
 

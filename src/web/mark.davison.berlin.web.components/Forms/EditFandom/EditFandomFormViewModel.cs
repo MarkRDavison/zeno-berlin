@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.components.Forms.EditFandom;
 
-public class EditFandomFormViewModel : IFormViewModel
+public sealed class EditFandomFormViewModel : IFormViewModel
 {
     public string Name { get; set; } = string.Empty;
     public bool IsHidden { get; set; }

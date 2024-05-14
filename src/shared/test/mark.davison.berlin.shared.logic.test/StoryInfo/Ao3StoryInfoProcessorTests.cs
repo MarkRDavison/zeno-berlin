@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.shared.logic.test.StoryInfo;
 
 [TestClass]
-public class Ao3StoryInfoProcessorTests
+public sealed class Ao3StoryInfoProcessorTests
 {
     private readonly Ao3StoryInfoProcessor _processor;
     private readonly IHttpClientFactory _httpClientFactory;
@@ -69,9 +69,10 @@ public class Ao3StoryInfoProcessorTests
             };
         };
 
-        var storyInfo = await _processor.ExtractStoryInfo(
-            "https://archiveofourown.org/123/47216291/idontmatterforthistest",
-            CancellationToken.None);
+        var storyUrl = "https://archiveofourown.org/works/123/chapters/47216291";
+        var baseStoryUrl = _processor.GenerateBaseStoryAddress(storyUrl);
+
+        var storyInfo = await _processor.ExtractStoryInfo(storyUrl, CancellationToken.None);
 
         Assert.AreEqual("All She Never Wanted", storyInfo.Name);
         Assert.AreEqual(2, storyInfo.Authors.Count);
@@ -86,6 +87,11 @@ public class Ao3StoryInfoProcessorTests
         Assert.IsTrue(storyInfo.Fandoms.Contains("Harry Potter - J. K. Rowling"));
         Assert.IsTrue(storyInfo.Fandoms.Contains("Star Wars Legends: New Jedi Order Series - Various Authors"));
         Assert.IsTrue(storyInfo.Fandoms.Contains("Star Wars - All Media Types"));
+        Assert.AreEqual(57, storyInfo.ChapterInfo.Count);
+        Assert.AreEqual($"{baseStoryUrl}/chapters/118941742", storyInfo.ChapterInfo[1].Address);
+        Assert.AreEqual($"{baseStoryUrl}/chapters/118953049", storyInfo.ChapterInfo[2].Address);
+        Assert.AreEqual($"{baseStoryUrl}/chapters/120110161", storyInfo.ChapterInfo[10].Address);
+        Assert.AreEqual($"{baseStoryUrl}/chapters/121778461", storyInfo.ChapterInfo[18].Address);
 
         await _rateLimitService
             .Received(1)

@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.AddFandom;
 
-public class AddFandomCommandProcessor : ICommandProcessor<AddFandomCommandRequest, AddFandomCommandResponse>
+public sealed class AddFandomCommandProcessor : ICommandProcessor<AddFandomCommandRequest, AddFandomCommandResponse>
 {
     private readonly IRepository _repository;
     private readonly IDateService _dateService;

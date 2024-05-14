@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.queries.Scenarios.AuthorList;
 
-public class AuthorListQueryHandler : IQueryHandler<AuthorListQueryRequest, AuthorListQueryResponse>
+public sealed class AuthorListQueryHandler : IQueryHandler<AuthorListQueryRequest, AuthorListQueryResponse>
 {
     private readonly IReadonlyRepository _repository;
 

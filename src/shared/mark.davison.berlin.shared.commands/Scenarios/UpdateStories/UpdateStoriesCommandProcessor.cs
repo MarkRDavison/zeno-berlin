@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.UpdateStories;
 
-public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequest, UpdateStoriesResponse>
+public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequest, UpdateStoriesResponse>
 {
     private readonly ILogger<UpdateStoriesCommandProcessor> _logger;
     private readonly IRepository _repository;
@@ -10,7 +10,6 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
     private readonly IAuthorService _authorService;
     private readonly INotificationCreationService _notificationCreationService;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IEnumerable<INotificationService> _notificationServices; // TODO: TEMP: REMOVE
 
     public UpdateStoriesCommandProcessor(
         ILogger<UpdateStoriesCommandProcessor> logger,
@@ -20,8 +19,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         IFandomService fandomService,
         IAuthorService authorService,
         INotificationCreationService notificationCreationService,
-        IServiceProvider serviceProvider,
-        IEnumerable<INotificationService> notificationServices)
+        IServiceProvider serviceProvider)
     {
         _logger = logger;
         _repository = repository;
@@ -31,7 +29,6 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         _authorService = authorService;
         _notificationCreationService = notificationCreationService;
         _serviceProvider = serviceProvider;
-        _notificationServices = notificationServices;
     }
 
     public async Task<UpdateStoriesResponse> ProcessAsync(UpdateStoriesRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
@@ -140,6 +137,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             story.Complete != info.IsCompleted ||
             story.Name != info.Name)
         {
+            info.ChapterInfo.TryGetValue(info.CurrentChapters, out var chapterInfo);
             var update = new StoryUpdate
             {
                 Id = Guid.NewGuid(),
@@ -147,9 +145,12 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                 UserId = story.UserId,
                 Complete = info.IsCompleted,
                 CurrentChapters = info.CurrentChapters,
+                ChapterAddress = chapterInfo?.Address,
+                ChapterTitle = chapterInfo?.Title,
                 TotalChapters = info.TotalChapters,
                 LastAuthored = info.Updated,
-                LastModified = _dateService.Now
+                LastModified = _dateService.Now,
+                Created = _dateService.Now
             };
 
             updates.Add(update);
@@ -165,6 +166,7 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
             {
                 for (var chapter = lastUpdate.CurrentChapters + 1; chapter < update.CurrentChapters; ++chapter)
                 {
+                    info.ChapterInfo.TryGetValue(chapter, out chapterInfo);
                     updates.Add(new StoryUpdate
                     {
                         Id = Guid.NewGuid(),
@@ -172,6 +174,8 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
                         UserId = story.UserId,
                         Complete = info.IsCompleted,
                         CurrentChapters = chapter,
+                        ChapterAddress = chapterInfo?.Address,
+                        ChapterTitle = chapterInfo?.Title,
                         TotalChapters = info.TotalChapters,
                         LastAuthored = info.Updated,
                         LastModified = update.LastModified
@@ -208,11 +212,6 @@ public class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequ
         var notificationText = _notificationCreationService.CreateNotification(site, story, info);
 
         _logger.LogInformation("Attempting to send notification for chapter {0} for {1}", info.CurrentChapters, info.Name);
-
-        foreach (var notificationService in _notificationServices)
-        {
-            _logger.LogInformation("Notification service: {0} enabled status: {1}", notificationService.Settings.SECTION, notificationService.Settings.ENABLED);
-        }
 
         var response = await _notificationHub.SendNotification(notificationText);
 

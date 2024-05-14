@@ -1,54 +1,54 @@
 ﻿namespace mark.davison.berlin.web.features.Store.SharedStoryUseCase;
 
-public class SetStoryConsumedChaptersAction : BaseAction
+public sealed class SetStoryConsumedChaptersAction : BaseAction
 {
     public Guid StoryId { get; set; }
     public int? ConsumedChapters { get; set; }
 }
-public class SetStoryConsumedChaptersActionResponse : BaseActionResponse
+public sealed class SetStoryConsumedChaptersActionResponse : BaseActionResponse
 {
     public Guid StoryId { get; set; }
     public int? ConsumedChapters { get; set; }
 }
 
-public class SetStoryFavouriteAction : BaseAction
+public sealed class SetStoryFavouriteAction : BaseAction
 {
     public Guid StoryId { get; set; }
     public bool IsFavourite { get; set; }
 }
 
-public class SetStoryFavouriteActionResponse : BaseActionResponse
+public sealed class SetStoryFavouriteActionResponse : BaseActionResponse
 {
     public Guid StoryId { get; set; }
     public bool IsFavourite { get; set; }
 }
 
-public class DeleteStoryAction : BaseAction
+public sealed class DeleteStoryAction : BaseAction
 {
     public Guid StoryId { get; set; }
 }
 
-public class DeleteStoryActionResponse : BaseActionResponse
+public sealed class DeleteStoryActionResponse : BaseActionResponse
 {
     public Guid StoryId { get; set; }
 }
 
-public class UpdateStoryAction : BaseAction
+public sealed class UpdateStoryAction : BaseAction
 {
     public Guid StoryId { get; set; }
 }
 
-public class UpdateStoryActionResponse : BaseActionResponse<StoryRowDto>
+public sealed class UpdateStoryActionResponse : BaseActionResponse<StoryRowDto>
 {
     public Guid StoryId { get; set; }
 }
-public class AddStoryAction : BaseAction
+public sealed class AddStoryAction : BaseAction
 {
     public string StoryAddress { get; set; } = string.Empty;
     public Guid? UpdateTypeId { get; set; }
 }
 
-public class AddStoryActionResponse : BaseActionResponse<StoryDto>
+public sealed class AddStoryActionResponse : BaseActionResponse<StoryDto>
 {
 
 }

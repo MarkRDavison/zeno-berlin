@@ -2,7 +2,7 @@
 
 public sealed record UpdateInfo(int Chapter, DateOnly AuthoredDate);
 
-public class AddStoryUpdateFormViewModel : IFormViewModel
+public sealed class AddStoryUpdateFormViewModel : IFormViewModel
 {
     public Guid StoryId { get; set; }
     public int? CurrentChapters { get; set; }

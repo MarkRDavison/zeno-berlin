@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.Import;
 
-public class ImportCommandProcessor : ICommandProcessor<ImportCommandRequest, ImportCommandResponse>
+public sealed class ImportCommandProcessor : ICommandProcessor<ImportCommandRequest, ImportCommandResponse>
 {
     private readonly IRepository _repository;
     private readonly ICommandHandler<AddStoryCommandRequest, AddStoryCommandResponse> _addStoryCommandHandler;

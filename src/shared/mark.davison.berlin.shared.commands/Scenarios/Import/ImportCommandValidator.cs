@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.Import;
 
-public class ImportCommandValidator : ICommandValidator<ImportCommandRequest, ImportCommandResponse>
+public sealed class ImportCommandValidator : ICommandValidator<ImportCommandRequest, ImportCommandResponse>
 {
     private readonly IValidationContext _validationContext;
 

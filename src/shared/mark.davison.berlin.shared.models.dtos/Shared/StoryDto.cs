@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.models.dtos.Shared;
 
-public class StoryDto
+public sealed class StoryDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.Configuration;
 
-public class NotificationSettings : IAppSettings
+public sealed class NotificationSettings : IAppSettings
 {
     public string SECTION => "NOTIFICATIONS";
 

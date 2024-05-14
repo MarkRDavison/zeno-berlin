@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.api.migrations.postgres;
 
 [ExcludeFromCodeCoverage]
-public class ContextFactory : PostgresDbContextFactory<BerlinDbContext>
+public sealed class ContextFactory : PostgresDbContextFactory<BerlinDbContext>
 {
     protected override string ConfigName => "DATABASE";
 

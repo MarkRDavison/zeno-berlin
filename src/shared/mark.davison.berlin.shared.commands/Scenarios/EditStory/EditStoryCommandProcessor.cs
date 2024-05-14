@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.EditStory;
 
-public class EditStoryCommandProcessor : ICommandProcessor<EditStoryCommandRequest, EditStoryCommandResponse>
+public sealed class EditStoryCommandProcessor : ICommandProcessor<EditStoryCommandRequest, EditStoryCommandResponse>
 {
     private readonly IRepository _repository;
 

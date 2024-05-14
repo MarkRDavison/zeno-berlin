@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.bff.common.web;
 
 [ExcludeFromCodeCoverage]
-public class BerlinHttpRepository : HttpRepository
+public sealed class BerlinHttpRepository : HttpRepository
 {
     public BerlinHttpRepository(string baseUri, JsonSerializerOptions options) : base(baseUri, new HttpClient(), options)
     {

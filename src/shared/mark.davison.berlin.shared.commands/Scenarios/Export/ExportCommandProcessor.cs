@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.Export;
 
-public class ExportCommandProcessor : ICommandProcessor<ExportCommandRequest, ExportCommandResponse>
+public sealed class ExportCommandProcessor : ICommandProcessor<ExportCommandRequest, ExportCommandResponse>
 {
     private readonly IRepository _repository;
 

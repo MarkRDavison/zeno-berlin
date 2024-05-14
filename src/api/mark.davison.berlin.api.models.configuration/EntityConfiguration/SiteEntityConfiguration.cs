@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.models.configuration.EntityConfiguration;
 
-public class SiteEntityConfiguration : BerlinEntityConfiguration<Site>
+public sealed class SiteEntityConfiguration : BerlinEntityConfiguration<Site>
 {
     public override void ConfigureEntity(EntityTypeBuilder<Site> builder)
     {

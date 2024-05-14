@@ -204,6 +204,10 @@ public partial class Story
         return author?.Name ?? string.Empty;
     }
 
+    private string _currentChapterAddress => Data.ConsumedChapters != null
+        ? Data.Updates.FirstOrDefault(_ => _.CurrentChapters == Data.ConsumedChapters + 1 && !string.IsNullOrEmpty(_.ChapterAddress))?.ChapterAddress ?? Data.Address
+        : Data.Address;
+
     private string _lastCheckedText => $"Last checked {Data.LastChecked.Humanize()}";
     private string _lastAuthoredText => $"Last authored {Data.LastAuthored.Humanize()}";
     private string _updateTypeText

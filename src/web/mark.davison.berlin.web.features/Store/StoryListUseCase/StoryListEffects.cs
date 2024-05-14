@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.StoryListUseCase;
 
-public class StoryListEffects
+public sealed class StoryListEffects
 {
     private readonly IClientHttpRepository _repository;
 

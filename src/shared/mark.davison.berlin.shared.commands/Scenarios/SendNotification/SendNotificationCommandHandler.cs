@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.SendNotification;
 
-public class SendNotificationCommandHandler : ICommandHandler<SendNotificationCommandRequest, SendNotificationCommandResponse>
+public sealed class SendNotificationCommandHandler : ICommandHandler<SendNotificationCommandRequest, SendNotificationCommandResponse>
 {
     private readonly INotificationHub _notificationHub;
     private readonly ILogger<SendNotificationCommandHandler> _logger;

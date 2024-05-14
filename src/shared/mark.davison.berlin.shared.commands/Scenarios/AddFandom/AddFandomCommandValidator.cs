@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.AddFandom;
 
-public class AddFandomCommandValidator : ICommandValidator<AddFandomCommandRequest, AddFandomCommandResponse>
+public sealed class AddFandomCommandValidator : ICommandValidator<AddFandomCommandRequest, AddFandomCommandResponse>
 {
     private readonly IReadonlyRepository _repository;
 

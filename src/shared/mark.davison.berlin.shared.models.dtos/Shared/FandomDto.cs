@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.models.dtos.Shared;
 
-public class FandomDto
+public sealed class FandomDto
 {
     public Guid FandomId { get; set; }
     public Guid? ParentFandomId { get; set; }

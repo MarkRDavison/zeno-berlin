@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.logic.Settings;
 
-public class Ao3Config : IAppSettings
+public sealed class Ao3Config : IAppSettings
 {
     public string SECTION => "AO3";
 

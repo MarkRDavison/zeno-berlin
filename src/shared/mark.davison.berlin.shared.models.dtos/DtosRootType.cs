@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.models.dtos;
 
-public class DtosRootType
+public sealed class DtosRootType
 {
 
 }

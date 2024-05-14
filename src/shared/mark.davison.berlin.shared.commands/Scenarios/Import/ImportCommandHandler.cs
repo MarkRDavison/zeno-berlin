@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.Import;
 
-public class ImportCommandHandler : ValidateAndProcessJobCommandHandler<ImportCommandRequest, ImportCommandResponse, ImportSummary>
+public sealed class ImportCommandHandler : ValidateAndProcessJobCommandHandler<ImportCommandRequest, ImportCommandResponse, ImportSummary>
 {
     public ImportCommandHandler(
         ICommandProcessor<ImportCommandRequest, ImportCommandResponse> processor,

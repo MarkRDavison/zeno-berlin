@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.jobs;
 
-public class InitializationHostedService : GenericApplicationHealthStateHostedService
+public sealed class InitializationHostedService : GenericApplicationHealthStateHostedService
 {
     private readonly IJobOrchestrationService _jobOrchestrationService;
 

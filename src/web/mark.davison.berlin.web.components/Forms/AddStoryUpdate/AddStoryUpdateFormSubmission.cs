@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.components.Forms.AddStoryUpdate;
 
-public class AddStoryUpdateFormSubmission : IFormSubmission<AddStoryUpdateFormViewModel>
+public sealed class AddStoryUpdateFormSubmission : IFormSubmission<AddStoryUpdateFormViewModel>
 {
     private readonly IStoreHelper _storeHelper;
 

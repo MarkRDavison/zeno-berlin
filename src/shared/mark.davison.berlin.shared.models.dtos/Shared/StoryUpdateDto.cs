@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.models.dtos.Shared;
 
-public class StoryUpdateDto
+public sealed class StoryUpdateDto
 {
     public Guid StoryId { get; set; }
     public int CurrentChapters { get; set; }

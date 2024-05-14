@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.EditFandom;
 
-public class EditFandomCommandProcessor : ICommandProcessor<EditFandomCommandRequest, EditFandomCommandResponse>
+public sealed class EditFandomCommandProcessor : ICommandProcessor<EditFandomCommandRequest, EditFandomCommandResponse>
 {
     private readonly IRepository _repository;
 

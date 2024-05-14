@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.queries.Scenarios.StartupQuery;
 
-public class StartupQueryHandler : IQueryHandler<StartupQueryRequest, StartupQueryResponse>
+public sealed class StartupQueryHandler : IQueryHandler<StartupQueryRequest, StartupQueryResponse>
 {
     private readonly IReadonlyRepository _repository;
 

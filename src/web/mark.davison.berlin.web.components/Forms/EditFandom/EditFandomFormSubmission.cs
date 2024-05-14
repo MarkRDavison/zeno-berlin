@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.components.Forms.EditFandom;
 
-public class EditFandomFormSubmission : IFormSubmission<EditFandomFormViewModel>
+public sealed class EditFandomFormSubmission : IFormSubmission<EditFandomFormViewModel>
 {
     private readonly IStoreHelper _storeHelper;
 

@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.web.features.Store.DashboardListUseCase;
 
 [FeatureState]
-public class DashboardListState
+public sealed class DashboardListState
 {
     public bool IsLoading { get; }
     public ReadOnlyCollection<DashboardTileDto> Entities { get; }

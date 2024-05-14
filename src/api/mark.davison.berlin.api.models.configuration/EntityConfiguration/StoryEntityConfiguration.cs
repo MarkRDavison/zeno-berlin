@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.models.configuration.EntityConfiguration;
 
-public class StoryEntityConfiguration : BerlinEntityConfiguration<Story>
+public sealed class StoryEntityConfiguration : BerlinEntityConfiguration<Story>
 {
     public override void ConfigureEntity(EntityTypeBuilder<Story> builder)
     {
