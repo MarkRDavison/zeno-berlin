@@ -4,13 +4,16 @@ public sealed class AddStoryFormSubmission : IFormSubmission<AddStoryFormViewMod
 {
     private readonly IStoreHelper _storeHelper;
     private readonly IClientNavigationManager _clientNavigationManager;
+    private readonly ISnackbar _snackbar;
 
     public AddStoryFormSubmission(
         IStoreHelper storeHelper,
-        IClientNavigationManager clientNavigationManager)
+        IClientNavigationManager clientNavigationManager,
+        ISnackbar snackbar)
     {
         _storeHelper = storeHelper;
         _clientNavigationManager = clientNavigationManager;
+        _snackbar = snackbar;
     }
 
     public async Task<Response> Primary(AddStoryFormViewModel formViewModel)
@@ -26,6 +29,11 @@ public sealed class AddStoryFormSubmission : IFormSubmission<AddStoryFormViewMod
         if (response.SuccessWithValue)
         {
             _clientNavigationManager.NavigateTo(RouteHelpers.Story(response.Value.Id));
+        }
+
+        if (response.Errors.Any(_ => _.Contains(ValidationMessages.DUPLICATE_ENTITY) && _.Contains("Story")))
+        {
+            _snackbar.Add("You've already added that story!", Severity.Warning);
         }
 
         return response;
