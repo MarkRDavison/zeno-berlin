@@ -24,6 +24,11 @@ public sealed class AddStoryCommandValidator : ICommandValidator<AddStoryCommand
                     nameof(AddStoryCommandRequest.StoryAddress));
         }
 
+        if (request.StoryAddress.StartsWith("http:"))
+        {
+            request.StoryAddress = request.StoryAddress.Replace("http:", "https:");
+        }
+
         if (request.UpdateTypeId is Guid updateTypeId &&
             UpdateTypeConstants.AllIds.All(_ => _ != updateTypeId))
         {
