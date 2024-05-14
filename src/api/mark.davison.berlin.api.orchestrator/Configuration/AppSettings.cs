@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.orchestrator.Configuration;
 
-public class AppSettings : IAppSettings
+public sealed class AppSettings : IAppSettings
 {
     public string SECTION => "BERLIN";
     public DatabaseAppSettings DATABASE { get; set; } = new();

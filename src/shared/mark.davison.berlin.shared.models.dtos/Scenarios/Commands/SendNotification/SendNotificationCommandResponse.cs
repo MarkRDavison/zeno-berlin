@@ -1,5 +1,5 @@
 ﻿namespace mark.davison.berlin.shared.models.dtos.Scenarios.Commands.SendNotification;
 
-public class SendNotificationCommandResponse : Response
+public sealed class SendNotificationCommandResponse : Response
 {
 }

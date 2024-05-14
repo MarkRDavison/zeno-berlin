@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.components.Forms.AddStory;
 
-public class AddStoryFormSubmission : IFormSubmission<AddStoryFormViewModel>
+public sealed class AddStoryFormSubmission : IFormSubmission<AddStoryFormViewModel>
 {
     private readonly IStoreHelper _storeHelper;
     private readonly IClientNavigationManager _clientNavigationManager;

@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.AddStory;
 
-public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest, AddStoryCommandResponse>
+public sealed class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest, AddStoryCommandResponse>
 {
     private readonly IDateService _dateService;
     private readonly IValidationContext _validationContext;
@@ -60,12 +60,15 @@ public class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommandRequest
                 StoryAuthorLinks = [.. authors.Select(_ => CreateStoryAuthorLink(storyId, _.Id, currentUserContext.CurrentUser.Id))] // TODO: Some helper methods/entities/framework for linking entities
             };
 
+            info.ChapterInfo.TryGetValue(story.CurrentChapters, out var chapterInfo);
             var storyUpdate = new StoryUpdate
             {
                 Id = Guid.NewGuid(),
                 StoryId = story.Id,
                 UserId = currentUserContext.CurrentUser.Id,
                 Complete = info.IsCompleted,
+                ChapterTitle = chapterInfo?.Title,
+                ChapterAddress = chapterInfo?.Address,
                 CurrentChapters = info.CurrentChapters,
                 TotalChapters = info.TotalChapters,
                 LastAuthored = info.Updated,

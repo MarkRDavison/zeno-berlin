@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.shared.commands.test.Scenarios.Import;
 
 [TestClass]
-public class ImportCommandProcessorTests
+public sealed class ImportCommandProcessorTests
 {
     private readonly IRepository _repository;
     private readonly ICurrentUserContext _currentUserContext;

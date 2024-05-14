@@ -67,6 +67,10 @@ shared action/response are public, non shared ones that are same as shared, inte
 
 On the author/fandom pages parent author/fandom is not taken into account when filtering stories to show
 
+support for backfilling missing data?
+ - e.g. chapter/story update address/title
+	- We do this if we've skipped over updates, but we dont fill them in from chatper 1 onwards
+	- Maybe do the same process, but use the published date as the chapter 1 date, then either evenly or stuff all the updates on publish/update date??
 
 ## BUGS
 
@@ -105,6 +109,8 @@ Stories that update multiple times at once?
 
  - A way to add the update type to the stories, maybe on add as well as manage
 	- Make the check stories process respect update type
+ - Story updates record the chapter title and address
+	- Can link to a specific chapter now
 
 Async background job processing
  - Runs as a separate container, can scale up

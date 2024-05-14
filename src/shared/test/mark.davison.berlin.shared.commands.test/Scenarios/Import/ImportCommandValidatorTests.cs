@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.shared.commands.test.Scenarios.Import;
 
 [TestClass]
-public class ImportCommandValidatorTests
+public sealed class ImportCommandValidatorTests
 {
     private readonly IValidationContext _validationContext;
     private readonly ICurrentUserContext _currentUserContext;

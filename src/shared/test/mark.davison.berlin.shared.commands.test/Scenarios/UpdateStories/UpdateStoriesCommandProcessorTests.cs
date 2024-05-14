@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.shared.commands.test.Scenarios.UpdateStories;
 
 [TestClass]
-public class UpdateStoriesCommandProcessorTests
+public sealed class UpdateStoriesCommandProcessorTests
 {
     private readonly ILogger<UpdateStoriesCommandProcessor> _logger;
     private readonly IRepository _repository;
@@ -114,8 +114,7 @@ public class UpdateStoriesCommandProcessorTests
             _fandomService,
             _authorService,
             _notificationCreationService,
-            services.BuildServiceProvider(),
-            Enumerable.Empty<INotificationService>());
+            services.BuildServiceProvider());
     }
 
     [TestMethod]
@@ -393,6 +392,93 @@ public class UpdateStoriesCommandProcessorTests
                 Arg.Any<List<StoryUpdate>>(),
                 Arg.Any<CancellationToken>())
             .Returns(_ => Task.FromResult(_.Arg<List<StoryUpdate>>()));
+
+        var response = await _processor.ProcessAsync(request, _currentUserContext, CancellationToken.None);
+
+        Assert.IsTrue(response.Success);
+
+        await _repository
+            .Received(1)
+            .UpsertEntitiesAsync<StoryUpdate>(
+                Arg.Is<List<StoryUpdate>>(_ => _.Count == missingChapters),
+                Arg.Any<CancellationToken>());
+    }
+
+    [TestMethod]
+    public async Task ProcessAsync_WhereNewUpdates_AppliesChapterInfoCorrectly()
+    {
+        var request = new UpdateStoriesRequest
+        {
+            StoryIds = [_story1Site1.Id]
+        };
+
+        _repository
+            .GetEntitiesAsync<Story>(
+                Arg.Any<Expression<Func<Story, bool>>>(),
+                Arg.Any<Expression<Func<Story, object>>[]>(),
+                Arg.Any<CancellationToken>())
+            .Returns(_ => Task.FromResult<List<Story>>([_story1Site1]));
+
+        var info = new StoryInfoModel
+        {
+            Name = "A new name",
+            CurrentChapters = 10,
+            ChapterInfo = new()
+            {
+                { 10, new ChapterInfoModel(10, "/chapters/10", "10") },
+                { 7, new ChapterInfoModel(7, "/chapters/7", "7") }
+            }
+        };
+
+        var missingChapters = 5;
+
+        var existingUpdates = new List<StoryUpdate>
+        {
+            new()
+            {
+                StoryId = _story1Site1.Id,
+                CurrentChapters = info.CurrentChapters - missingChapters
+            }
+        };
+
+        _repository
+            .QueryEntities<StoryUpdate>()
+            .Returns(existingUpdates.AsAsyncQueryable());
+
+        _site1StoryInfoProcessor
+            .ExtractStoryInfo(
+                Arg.Any<string>(),
+                Arg.Any<CancellationToken>())
+            .Returns(info);
+
+        _repository
+            .UpsertEntitiesAsync<Story>(
+                Arg.Any<List<Story>>(),
+                Arg.Any<CancellationToken>())
+            .Returns(_ => Task.FromResult(_.Arg<List<Story>>()));
+
+        _repository
+            .UpsertEntitiesAsync<StoryUpdate>(
+                Arg.Any<List<StoryUpdate>>(),
+                Arg.Any<CancellationToken>())
+            .Returns(_ =>
+            {
+                foreach (var update in _.Arg<List<StoryUpdate>>())
+                {
+                    if (info.ChapterInfo.TryGetValue(update.CurrentChapters, out var chapterInfo))
+                    {
+                        Assert.AreEqual(chapterInfo.Address, update.ChapterAddress);
+                        Assert.AreEqual(chapterInfo.Title, update.ChapterTitle);
+                    }
+                    else
+                    {
+                        Assert.IsNull(update.ChapterAddress);
+                        Assert.IsNull(update.ChapterTitle);
+                    }
+                }
+
+                return Task.FromResult(_.Arg<List<StoryUpdate>>());
+            });
 
         var response = await _processor.ProcessAsync(request, _currentUserContext, CancellationToken.None);
 

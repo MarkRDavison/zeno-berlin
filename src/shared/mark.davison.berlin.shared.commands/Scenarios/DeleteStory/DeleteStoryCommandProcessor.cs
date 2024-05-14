@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.DeleteStory;
 
-public class DeleteStoryCommandProcessor : ICommandProcessor<DeleteStoryCommandRequest, DeleteStoryCommandResponse>
+public sealed class DeleteStoryCommandProcessor : ICommandProcessor<DeleteStoryCommandRequest, DeleteStoryCommandResponse>
 {
     private readonly IRepository _repository;
 

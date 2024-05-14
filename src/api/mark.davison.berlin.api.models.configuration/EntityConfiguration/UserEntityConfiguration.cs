@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.models.configuration.EntityConfiguration;
 
-public class UserEntityConfiguration : IEntityTypeConfiguration<User>
+public sealed class UserEntityConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {

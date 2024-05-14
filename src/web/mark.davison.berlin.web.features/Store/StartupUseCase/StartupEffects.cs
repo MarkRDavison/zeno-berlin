@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.StartupUseCase;
 
-public class StartupEffects
+public sealed class StartupEffects
 {
     private readonly IClientHttpRepository _repository;
 

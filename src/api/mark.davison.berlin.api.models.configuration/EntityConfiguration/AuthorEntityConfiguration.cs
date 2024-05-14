@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.models.configuration.EntityConfiguration;
 
-public class AuthorEntityConfiguration : BerlinEntityConfiguration<Author>
+public sealed class AuthorEntityConfiguration : BerlinEntityConfiguration<Author>
 {
     public override void ConfigureEntity(EntityTypeBuilder<Author> builder)
     {

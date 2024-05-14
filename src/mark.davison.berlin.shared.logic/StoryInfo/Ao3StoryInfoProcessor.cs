@@ -1,7 +1,8 @@
 ﻿namespace mark.davison.berlin.shared.logic.StoryInfo;
 
-public class Ao3StoryInfoProcessor : IStoryInfoProcessor
+public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
 {
+    private const string ChapterNumberTitleSeparator = ". ";
     private readonly HttpClient _client;
     private readonly IRateLimitService _rateLimitService;
 
@@ -47,18 +48,18 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
 
         await _rateLimitService.Wait(cancellationToken);
 
-        var response = await _client.SendAsync(request);
+        var response = await _client.SendAsync(request, cancellationToken);
 
-        var content = await response.Content.ReadAsStringAsync();
+        var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
-        return await ParseStoryInfoFromContent(content);
+        return await ParseStoryInfoFromContent(GenerateBaseStoryAddress(storyAddress), content, cancellationToken);
     }
 
-    private static async Task<StoryInfoModel> ParseStoryInfoFromContent(string content)
+    private static async Task<StoryInfoModel> ParseStoryInfoFromContent(string address, string content, CancellationToken cancellationToken)
     {
         var context = BrowsingContext.New(Configuration.Default);
 
-        var document = await context.OpenAsync(req => req.Content(content));
+        var document = await context.OpenAsync(req => req.Content(content), cancellationToken);
 
         var title = document
             .GetElementsByClassName("title heading")?
@@ -114,14 +115,12 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
             .Where(_ => !string.IsNullOrEmpty(_.Key))
             .ToDictionary(_ => _.Key!, _ => _.Last().InnerHtml);
 
-        DateOnly published;
-        DateOnly updated;
 
-        if (!groupedStats.TryGetValue("published", out var publishedValue) || !DateOnly.TryParse(publishedValue, out published))
+        if (!groupedStats.TryGetValue("published", out var publishedValue) || !DateOnly.TryParse(publishedValue, out DateOnly published))
         {
             throw new InvalidDataException("Could not extract published date");
         }
-        if (!groupedStats.TryGetValue("status", out var updatedValue) || !DateOnly.TryParse(updatedValue, out updated))
+        if (!groupedStats.TryGetValue("status", out var updatedValue) || !DateOnly.TryParse(updatedValue, out DateOnly updated))
         {
             throw new InvalidDataException("Could not extract updated date");
         }
@@ -140,6 +139,39 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
             .Distinct()
             .ToList() ?? [];
 
+        var chapterValues = document
+            .GetElementById("chapter_index")?
+            .GetElementsByTagName("option")
+            .Select(_ => new { ChapterValue = _.GetAttribute("value"), ChapterTitle = _.InnerHtml })
+            .ToList() ?? [];
+
+        Dictionary<int, ChapterInfoModel> chapterInfos = new();
+
+        int chapterNumber = 1;
+        foreach (var chapterValueInfo in chapterValues)
+        {
+            var chapterNumberSeparator = chapterValueInfo.ChapterTitle.IndexOf(ChapterNumberTitleSeparator);
+
+            var chapterTitle = chapterValueInfo.ChapterTitle;
+
+            if (chapterNumberSeparator != -1)
+            {
+                chapterTitle = chapterTitle.Substring(chapterNumberSeparator + 2);
+
+                if (int.TryParse(chapterValueInfo.ChapterTitle.AsSpan(0, chapterNumberSeparator), out var extractedChapterNumber))
+                {
+                    if (chapterNumber != extractedChapterNumber)
+                    {
+                        continue;
+                    }
+                }
+
+                chapterInfos.Add(chapterNumber, new ChapterInfoModel(chapterNumber, $"{address.TrimEnd('/')}/chapters/{chapterValueInfo.ChapterValue}", chapterTitle));
+            }
+
+            chapterNumber++;
+        }
+
         return new StoryInfoModel
         {
             Name = title,
@@ -148,6 +180,7 @@ public class Ao3StoryInfoProcessor : IStoryInfoProcessor
             CurrentChapters = currentChapters,
             TotalChapters = totalChapters,
             Published = published,
+            ChapterInfo = chapterInfos,
             Updated = updated,
             Fandoms = fandoms
         };

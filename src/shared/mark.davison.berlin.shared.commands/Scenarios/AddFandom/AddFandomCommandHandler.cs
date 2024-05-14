@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.AddFandom;
 
-public class AddFandomCommandHandler : ValidateAndProcessCommandHandler<AddFandomCommandRequest, AddFandomCommandResponse>
+public sealed class AddFandomCommandHandler : ValidateAndProcessCommandHandler<AddFandomCommandRequest, AddFandomCommandResponse>
 {
     public AddFandomCommandHandler(
         ICommandProcessor<AddFandomCommandRequest, AddFandomCommandResponse> processor,

@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.api.test.Scenarios.Commands;
 
 [TestClass]
-public class AddStoryCommandTests : ApiIntegrationTestBase
+public sealed class AddStoryCommandTests : ApiIntegrationTestBase
 {
     [TestMethod]
     public async Task AddStoryWorks()

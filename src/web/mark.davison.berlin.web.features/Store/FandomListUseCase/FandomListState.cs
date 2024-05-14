@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.web.features.Store.FandomListUseCase;
 
 [FeatureState]
-public class FandomListState
+public sealed class FandomListState
 {
     public bool IsLoading { get; }
     public ReadOnlyCollection<FandomDto> Entities { get; }

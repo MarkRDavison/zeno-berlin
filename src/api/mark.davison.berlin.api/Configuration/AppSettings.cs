@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.Configuration;
 
-public class AppSettings : IAppSettings
+public sealed class AppSettings : IAppSettings
 {
     public string SECTION => "BERLIN";
 

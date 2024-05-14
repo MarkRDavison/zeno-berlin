@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.queries.Scenarios.ManageStory;
 
-public class ManageStoryQueryHandler : IQueryHandler<ManageStoryQueryRequest, ManageStoryQueryResponse>
+public sealed class ManageStoryQueryHandler : IQueryHandler<ManageStoryQueryRequest, ManageStoryQueryResponse>
 {
     private readonly IReadonlyRepository _repository;
 
@@ -54,6 +54,8 @@ public class ManageStoryQueryHandler : IQueryHandler<ManageStoryQueryRequest, Ma
                         CurrentChapters = _.CurrentChapters,
                         TotalChapters = _.TotalChapters,
                         Complete = _.Complete,
+                        ChapterAddress = _.ChapterAddress ?? string.Empty,
+                        ChapterTitle = _.ChapterTitle ?? string.Empty,
                         LastAuthored = _.LastAuthored,
                         LastChecked = _.LastModified
                     }).OrderByDescending(_ => _.LastAuthored)]

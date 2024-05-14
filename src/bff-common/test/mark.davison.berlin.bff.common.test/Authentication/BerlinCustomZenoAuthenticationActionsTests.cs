@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.bff.common.test.Authentication;
 
 [TestClass]
-public class BerlinCustomZenoAuthenticationActionsTests
+public sealed class BerlinCustomZenoAuthenticationActionsTests
 {
     private readonly IHttpRepository _httpRepository;
     private readonly IDateService _dateService;

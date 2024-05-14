@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.SharedStoryUseCase;
 
-public class SharedStoryEffects
+public sealed class SharedStoryEffects
 {
     private readonly IClientHttpRepository _repository;
 

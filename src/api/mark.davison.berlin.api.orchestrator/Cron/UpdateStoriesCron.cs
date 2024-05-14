@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.orchestrator.Cron;
 
-public class UpdateStoriesCron : BaseCQRSCron<UpdateStoriesRequest, UpdateStoriesResponse, UpdateStoriesCron>
+public sealed class UpdateStoriesCron : BaseCQRSCron<UpdateStoriesRequest, UpdateStoriesResponse, UpdateStoriesCron>
 {
     public UpdateStoriesCron(
         IScheduleConfig<UpdateStoriesCron> scheduleConfig,

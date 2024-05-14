@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.components.Forms.EditStory;
 
-public class EditStoryFormViewModel : IFormViewModel
+public sealed class EditStoryFormViewModel : IFormViewModel
 {
     public Guid StoryId { get; set; }
     public int? ConsumedChapters { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.queries.Scenarios.StoryList;
 
-public class StoryListQueryHandler : IQueryHandler<StoryListQueryRequest, StoryListQueryResponse>
+public sealed class StoryListQueryHandler : IQueryHandler<StoryListQueryRequest, StoryListQueryResponse>
 {
     private readonly IReadonlyRepository _repository;
 

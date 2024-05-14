@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.shared.queries.test.Scenarios.StartupQuery;
 
 [TestClass]
-public class StartupQueryHandlerTests
+public sealed class StartupQueryHandlerTests
 {
     //private readonly Mock<IReadonlyRepository> _repository;
     //private readonly Mock<ICurrentUserContext> _currentUserContext;

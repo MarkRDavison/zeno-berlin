@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.queries.Scenarios.FandomList;
 
-public class FandomListQueryHandler : IQueryHandler<FandomListQueryRequest, FandomListQueryResponse>
+public sealed class FandomListQueryHandler : IQueryHandler<FandomListQueryRequest, FandomListQueryResponse>
 {
     private readonly IReadonlyRepository _repository;
 

@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.bff.web;
 
-public class Startup
+public sealed class Startup
 {
     const string AuthorityToWellKnown = "/.well-known/openid-configuration";
 

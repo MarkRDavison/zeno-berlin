@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.jobs.Services;
 
-public class CheckJobsService : ICheckJobsService
+public sealed class CheckJobsService : ICheckJobsService
 {
     private readonly ILockService _lockService;
     private readonly IDateService _dateService;

@@ -1,10 +1,10 @@
 ﻿namespace mark.davison.berlin.api.Data;
 
 [ExcludeFromCodeCoverage]
-public class BerlinDataSeeder : IBerlinDataSeeder
+public sealed class BerlinDataSeeder : IBerlinDataSeeder
 {
-    protected readonly IServiceScopeFactory _serviceScopeFactory;
-    protected readonly AppSettings _appSettings;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly AppSettings _appSettings;
 
     public BerlinDataSeeder(
         IServiceScopeFactory serviceScopeFactory,
@@ -36,6 +36,7 @@ public class BerlinDataSeeder : IBerlinDataSeeder
 
         await repository.UpsertEntitiesAsync(newEntities, cancellationToken);
     }
+
     private async Task<User> EnsureUserSeeded(IRepository repository, CancellationToken cancellationToken)
     {
         var seededUser = new User { Id = Guid.Empty, Email = "berlinsystem@markdavison.kiwi", First = "Berlin", Last = "System", Username = "Berlin.System" };

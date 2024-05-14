@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.api;
 
 [UseCQRSServer(typeof(DtosRootType), typeof(CommandsRootType), typeof(QueriesRootType))]
-public class Startup
+public sealed class Startup
 {
     public IConfiguration Configuration { get; }
 

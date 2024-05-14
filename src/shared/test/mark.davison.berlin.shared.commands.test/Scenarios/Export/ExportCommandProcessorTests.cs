@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.shared.commands.test.Scenarios.Export;
 
 [TestClass]
-public class ExportCommandProcessorTests
+public sealed class ExportCommandProcessorTests
 {
     private readonly IRepository _repository;
     private readonly ICurrentUserContext _currentUserContext;

@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.shared.server.services.Helpers;
 
-public class AuthorService : IAuthorService
+public sealed class AuthorService : IAuthorService
 {
     private readonly IRepository _repository;
     private readonly ICurrentUserContext _currentUserContext;

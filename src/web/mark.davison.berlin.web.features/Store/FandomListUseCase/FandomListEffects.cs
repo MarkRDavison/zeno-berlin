@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.FandomListUseCase;
 
-public class FandomListEffects
+public sealed class FandomListEffects
 {
     private readonly IClientHttpRepository _repository;
 

@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api;
 
-public class InitializationHostedService : GenericApplicationHealthStateHostedService
+public sealed class InitializationHostedService : GenericApplicationHealthStateHostedService
 {
     private readonly IBerlinDataSeeder _dataSeeder;
     private readonly IDbContextFactory<BerlinDbContext> _dbContextFactory;

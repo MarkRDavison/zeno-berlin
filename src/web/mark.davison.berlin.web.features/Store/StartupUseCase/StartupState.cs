@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.web.features.Store.StartupUseCase;
 
 [FeatureState]
-public class StartupState
+public sealed class StartupState
 {
     public ReadOnlyCollection<UpdateTypeDto> UpdateTypes { get; }
 

@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.models.configuration.EntityConfiguration;
 
-public class FandomEntityConfiguration : BerlinEntityConfiguration<Fandom>
+public sealed class FandomEntityConfiguration : BerlinEntityConfiguration<Fandom>
 {
     public override void ConfigureEntity(EntityTypeBuilder<Fandom> builder)
     {

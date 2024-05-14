@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.MonthlyNotifications;
 
-public class MonthlyNotificationsCommandProcessor : ICommandProcessor<MonthlyNotificationsCommandRequest, MonthlyNotificationsCommandResponse>
+public sealed class MonthlyNotificationsCommandProcessor : ICommandProcessor<MonthlyNotificationsCommandRequest, MonthlyNotificationsCommandResponse>
 {
     private readonly IReadonlyRepository _repository;
     private readonly IDateService _dateService;

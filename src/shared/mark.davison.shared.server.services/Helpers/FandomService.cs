@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.shared.server.services.Helpers;
 
-public class FandomService : IFandomService
+public sealed class FandomService : IFandomService
 {
     private readonly IRepository _repository;
     private readonly ICurrentUserContext _currentUserContext;

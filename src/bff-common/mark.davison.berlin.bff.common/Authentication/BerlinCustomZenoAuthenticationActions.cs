@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.bff.common.Authentication;
 
-public class BerlinCustomZenoAuthenticationActions : ICustomZenoAuthenticationActions
+public sealed class BerlinCustomZenoAuthenticationActions : ICustomZenoAuthenticationActions
 {
     private readonly IHttpRepository _httpRepository;
     private readonly IDateService _dateService;

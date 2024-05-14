@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.web.features.Store.StoryListUseCase;
 
 [FeatureState]
-public class StoryListState
+public sealed class StoryListState
 {
     public bool IsLoading { get; }
     public ReadOnlyCollection<StoryRowDto> Stories { get; }

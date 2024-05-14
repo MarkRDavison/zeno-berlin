@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands;
 
-public class CommandsRootType
+public sealed class CommandsRootType
 {
 
 }

@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.models.configuration.EntityConfiguration;
 
-public class StoryFandomLinkEntityConfiguration : BerlinEntityConfiguration<StoryFandomLink>
+public sealed class StoryFandomLinkEntityConfiguration : BerlinEntityConfiguration<StoryFandomLink>
 {
     protected override bool ConfigureNavigationManually => true;
 

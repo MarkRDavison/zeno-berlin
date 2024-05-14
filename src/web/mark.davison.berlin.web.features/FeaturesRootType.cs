@@ -1,5 +1,5 @@
 ﻿namespace mark.davison.berlin.web.features;
 
-public class FeaturesRootType
+public sealed class FeaturesRootType
 {
 }

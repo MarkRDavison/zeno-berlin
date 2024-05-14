@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.ui;
 
-public class BerlinClientHttpRepository : ClientHttpRepository
+public sealed class BerlinClientHttpRepository : ClientHttpRepository
 {
     public BerlinClientHttpRepository(
         string remoteEndpoint,

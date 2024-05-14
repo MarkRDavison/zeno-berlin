@@ -1,44 +1,44 @@
 ﻿namespace mark.davison.berlin.web.features.Store.ManageStoryUseCase;
 
-public class FetchManageStoryAction : BaseAction
+public sealed class FetchManageStoryAction : BaseAction
 {
     public Guid StoryId { get; set; }
     public bool SetLoading { get; set; }
 }
 
-public class FetchManageStoryActionResponse : BaseActionResponse<StoryManageDto>
+public sealed class FetchManageStoryActionResponse : BaseActionResponse<StoryManageDto>
 {
 
 }
 
-public class SetFavouriteManageStoryAction : BaseAction
+public sealed class SetFavouriteManageStoryAction : BaseAction
 {
     public Guid StoryId { get; set; }
     public bool IsFavourite { get; set; }
 }
 
-public class SetFavouriteManageStoryActionResponse : BaseActionResponse
+public sealed class SetFavouriteManageStoryActionResponse : BaseActionResponse
 {
     public Guid StoryId { get; set; }
     public bool IsFavourite { get; set; }
 }
-public class SetManageStoryConsumedChaptersAction : BaseAction
+public sealed class SetManageStoryConsumedChaptersAction : BaseAction
 {
     public Guid StoryId { get; set; }
     public int? ConsumedChapters { get; set; }
 }
-public class SetManageStoryConsumedChaptersActionResponse : BaseActionResponse
+public sealed class SetManageStoryConsumedChaptersActionResponse : BaseActionResponse
 {
     public Guid StoryId { get; set; }
     public int? ConsumedChapters { get; set; }
 }
 
-public class UpdateManageStoryActionResponse : BaseActionResponse<StoryRowDto>
+public sealed class UpdateManageStoryActionResponse : BaseActionResponse<StoryRowDto>
 {
     public Guid StoryId { get; set; }
 }
 
-public class AddManageStoryUpdateAction : BaseAction // TODO: Source gen to create this from command/query???
+public sealed class AddManageStoryUpdateAction : BaseAction // TODO: Source gen to create this from command/query???
 {
     public Guid StoryId { get; set; }
     public int CurrentChapters { get; set; }
@@ -47,7 +47,7 @@ public class AddManageStoryUpdateAction : BaseAction // TODO: Source gen to crea
     public DateOnly UpdateDate { get; set; }
 }
 
-public class AddManageStoryUpdateActionResponse : BaseActionResponse<StoryUpdateDto>
+public sealed class AddManageStoryUpdateActionResponse : BaseActionResponse<StoryUpdateDto>
 {
 
 }

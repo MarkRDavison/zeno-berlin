@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.web.components;
 
-public class Routes
+public sealed class Routes
 {
     public const string Root = "/";
     public const string Dashboard = Root;
@@ -13,7 +13,7 @@ public class Routes
     public const string Author = "/authors/{id:guid}";
 }
 
-public class RouteHelpers
+public sealed class RouteHelpers
 {
     public static string Story(Guid id) => Routes.Story.Replace("{id:guid}", id.ToString());
     public static string Fandom(Guid id) => Routes.Fandom.Replace("{id:guid}", id.ToString());

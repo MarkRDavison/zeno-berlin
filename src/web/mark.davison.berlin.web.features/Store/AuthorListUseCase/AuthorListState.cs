@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.web.features.Store.AuthorListUseCase;
 
 [FeatureState]
-public class AuthorListState
+public sealed class AuthorListState
 {
     public bool IsLoading { get; }
     public ReadOnlyCollection<AuthorDto> Entities { get; }

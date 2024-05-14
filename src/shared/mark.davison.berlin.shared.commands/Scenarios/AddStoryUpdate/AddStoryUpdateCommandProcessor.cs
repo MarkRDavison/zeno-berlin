@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.commands.Scenarios.AddStoryUpdate;
 
-public class AddStoryUpdateCommandProcessor : ICommandProcessor<AddStoryUpdateCommandRequest, AddStoryUpdateCommandResponse>
+public sealed class AddStoryUpdateCommandProcessor : ICommandProcessor<AddStoryUpdateCommandRequest, AddStoryUpdateCommandResponse>
 {
     private readonly IRepository _repository;
     private readonly IDateService _dateService;

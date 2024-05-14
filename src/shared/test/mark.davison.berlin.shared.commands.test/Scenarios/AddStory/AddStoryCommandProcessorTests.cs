@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.shared.commands.test.Scenarios.AddStory;
 
 [TestClass]
-public class AddStoryCommandProcessorTests
+public sealed class AddStoryCommandProcessorTests
 {
     private readonly IDateService _dateService;
     private readonly IValidationContext _validationContext;
@@ -78,7 +78,11 @@ public class AddStoryCommandProcessorTests
             Name = "story-" + externalId,
             CurrentChapters = 0,
             TotalChapters = 10,
-            IsCompleted = false
+            IsCompleted = false,
+            ChapterInfo = new()
+            {
+                { 10, new ChapterInfoModel(10, request.StoryAddress + "/chapters/10", "10") }
+            }
         };
 
         _storyInfoProcessor
@@ -139,6 +143,8 @@ public class AddStoryCommandProcessorTests
                     _.StoryId != Guid.Empty &&
                     _.CurrentChapters == storyInfo.CurrentChapters &&
                     _.TotalChapters == storyInfo.TotalChapters &&
-                    _.Complete == storyInfo.IsCompleted));
+                    _.Complete == storyInfo.IsCompleted &&
+                    _.ChapterTitle == "10" &&
+                    _.ChapterAddress == request.StoryAddress + "/chapters/10"));
     }
 }

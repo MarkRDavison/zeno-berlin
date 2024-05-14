@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.shared.validation.Context;
 
-public class ValidationContext : IValidationContext
+public sealed class ValidationContext : IValidationContext
 {
     private readonly IReadonlyRepository _repository;
 

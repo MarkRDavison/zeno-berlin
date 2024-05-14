@@ -1,6 +1,6 @@
 ﻿namespace mark.davison.berlin.api.persistence;
 
-public class BerlinRepository : RepositoryBase<BerlinDbContext>
+public sealed class BerlinRepository : RepositoryBase<BerlinDbContext>
 {
     public BerlinRepository(
         IDbContextFactory<BerlinDbContext> dbContextFactory,

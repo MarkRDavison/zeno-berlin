@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.web.features.Store.ManageStoryUseCase;
 
 [FeatureState]
-public class ManageStoryState
+public sealed class ManageStoryState
 {
     public bool IsLoading { get; }
     public StoryManageDto Data { get; }
