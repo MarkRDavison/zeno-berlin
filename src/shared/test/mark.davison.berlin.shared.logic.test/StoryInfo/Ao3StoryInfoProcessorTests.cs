@@ -69,7 +69,8 @@ public sealed class Ao3StoryInfoProcessorTests
             };
         };
 
-        var storyUrl = "https://archiveofourown.org/123/47216291/idontmatterforthistest";
+        var storyUrl = "https://archiveofourown.org/works/123/chapters/47216291";
+        var baseStoryUrl = _processor.GenerateBaseStoryAddress(storyUrl);
 
         var storyInfo = await _processor.ExtractStoryInfo(storyUrl, CancellationToken.None);
 
@@ -87,10 +88,10 @@ public sealed class Ao3StoryInfoProcessorTests
         Assert.IsTrue(storyInfo.Fandoms.Contains("Star Wars Legends: New Jedi Order Series - Various Authors"));
         Assert.IsTrue(storyInfo.Fandoms.Contains("Star Wars - All Media Types"));
         Assert.AreEqual(57, storyInfo.ChapterInfo.Count);
-        Assert.AreEqual($"{storyUrl}/chapters/118941742", storyInfo.ChapterInfo[1].Address);
-        Assert.AreEqual($"{storyUrl}/chapters/118953049", storyInfo.ChapterInfo[2].Address);
-        Assert.AreEqual($"{storyUrl}/chapters/120110161", storyInfo.ChapterInfo[10].Address);
-        Assert.AreEqual($"{storyUrl}/chapters/121778461", storyInfo.ChapterInfo[18].Address);
+        Assert.AreEqual($"{baseStoryUrl}/chapters/118941742", storyInfo.ChapterInfo[1].Address);
+        Assert.AreEqual($"{baseStoryUrl}/chapters/118953049", storyInfo.ChapterInfo[2].Address);
+        Assert.AreEqual($"{baseStoryUrl}/chapters/120110161", storyInfo.ChapterInfo[10].Address);
+        Assert.AreEqual($"{baseStoryUrl}/chapters/121778461", storyInfo.ChapterInfo[18].Address);
 
         await _rateLimitService
             .Received(1)

@@ -70,13 +70,13 @@ public sealed class AddStoryCommandProcessorTests
         var request = new AddStoryCommandRequest
         {
             SiteId = _site.Id,
-            StoryAddress = _site.Address + "/story/" + externalId
+            StoryAddress = _site.Address + "/works/" + externalId
         };
 
         var storyInfo = new StoryInfoModel
         {
             Name = "story-" + externalId,
-            CurrentChapters = 0,
+            CurrentChapters = 10,
             TotalChapters = 10,
             IsCompleted = false,
             ChapterInfo = new()
