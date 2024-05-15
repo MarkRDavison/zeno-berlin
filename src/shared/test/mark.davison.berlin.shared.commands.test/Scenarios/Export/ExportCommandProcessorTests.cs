@@ -3,10 +3,11 @@
 [TestClass]
 public sealed class ExportCommandProcessorTests
 {
-    private readonly IRepository _repository;
     private readonly ICurrentUserContext _currentUserContext;
-    private readonly ExportCommandProcessor _processor;
     private readonly User _currentUser;
+
+    private IDbContext<BerlinDbContext> _dbContext = default!;
+    private ExportCommandProcessor _processor = default!;
 
     public ExportCommandProcessorTests()
     {
@@ -14,11 +15,15 @@ public sealed class ExportCommandProcessorTests
         {
             Id = Guid.NewGuid()
         };
-        _repository = Substitute.For<IRepository>();
         _currentUserContext = Substitute.For<ICurrentUserContext>();
         _currentUserContext.CurrentUser.Returns(_currentUser);
+    }
 
-        _processor = new(_repository);
+    [TestInitialize]
+    public void Initialize()
+    {
+        _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
+        _processor = new(_dbContext);
     }
 
     [TestMethod]
@@ -62,12 +67,10 @@ public sealed class ExportCommandProcessorTests
             new(){ Id = Guid.NewGuid(), UserId = Guid.NewGuid(), StoryId = otherUserStories[3].Id }
         };
 
-        _repository
-            .QueryEntities<Story>()
-            .Returns(currentUserStories.Concat(otherUserStories).AsAsyncQueryable());
-        _repository
-            .QueryEntities<StoryUpdate>()
-            .Returns(currentUserStoryUpdates.Concat(otherUserStoryUpdates).AsAsyncQueryable());
+        _dbContext.Add(currentUserStories);
+        _dbContext.Add(otherUserStories);
+        _dbContext.Add(currentUserStoryUpdates);
+        _dbContext.Add(otherUserStoryUpdates);
 
         var request = new ExportCommandRequest { };
 
@@ -105,12 +108,8 @@ public sealed class ExportCommandProcessorTests
             LastAuthored = DateOnly.FromDateTime(DateTime.Now)
         };
 
-        _repository
-            .QueryEntities<Story>()
-            .Returns(new List<Story> { story }.AsAsyncQueryable());
-        _repository
-            .QueryEntities<StoryUpdate>()
-            .Returns(new List<StoryUpdate> { update }.AsAsyncQueryable());
+        _dbContext.Add(story);
+        _dbContext.Add(update);
 
         var request = new ExportCommandRequest { };
 

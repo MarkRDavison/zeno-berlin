@@ -2,38 +2,37 @@
 
 public sealed class ExportCommandProcessor : ICommandProcessor<ExportCommandRequest, ExportCommandResponse>
 {
-    private readonly IRepository _repository;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
 
     public ExportCommandProcessor(
-        IRepository repository)
+        IDbContext<BerlinDbContext> dbContext)
     {
-        _repository = repository;
+        _dbContext = dbContext;
     }
 
     public async Task<ExportCommandResponse> ProcessAsync(ExportCommandRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
     {
         var response = new ExportCommandResponse();
 
-        await using (_repository.BeginTransaction())
+        var stories = await _dbContext
+            .Set<Story>()
+            .AsNoTracking()
+            .Where(_ => _.UserId == currentUserContext.CurrentUser.Id)
+            .ToListAsync();
+
+        var storyUpdates = await _dbContext
+            .Set<StoryUpdate>()
+            .AsNoTracking()
+            .Where(_ => _.UserId == currentUserContext.CurrentUser.Id)
+            .ToListAsync();
+
+        var exportData = new SerialisedtDataDto
         {
-            var stories = await _repository
-                .QueryEntities<Story>()
-                .Where(_ => _.UserId == currentUserContext.CurrentUser.Id)
-                .ToListAsync();
+            Version = 1,
+            Stories = [.. stories.Select(s => CreateSerialisedStoryDto(s, storyUpdates.Where(u => u.StoryId == s.Id)))]
+        };
 
-            var storyUpdates = await _repository
-                .QueryEntities<StoryUpdate>()
-                .Where(_ => _.UserId == currentUserContext.CurrentUser.Id)
-                .ToListAsync();
-
-            var exportData = new SerialisedtDataDto
-            {
-                Version = 1,
-                Stories = [.. stories.Select(s => CreateSerialisedStoryDto(s, storyUpdates.Where(u => u.StoryId == s.Id)))]
-            };
-
-            response.Value = exportData;
-        }
+        response.Value = exportData;
 
         return response;
     }
