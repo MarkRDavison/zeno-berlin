@@ -1,7 +1,8 @@
 ﻿namespace mark.davison.berlin.api.migrations.sqlite;
 
 [ExcludeFromCodeCoverage]
-public sealed class ContextFactory : SqliteDbContextFactory<BerlinDbContext>
+[DatabaseMigrationAssembly(DatabaseType.Sqlite)]
+public sealed class SqliteContextFactory : SqliteDbContextFactory<BerlinDbContext>
 {
     protected override BerlinDbContext DbContextCreation(
             DbContextOptions<BerlinDbContext> options

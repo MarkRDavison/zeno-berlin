@@ -2,26 +2,26 @@
 
 public sealed class StartupQueryProcessor : IQueryProcessor<StartupQueryRequest, StartupQueryResponse>
 {
-    private readonly IReadonlyRepository _repository;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
 
-    public StartupQueryProcessor(IReadonlyRepository repository)
+    public StartupQueryProcessor(IDbContext<BerlinDbContext> dbContext)
     {
-        _repository = repository;
+        _dbContext = dbContext;
     }
 
     public async Task<StartupQueryResponse> ProcessAsync(StartupQueryRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
     {
-        await using (_repository.BeginTransaction())
-        {
-            var updateTypes = await _repository.GetEntitiesAsync<UpdateType>(cancellationToken);
+        var updateTypes = await _dbContext
+            .Set<UpdateType>()
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
 
-            return new StartupQueryResponse
+        return new StartupQueryResponse
+        {
+            Value = new()
             {
-                Value = new()
-                {
-                    UpdateTypes = [.. updateTypes.Select(_ => new UpdateTypeDto { Id = _.Id, Description = _.Description })]
-                }
-            };
-        }
+                UpdateTypes = [.. updateTypes.Select(_ => new UpdateTypeDto { Id = _.Id, Description = _.Description })]
+            }
+        };
     }
 }

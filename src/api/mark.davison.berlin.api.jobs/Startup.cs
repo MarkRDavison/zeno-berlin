@@ -19,13 +19,6 @@ public class Startup
 
         Console.WriteLine(AppSettings.DumpAppSettings(AppSettings.PRODUCTION_MODE));
 
-        // TODO: retrieve these
-        AppSettings.DATABASE.MigrationAssemblyNames.Add(
-            DatabaseType.Postgres, "mark.davison.berlin.api.migrations.postgres");
-        AppSettings.DATABASE.MigrationAssemblyNames.Add(
-            DatabaseType.Sqlite, "mark.davison.berlin.api.migrations.sqlite");
-
-
         services
             .AddLogging()
             .ConfigureHealthCheckServices<InitializationHostedService>()
@@ -39,9 +32,10 @@ public class Startup
                     .Build()
                 ));
 
-        services.UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE);
         services
+            .UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
             .AddSingleton<ICheckJobsService, CheckJobsService>();
+
         services
             .AddScoped<IRepository>(_ =>
                 new BerlinRepository(
