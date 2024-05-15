@@ -3,27 +3,31 @@
 [TestClass]
 public sealed class MonthlyNotificationsCommandProcessorTests
 {
-    private readonly IReadonlyRepository _repository;
     private readonly IDateService _dateService;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly INotificationCreationService _notificationCreationService;
     private readonly INotificationHub _notificationHub;
     private readonly DateOnly _currentDate;
 
-    private readonly MonthlyNotificationsCommandProcessor _processor;
+    private IDbContext<BerlinDbContext> _dbContext = default!;
+    private MonthlyNotificationsCommandProcessor _processor = default!;
 
     public MonthlyNotificationsCommandProcessorTests()
     {
         _currentDate = DateOnly.FromDateTime(DateTime.Today);
-        _repository = Substitute.For<IReadonlyRepository>();
         _dateService = Substitute.For<IDateService>();
         _currentUserContext = Substitute.For<ICurrentUserContext>();
         _notificationCreationService = Substitute.For<INotificationCreationService>();
         _notificationHub = Substitute.For<INotificationHub>();
 
         _dateService.Today.Returns(_currentDate);
+    }
 
-        _processor = new(_repository, _dateService, _notificationCreationService, _notificationHub);
+    [TestInitialize]
+    public void Initialize()
+    {
+        _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
+        _processor = new(_dbContext, _dateService, _notificationCreationService, _notificationHub);
     }
 
     [TestMethod]
@@ -56,6 +60,7 @@ public sealed class MonthlyNotificationsCommandProcessorTests
         {
             new StoryUpdate
             {
+                Id = Guid.NewGuid(),
                 StoryId = story1Id,
                 CurrentChapters = 5,
                 TotalChapters = null,
@@ -63,6 +68,7 @@ public sealed class MonthlyNotificationsCommandProcessorTests
             },
             new StoryUpdate
             {
+                Id = Guid.NewGuid(),
                 StoryId = story1Id,
                 CurrentChapters = 6,
                 TotalChapters = null,
@@ -70,6 +76,7 @@ public sealed class MonthlyNotificationsCommandProcessorTests
             },
             new StoryUpdate
             {
+                Id = Guid.NewGuid(),
                 StoryId = story1Id,
                 CurrentChapters = 7,
                 TotalChapters = null,
@@ -77,6 +84,7 @@ public sealed class MonthlyNotificationsCommandProcessorTests
             },
             new StoryUpdate
             {
+                Id = Guid.NewGuid(),
                 StoryId = story2Id,
                 CurrentChapters = 10,
                 TotalChapters = null,
@@ -84,6 +92,7 @@ public sealed class MonthlyNotificationsCommandProcessorTests
             },
             new StoryUpdate
             {
+                Id = Guid.NewGuid(),
                 StoryId = story2Id,
                 CurrentChapters = 11,
                 TotalChapters = null,
@@ -98,9 +107,7 @@ public sealed class MonthlyNotificationsCommandProcessorTests
             update.Story = story;
         }
 
-        _repository
-            .QueryEntities<StoryUpdate>()
-            .Returns(updates.AsAsyncQueryable());
+        _dbContext.Add(updates);
 
         var response = await _processor.ProcessAsync(new(), _currentUserContext, CancellationToken.None);
 
