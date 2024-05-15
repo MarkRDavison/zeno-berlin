@@ -4,14 +4,14 @@
 public sealed class UpdateStoriesCommandProcessorTests
 {
     private readonly ILogger<UpdateStoriesCommandProcessor> _logger;
-    private readonly IRepository _repository;
     private readonly IDateService _dateService;
     private readonly INotificationHub _notificationHub;
     private readonly IFandomService _fandomService;
     private readonly IAuthorService _authorService;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly INotificationCreationService _notificationCreationService;
-    private readonly UpdateStoriesCommandProcessor _processor;
+    private IDbContext<BerlinDbContext> _dbContext = default!;
+    private UpdateStoriesCommandProcessor _processor = default!;
 
     private readonly IStoryInfoProcessor _site1StoryInfoProcessor;
     private readonly IStoryInfoProcessor _site2StoryInfoProcessor;
@@ -27,7 +27,6 @@ public sealed class UpdateStoriesCommandProcessorTests
     public UpdateStoriesCommandProcessorTests()
     {
         _logger = Substitute.For<ILogger<UpdateStoriesCommandProcessor>>();
-        _repository = Substitute.For<IRepository>();
         _dateService = Substitute.For<IDateService>();
         _site1StoryInfoProcessor = Substitute.For<IStoryInfoProcessor>();
         _site2StoryInfoProcessor = Substitute.For<IStoryInfoProcessor>();
@@ -36,6 +35,8 @@ public sealed class UpdateStoriesCommandProcessorTests
         _authorService = Substitute.For<IAuthorService>();
         _notificationCreationService = Substitute.For<INotificationCreationService>();
         _currentUserContext = Substitute.For<ICurrentUserContext>();
+
+        _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
 
         _dateService.Now.Returns(DateTime.Now);
 
@@ -80,35 +81,28 @@ public sealed class UpdateStoriesCommandProcessorTests
             LastModified = _dateService.Now
         };
 
-        _repository
-            .BeginTransaction()
-            .Returns(new StubAsyncDisposable());
-
         _currentUserContext
             .CurrentUser
             .Returns(_ => _user);
+
+        _notificationHub
+            .SendNotification(Arg.Any<string>())
+            .Returns(new Response());
+    }
+
+    [TestInitialize]
+    public void Initialise()
+    {
+        _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
+        _dbContext.Add([_site1, _site2]);
 
         var services = new ServiceCollection();
         services.AddKeyedTransient(_site1.ShortName, (_, __) => _site1StoryInfoProcessor);
         services.AddKeyedTransient(_site2.ShortName, (_, __) => _site2StoryInfoProcessor);
 
-        _repository
-            .GetEntityAsync<Site>(
-                Arg.Any<Guid>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult(new List<Site>
-            {
-                _site1,
-                _site2
-            }.FirstOrDefault(__ => __.Id == _.Arg<Guid>())));
-
-        _notificationHub
-            .SendNotification(Arg.Any<string>())
-            .Returns(new Response());
-
         _processor = new(
             _logger,
-            _repository,
+            _dbContext,
             _dateService,
             _notificationHub,
             _fandomService,
@@ -133,9 +127,7 @@ public sealed class UpdateStoriesCommandProcessorTests
         stories[2].LastModified = _dateService.Now.AddDays(-1);
         stories[3].LastModified = _dateService.Now.AddDays(-0);
 
-        _repository
-            .QueryEntities<Story>()
-            .Returns(_ => stories.AsAsyncQueryable());
+        _dbContext.Add(stories);
 
         var request = new UpdateStoriesRequest();
 
@@ -160,34 +152,10 @@ public sealed class UpdateStoriesCommandProcessorTests
             StoryIds = [.. stories.Select(_ => _.Id)]
         };
 
-        _repository
-            .GetEntitiesAsync<Story>(
-                Arg.Any<Expression<Func<Story, bool>>>(),
-                Arg.Any<Expression<Func<Story, object>>[]>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ =>
-            {
-                var predicate = _.Arg<Expression<Func<Story, bool>>>().Compile();
-
-
-                var count = stories.Count(predicate);
-
-                Assert.AreEqual(stories.Count, count);
-
-                return Task.FromResult(new List<Story>());
-            });
-
         var response = await _processor.ProcessAsync(request, _currentUserContext, CancellationToken.None);
 
         Assert.IsTrue(response.Success);
         Assert.IsTrue(response.Warnings.Any(_ => _ == ValidationMessages.NO_ITEMS));
-
-        await _repository
-            .Received(1)
-            .GetEntitiesAsync<Story>(
-                Arg.Any<Expression<Func<Story, bool>>>(),
-                Arg.Any<Expression<Func<Story, object>>[]>(),
-                Arg.Any<CancellationToken>());
     }
 
     [TestMethod]
@@ -206,12 +174,7 @@ public sealed class UpdateStoriesCommandProcessorTests
             StoryIds = [.. stories.Select(_ => _.Id)]
         };
 
-        _repository
-            .GetEntitiesAsync<Story>(
-                Arg.Any<Expression<Func<Story, bool>>>(),
-                Arg.Any<Expression<Func<Story, object>>[]>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult(stories));
+        _dbContext.Add(stories);
 
         _site1StoryInfoProcessor
             .ExtractStoryInfo(
@@ -250,12 +213,7 @@ public sealed class UpdateStoriesCommandProcessorTests
             StoryIds = [_story1Site1.Id]
         };
 
-        _repository
-            .GetEntitiesAsync<Story>(
-                Arg.Any<Expression<Func<Story, bool>>>(),
-                Arg.Any<Expression<Func<Story, object>>[]>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult<List<Story>>([_story1Site1]));
+        _dbContext.Add(_story1Site1);
 
         var info = new StoryInfoModel { };
 
@@ -265,28 +223,24 @@ public sealed class UpdateStoriesCommandProcessorTests
                 Arg.Any<CancellationToken>())
             .Returns(info);
 
-        _repository
-            .UpsertEntitiesAsync<Story>(
-                Arg.Is<List<Story>>(_ =>
-                    _.Count == 1 &&
-                    _[0].Id == _story1Site1.Id &&
-                    _[0].TotalChapters == info.TotalChapters &&
-                    _[0].CurrentChapters == info.CurrentChapters &&
-                    _[0].Complete == info.IsCompleted &&
-                    _[0].Name == info.Name &&
-                    _[0].LastModified == _dateService.Now),
-                Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult(_.Arg<List<Story>>()));
-
         var response = await _processor.ProcessAsync(request, _currentUserContext, CancellationToken.None);
 
         Assert.IsTrue(response.Success);
 
-        await _repository
-            .Received(1)
-            .UpsertEntitiesAsync<Story>(
-                Arg.Any<List<Story>>(),
-                Arg.Any<CancellationToken>());
+        var stories = await _dbContext
+            .Set<Story>()
+            .AsNoTracking()
+            .ToListAsync();
+
+        Assert.AreEqual(1, stories.Count);
+
+        var story = stories.Single();
+
+        Assert.AreEqual(_story1Site1.Id, story.Id);
+        Assert.AreEqual(info.TotalChapters, story.TotalChapters);
+        Assert.AreEqual(info.CurrentChapters, story.CurrentChapters);
+        Assert.AreEqual(info.IsCompleted, story.Complete);
+        Assert.AreEqual(info.Name, story.Name);
     }
 
     [TestMethod]
@@ -297,34 +251,18 @@ public sealed class UpdateStoriesCommandProcessorTests
             StoryIds = [_story1Site1.Id]
         };
 
-        _repository
-            .GetEntitiesAsync<Story>(
-                Arg.Any<Expression<Func<Story, bool>>>(),
-                Arg.Any<Expression<Func<Story, object>>[]>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult<List<Story>>([_story1Site1]));
+        _dbContext.Add(_story1Site1);
 
         var info = new StoryInfoModel
         {
             Name = "A new name"
         };
 
-
-        _repository
-            .QueryEntities<StoryUpdate>()
-            .Returns(new List<StoryUpdate>().AsAsyncQueryable());
-
         _site1StoryInfoProcessor
             .ExtractStoryInfo(
                 Arg.Any<string>(),
                 Arg.Any<CancellationToken>())
             .Returns(info);
-
-        _repository
-            .UpsertEntitiesAsync<Story>(
-                Arg.Any<List<Story>>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult(_.Arg<List<Story>>()));
 
         _notificationHub
             .SendNotification(Arg.Any<string>())
@@ -347,12 +285,7 @@ public sealed class UpdateStoriesCommandProcessorTests
             StoryIds = [_story1Site1.Id]
         };
 
-        _repository
-            .GetEntitiesAsync<Story>(
-                Arg.Any<Expression<Func<Story, bool>>>(),
-                Arg.Any<Expression<Func<Story, object>>[]>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult<List<Story>>([_story1Site1]));
+        _dbContext.Add(_story1Site1);
 
         var info = new StoryInfoModel
         {
@@ -362,18 +295,14 @@ public sealed class UpdateStoriesCommandProcessorTests
 
         var missingChapters = 5;
 
-        var existingUpdates = new List<StoryUpdate>
+        var existingUpdate = new StoryUpdate
         {
-            new()
-            {
-                StoryId = _story1Site1.Id,
-                CurrentChapters = info.CurrentChapters - missingChapters
-            }
+            Id = Guid.NewGuid(),
+            StoryId = _story1Site1.Id,
+            CurrentChapters = info.CurrentChapters - missingChapters
         };
 
-        _repository
-            .QueryEntities<StoryUpdate>()
-            .Returns(existingUpdates.AsAsyncQueryable());
+        _dbContext.Add(existingUpdate);
 
         _site1StoryInfoProcessor
             .ExtractStoryInfo(
@@ -381,27 +310,17 @@ public sealed class UpdateStoriesCommandProcessorTests
                 Arg.Any<CancellationToken>())
             .Returns(info);
 
-        _repository
-            .UpsertEntitiesAsync<Story>(
-                Arg.Any<List<Story>>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult(_.Arg<List<Story>>()));
-
-        _repository
-            .UpsertEntitiesAsync<StoryUpdate>(
-                Arg.Any<List<StoryUpdate>>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult(_.Arg<List<StoryUpdate>>()));
-
         var response = await _processor.ProcessAsync(request, _currentUserContext, CancellationToken.None);
 
         Assert.IsTrue(response.Success);
 
-        await _repository
-            .Received(1)
-            .UpsertEntitiesAsync<StoryUpdate>(
-                Arg.Is<List<StoryUpdate>>(_ => _.Count == missingChapters),
-                Arg.Any<CancellationToken>());
+        var storyUpdates = await _dbContext
+            .Set<StoryUpdate>()
+            .AsNoTracking()
+            .Where(_ => existingUpdate.Id != _.Id)
+            .ToListAsync();
+
+        Assert.AreEqual(missingChapters, storyUpdates.Count);
     }
 
     [TestMethod]
@@ -412,38 +331,29 @@ public sealed class UpdateStoriesCommandProcessorTests
             StoryIds = [_story1Site1.Id]
         };
 
-        _repository
-            .GetEntitiesAsync<Story>(
-                Arg.Any<Expression<Func<Story, bool>>>(),
-                Arg.Any<Expression<Func<Story, object>>[]>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult<List<Story>>([_story1Site1]));
+        _dbContext.Add(_story1Site1);
 
         var info = new StoryInfoModel
         {
             Name = "A new name",
             CurrentChapters = 10,
             ChapterInfo = new()
-            {
-                { 10, new ChapterInfoModel(10, "/chapters/10", "10") },
-                { 7, new ChapterInfoModel(7, "/chapters/7", "7") }
-            }
+           {
+               { 10, new ChapterInfoModel(10, "/chapters/10", "10") },
+               { 7, new ChapterInfoModel(7, "/chapters/7", "7") }
+           }
         };
 
         var missingChapters = 5;
 
-        var existingUpdates = new List<StoryUpdate>
-        {
-            new()
+        var existingUpdate =
+            new StoryUpdate
             {
                 StoryId = _story1Site1.Id,
                 CurrentChapters = info.CurrentChapters - missingChapters
-            }
-        };
+            };
 
-        _repository
-            .QueryEntities<StoryUpdate>()
-            .Returns(existingUpdates.AsAsyncQueryable());
+        _dbContext.Add(existingUpdate);
 
         _site1StoryInfoProcessor
             .ExtractStoryInfo(
@@ -451,43 +361,30 @@ public sealed class UpdateStoriesCommandProcessorTests
                 Arg.Any<CancellationToken>())
             .Returns(info);
 
-        _repository
-            .UpsertEntitiesAsync<Story>(
-                Arg.Any<List<Story>>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult(_.Arg<List<Story>>()));
-
-        _repository
-            .UpsertEntitiesAsync<StoryUpdate>(
-                Arg.Any<List<StoryUpdate>>(),
-                Arg.Any<CancellationToken>())
-            .Returns(_ =>
-            {
-                foreach (var update in _.Arg<List<StoryUpdate>>())
-                {
-                    if (info.ChapterInfo.TryGetValue(update.CurrentChapters, out var chapterInfo))
-                    {
-                        Assert.AreEqual(chapterInfo.Address, update.ChapterAddress);
-                        Assert.AreEqual(chapterInfo.Title, update.ChapterTitle);
-                    }
-                    else
-                    {
-                        Assert.IsNull(update.ChapterAddress);
-                        Assert.IsNull(update.ChapterTitle);
-                    }
-                }
-
-                return Task.FromResult(_.Arg<List<StoryUpdate>>());
-            });
-
         var response = await _processor.ProcessAsync(request, _currentUserContext, CancellationToken.None);
 
         Assert.IsTrue(response.Success);
 
-        await _repository
-            .Received(1)
-            .UpsertEntitiesAsync<StoryUpdate>(
-                Arg.Is<List<StoryUpdate>>(_ => _.Count == missingChapters),
-                Arg.Any<CancellationToken>());
+        var storyUpdates = await _dbContext
+            .Set<StoryUpdate>()
+            .AsNoTracking()
+            .Where(_ => existingUpdate.Id != _.Id)
+            .ToListAsync();
+
+        Assert.AreEqual(missingChapters, storyUpdates.Count);
+
+        foreach (var update in storyUpdates)
+        {
+            if (info.ChapterInfo.TryGetValue(update.CurrentChapters, out var chapterInfo))
+            {
+                Assert.AreEqual(chapterInfo.Address, update.ChapterAddress);
+                Assert.AreEqual(chapterInfo.Title, update.ChapterTitle);
+            }
+            else
+            {
+                Assert.IsNull(update.ChapterAddress);
+                Assert.IsNull(update.ChapterTitle);
+            }
+        }
     }
 }

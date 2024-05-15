@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\mark.davison.berlin.shared.queries\mark.davison.berlin.shared.queries.csproj" />
+    <ProjectReference Include="..\mark.davison.berlin.shared.server.common.candidate.test\mark.davison.berlin.shared.server.common.candidate.test.csproj" />
   </ItemGroup>
 
 </Project>
