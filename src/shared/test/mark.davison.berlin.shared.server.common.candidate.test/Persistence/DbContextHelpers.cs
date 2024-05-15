@@ -1,4 +1,5 @@
 ﻿using mark.davison.common.server.abstractions;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace mark.davison.berlin.shared.server.common.candidate.test.Persistence;
 
@@ -16,10 +17,10 @@ public static class DbContextHelpers
         string databaseName)
         where TContext : DbContextBase<TContext>
     {
-        return creator(
-            new DbContextOptionsBuilder<TContext>()
+        var optionsBuilder = new DbContextOptionsBuilder<TContext>()
                 .UseInMemoryDatabase(databaseName: databaseName)
-                .Options);
+                .ConfigureWarnings((WarningsConfigurationBuilder _) => _.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+        return creator(optionsBuilder.Options);
     }
 
     public static void Add<TContext, TEntity>(this IDbContext<TContext> dbContext, TEntity entity)

@@ -2,14 +2,14 @@
 
 public sealed class ImportCommandProcessor : ICommandProcessor<ImportCommandRequest, ImportCommandResponse>
 {
-    private readonly IRepository _repository;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
     private readonly ICommandHandler<AddStoryCommandRequest, AddStoryCommandResponse> _addStoryCommandHandler;
 
     public ImportCommandProcessor(
-        IRepository repository,
+        IDbContext<BerlinDbContext> dbContext,
         ICommandHandler<AddStoryCommandRequest, AddStoryCommandResponse> addStoryCommandHandler)
     {
-        _repository = repository;
+        _dbContext = dbContext;
         _addStoryCommandHandler = addStoryCommandHandler;
     }
 
@@ -27,7 +27,7 @@ public sealed class ImportCommandProcessor : ICommandProcessor<ImportCommandRequ
                 nameof(Story)));
         }
 
-        await using (_repository.BeginTransaction())
+        using (var transaction = await _dbContext.BeginTransactionAsync(cancellationToken))
         {
             var updates = new List<StoryUpdate>();
 
@@ -74,9 +74,11 @@ public sealed class ImportCommandProcessor : ICommandProcessor<ImportCommandRequ
                 }
             }
 
-            await _repository.UpsertEntitiesAsync(updates, cancellationToken);
+            await _dbContext.Set<StoryUpdate>().AddRangeAsync(updates, cancellationToken);
 
-            await _repository.CommitTransactionAsync();
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            await transaction.CommitTransactionAsync(cancellationToken);
         }
 
         return response;
