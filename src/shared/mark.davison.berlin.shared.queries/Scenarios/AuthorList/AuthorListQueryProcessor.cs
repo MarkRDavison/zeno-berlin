@@ -2,18 +2,18 @@
 
 public sealed class AuthorListQueryProcessor : IQueryProcessor<AuthorListQueryRequest, AuthorListQueryResponse>
 {
-    private readonly IReadonlyRepository _repository;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
 
-    public AuthorListQueryProcessor(IReadonlyRepository repository)
+    public AuthorListQueryProcessor(IDbContext<BerlinDbContext> dbContext)
     {
-        _repository = repository;
+        _dbContext = dbContext;
     }
 
     public async Task<AuthorListQueryResponse> ProcessAsync(AuthorListQueryRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
     {
-        await using (_repository.BeginTransaction())
-        {
-            var authors = await _repository.QueryEntities<Author>()
+        var authors = await _dbContext
+            .Set<Author>()
+            .AsNoTracking()
                 .Where(_ => _.UserId == currentUserContext.CurrentUser.Id)
                 .Select(_ => new AuthorDto // TODO: Helper
                 {
@@ -24,10 +24,9 @@ public sealed class AuthorListQueryProcessor : IQueryProcessor<AuthorListQueryRe
                 })
                 .ToListAsync();
 
-            return new AuthorListQueryResponse
-            {
-                Value = authors
-            };
-        }
+        return new AuthorListQueryResponse
+        {
+            Value = authors
+        };
     }
 }

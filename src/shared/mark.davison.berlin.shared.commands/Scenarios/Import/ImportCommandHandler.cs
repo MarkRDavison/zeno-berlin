@@ -5,13 +5,13 @@ public sealed class ImportCommandHandler : ValidateAndProcessJobCommandHandler<I
     public ImportCommandHandler(
         ICommandProcessor<ImportCommandRequest, ImportCommandResponse> processor,
         ICommandValidator<ImportCommandRequest, ImportCommandResponse> validator,
-        IRepository repository,
+        IDbContext<BerlinDbContext> dbContext,
         IDistributedPubSub distributedPubSub,
         IOptions<JobAppSettings> jobOptions
     ) : base(
         processor,
         validator,
-        repository,
+        dbContext,
         distributedPubSub,
         jobOptions)
     {

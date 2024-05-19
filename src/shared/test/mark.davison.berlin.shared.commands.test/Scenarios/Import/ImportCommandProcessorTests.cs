@@ -3,11 +3,12 @@
 [TestClass]
 public sealed class ImportCommandProcessorTests
 {
-    private readonly IRepository _repository;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly ICommandHandler<AddStoryCommandRequest, AddStoryCommandResponse> _addStoryCommandHandler;
-    private readonly ImportCommandProcessor _processor;
     private readonly User _currentUser;
+
+    private IDbContext<BerlinDbContext> _dbContext = default!;
+    private ImportCommandProcessor _processor = default!;
 
     public ImportCommandProcessorTests()
     {
@@ -15,12 +16,17 @@ public sealed class ImportCommandProcessorTests
         {
             Id = Guid.NewGuid()
         };
-        _repository = Substitute.For<IRepository>();
+
         _currentUserContext = Substitute.For<ICurrentUserContext>();
         _addStoryCommandHandler = Substitute.For<ICommandHandler<AddStoryCommandRequest, AddStoryCommandResponse>>();
         _currentUserContext.CurrentUser.Returns(_currentUser);
+    }
 
-        _processor = new(_repository, _addStoryCommandHandler);
+    [TestInitialize]
+    public void Initialize()
+    {
+        _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
+        _processor = new(_dbContext, _addStoryCommandHandler);
     }
 
     [TestMethod]
@@ -35,7 +41,7 @@ public sealed class ImportCommandProcessorTests
                     new()
                     {
                         StoryAddress = "someaddress1",
-                        Updates=
+                        Updates =
                         [
                             new(),
                             new()
@@ -89,11 +95,12 @@ public sealed class ImportCommandProcessorTests
 
         var expectedStoryUpdates = request.Data.Stories.SelectMany(_ => _.Updates).Count();
 
-        await _repository
-            .Received(1)
-            .UpsertEntitiesAsync<StoryUpdate>(
-                Arg.Is<List<StoryUpdate>>(_ => _.Count == expectedStoryUpdates),
-                Arg.Any<CancellationToken>());
+        var persistedUpatesCount = await _dbContext
+            .Set<StoryUpdate>()
+            .AsNoTracking()
+            .CountAsync(CancellationToken.None);
+
+        Assert.AreEqual(expectedStoryUpdates, persistedUpatesCount);
     }
 
     [TestMethod]

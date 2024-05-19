@@ -4,13 +4,14 @@
 public sealed class AddStoryCommandProcessorTests
 {
     private readonly IDateService _dateService;
-    private readonly IValidationContext _validationContext;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly IStoryInfoProcessor _storyInfoProcessor;
     private readonly IFandomService _fandomService;
     private readonly IAuthorService _authorService;
-    private readonly IRepository _repository;
-    private readonly AddStoryCommandProcessor _processor;
+
+    private IDbContext<BerlinDbContext> _dbContext = default!;
+    private AddStoryCommandProcessor _processor = default!;
+
 
     private readonly Site _site;
     private readonly User _user;
@@ -18,12 +19,10 @@ public sealed class AddStoryCommandProcessorTests
     public AddStoryCommandProcessorTests()
     {
         _dateService = Substitute.For<IDateService>();
-        _validationContext = Substitute.For<IValidationContext>();
         _currentUserContext = Substitute.For<ICurrentUserContext>();
         _storyInfoProcessor = Substitute.For<IStoryInfoProcessor>();
         _fandomService = Substitute.For<IFandomService>();
         _authorService = Substitute.For<IAuthorService>();
-        _repository = Substitute.For<IRepository>();
 
         _site = new()
         {
@@ -40,24 +39,19 @@ public sealed class AddStoryCommandProcessorTests
             .CurrentUser
             .Returns(_user);
 
-        _validationContext
-            .GetAll<Site>(Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult(new List<Site> { _site }));
-        _validationContext
-            .GetById<Site>(_site.Id, Arg.Any<CancellationToken>())
-            .Returns(_ => Task.FromResult<Site?>(_site));
-
-        _repository
-            .BeginTransaction()
-            .Returns(new StubAsyncDisposable());
+    }
+    [TestInitialize]
+    public void Initialize()
+    {
+        _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
+        _dbContext.Add(_site);
 
         var services = new ServiceCollection();
-        services.AddScoped(_ => _repository);
         services.AddKeyedTransient(_site.ShortName, (_, __) => _storyInfoProcessor);
 
         _processor = new AddStoryCommandProcessor(
             _dateService,
-            _validationContext,
+            _dbContext,
             _fandomService,
             _authorService,
             services.BuildServiceProvider());
@@ -86,16 +80,17 @@ public sealed class AddStoryCommandProcessorTests
         };
 
         _storyInfoProcessor
-            .ExtractExternalStoryId(request.StoryAddress)
+            .ExtractExternalStoryId(request.StoryAddress, _site.Address)
                 .Returns(externalId);
 
         _storyInfoProcessor
-            .GenerateBaseStoryAddress(request.StoryAddress)
+            .GenerateBaseStoryAddress(request.StoryAddress, _site.Address)
                 .Returns(request.StoryAddress);
 
         _storyInfoProcessor
             .ExtractStoryInfo(
                 request.StoryAddress,
+                _site.Address,
                 Arg.Any<CancellationToken>())
             .Returns(_ => storyInfo);
 
@@ -112,39 +107,35 @@ public sealed class AddStoryCommandProcessorTests
                 Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new List<Author>()));
 
-        _repository
-            .UpsertEntityAsync<Story>(
-                Arg.Any<Story>())
-            .Returns(_ => Task.FromResult<Story?>(_.Arg<Story>()));
-
-        _repository
-            .UpsertEntityAsync<StoryUpdate>(
-                Arg.Any<StoryUpdate>())
-            .Returns(_ => Task.FromResult<StoryUpdate?>(_.Arg<StoryUpdate>()));
-
         var response = await _processor.ProcessAsync(request, _currentUserContext, CancellationToken.None);
 
         Assert.IsTrue(response.Success);
 
-        await _repository
-            .Received(1)
-            .UpsertEntityAsync<Story>(
-                Arg.Is<Story>(_ =>
+        var storyExists = await _dbContext
+            .Set<Story>()
+            .AsNoTracking()
+            .Where(_ =>
                     _.ExternalId == externalId &&
                     _.Name == storyInfo.Name &&
                     _.CurrentChapters == storyInfo.CurrentChapters &&
                     _.TotalChapters == storyInfo.TotalChapters &&
-                    _.Complete == storyInfo.IsCompleted));
+                    _.Complete == storyInfo.IsCompleted)
+            .CountAsync();
 
-        await _repository
-            .Received(1)
-            .UpsertEntityAsync<StoryUpdate>(
-                Arg.Is<StoryUpdate>(_ =>
+        Assert.AreEqual(1, storyExists);
+
+        var storyUpdateExists = await _dbContext
+            .Set<StoryUpdate>()
+            .AsNoTracking()
+            .Where(_ =>
                     _.StoryId != Guid.Empty &&
                     _.CurrentChapters == storyInfo.CurrentChapters &&
                     _.TotalChapters == storyInfo.TotalChapters &&
                     _.Complete == storyInfo.IsCompleted &&
                     _.ChapterTitle == "10" &&
-                    _.ChapterAddress == request.StoryAddress + "/chapters/10"));
+                    _.ChapterAddress == request.StoryAddress + "/chapters/10")
+            .CountAsync();
+
+        Assert.AreEqual(1, storyUpdateExists);
     }
 }

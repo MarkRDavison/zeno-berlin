@@ -20,7 +20,7 @@
                 OnClick="@OpenAddFandomModal">Add</MudButton>
         }
     </MudStack>
-    <MudTable Items="@_fandoms" Hover Breakpoint="Breakpoint.Sm" Loading="@FandomListState.Value.IsLoading">
+    <MudTable data-testid="@DataTestIds.FandomsTable" Items="@_fandoms" Hover Breakpoint="Breakpoint.Sm" Loading="@FandomListState.Value.IsLoading">
         <HeaderContent>
             <MudTh>Name</MudTh>
             <MudTh>External name</MudTh>

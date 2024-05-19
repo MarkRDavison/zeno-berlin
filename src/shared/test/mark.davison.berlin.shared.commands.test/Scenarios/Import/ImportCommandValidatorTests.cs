@@ -3,38 +3,25 @@
 [TestClass]
 public sealed class ImportCommandValidatorTests
 {
-    private readonly IValidationContext _validationContext;
     private readonly ICurrentUserContext _currentUserContext;
-    private readonly ImportCommandValidator _validator;
     private readonly Guid _userId;
+
+    private IDbContext<BerlinDbContext> _dbContext = default!;
+    private ImportCommandValidator _validator = default!;
 
     public ImportCommandValidatorTests()
     {
         _userId = Guid.NewGuid();
-        _validationContext = Substitute.For<IValidationContext>();
         _currentUserContext = Substitute.For<ICurrentUserContext>();
 
         _currentUserContext.CurrentUser.Returns(new User { Id = _userId });
-
-        _validator = new(_validationContext);
     }
 
-    [TestMethod]
-    public async Task ValidateAsync_LoadsAllStories_ForCurrentUser()
+    [TestInitialize]
+    public void Initialize()
     {
-        _validationContext
-            .GetAllForUserId<Story>(
-                Arg.Is<Guid>(_ => _ == _userId),
-                Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(new List<Story>()));
-
-        await _validator.ValidateAsync(new(), _currentUserContext, CancellationToken.None);
-
-        await _validationContext
-            .Received(1)
-            .GetAllForUserId<Story>(
-                Arg.Is<Guid>(_ => _ == _userId),
-                Arg.Any<CancellationToken>());
+        _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
+        _validator = new(_dbContext);
     }
 
     [TestMethod]
@@ -42,15 +29,21 @@ public sealed class ImportCommandValidatorTests
     {
         var existingStories = new List<Story>
         {
-            new() { Address = "address1" },
-            new() { Address = "address2" },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                UserId = _userId,
+                Address = "address1"
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                UserId = _userId,
+                Address = "address2"
+            },
         };
 
-        _validationContext
-            .GetAllForUserId<Story>(
-                Arg.Is<Guid>(_ => _ == _userId),
-                Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(existingStories));
+        _dbContext.Add(existingStories);
 
         var request = new ImportCommandRequest
         {

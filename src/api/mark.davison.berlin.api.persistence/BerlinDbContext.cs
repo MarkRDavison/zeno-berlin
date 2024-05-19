@@ -1,7 +1,7 @@
 ﻿namespace mark.davison.berlin.api.persistence;
 
 [ExcludeFromCodeCoverage]
-public sealed class BerlinDbContext : DbContext
+public sealed class BerlinDbContext : DbContextBase<BerlinDbContext>
 {
     public BerlinDbContext(DbContextOptions options) : base(options)
     {

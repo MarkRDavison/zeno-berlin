@@ -1,4 +1,6 @@
-﻿global using mark.davison.berlin.api.orchestrator.Configuration;
+﻿global using mark.davison.berlin.api.migrations.postgres;
+global using mark.davison.berlin.api.migrations.sqlite;
+global using mark.davison.berlin.api.orchestrator.Configuration;
 global using mark.davison.berlin.api.orchestrator.Cron;
 global using mark.davison.berlin.api.persistence;
 global using mark.davison.berlin.shared.constants;

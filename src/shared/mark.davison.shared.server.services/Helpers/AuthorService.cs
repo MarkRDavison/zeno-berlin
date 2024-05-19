@@ -2,26 +2,25 @@
 
 public sealed class AuthorService : IAuthorService
 {
-    private readonly IRepository _repository;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly IDateService _dateService;
     private readonly ILogger<AuthorService> _logger;
     private readonly IDictionary<string, Author> _createdAuthors;
 
     public AuthorService(
-        IRepository repository,
+        IDbContext<BerlinDbContext> dbContext,
         ICurrentUserContext currentUserContext,
         IDateService dateService,
         ILogger<AuthorService> logger)
     {
-        _repository = repository;
+        _dbContext = dbContext;
         _currentUserContext = currentUserContext;
         _dateService = dateService;
         _logger = logger;
         _createdAuthors = new Dictionary<string, Author>();
     }
 
-    // TODO: Repository doesnt create transaction
     public async Task<List<Author>> GetOrCreateAuthorsByName(List<string> names, Guid siteId, CancellationToken cancellationToken)
     {
         var authors = new List<Author>();
@@ -44,7 +43,8 @@ public sealed class AuthorService : IAuthorService
 
                 _createdAuthors.Add(name, author);
 
-                author = await _repository.UpsertEntityAsync(author, cancellationToken);
+                var authorResult = await _dbContext.AddAsync(author, cancellationToken);
+                author = authorResult?.Entity;
             }
 
             if (author == null)
@@ -66,7 +66,10 @@ public sealed class AuthorService : IAuthorService
             return author;
         }
 
-        return await _repository.GetEntityAsync<Author>(
+        return await _dbContext
+            .Set<Author>()
+            .AsNoTracking()
+            .SingleOrDefaultAsync(
             _ =>
                 _.UserId == _currentUserContext.CurrentUser.Id &&
                 _.Name == name,

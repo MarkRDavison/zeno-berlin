@@ -7,22 +7,22 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
     private readonly IRateLimitService _rateLimitService;
 
     public Ao3StoryInfoProcessor(
-        IHttpClientFactory httpClientFactory,
+        HttpClient httpClient,
         IRateLimitServiceFactory rateLimitServiceFactory,
         IOptions<Ao3Config> ao3ConfigOptions
     )
     {
-        _client = httpClientFactory.CreateClient(nameof(Ao3StoryInfoProcessor));
+        _client = httpClient;
         _rateLimitService = rateLimitServiceFactory.CreateRateLimiter(TimeSpan.FromSeconds(ao3ConfigOptions.Value.RATE_DELAY));
     }
 
-    public string ExtractExternalStoryId(string storyAddress)
+    public string ExtractExternalStoryId(string storyAddress, string siteAddress)
     {
-        if (!storyAddress.StartsWith(SiteConstants.ArchiveOfOurOwn_Address))
+        if (!storyAddress.StartsWith(siteAddress))
         {
             return string.Empty;
         }
-        var relative = storyAddress.Replace(SiteConstants.ArchiveOfOurOwn_Address, string.Empty);
+        var relative = storyAddress.Replace(siteAddress, string.Empty);
         var tokens = relative.Split('/', StringSplitOptions.RemoveEmptyEntries).ToList();
 
         if (tokens.Count < 2)
@@ -38,7 +38,7 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
         return tokens[1];
     }
 
-    public async Task<StoryInfoModel> ExtractStoryInfo(string storyAddress, CancellationToken cancellationToken)
+    public async Task<StoryInfoModel> ExtractStoryInfo(string storyAddress, string siteAddress, CancellationToken cancellationToken)
     {
         var request = new HttpRequestMessage
         {
@@ -52,10 +52,10 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
 
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
-        return await ParseStoryInfoFromContent(GenerateBaseStoryAddress(storyAddress), content, cancellationToken);
+        return await ParseStoryInfoFromContent(GenerateBaseStoryAddress(storyAddress, siteAddress), content, cancellationToken);
     }
 
-    private static async Task<StoryInfoModel> ParseStoryInfoFromContent(string address, string content, CancellationToken cancellationToken)
+    public static async Task<StoryInfoModel> ParseStoryInfoFromContent(string address, string content, CancellationToken cancellationToken)
     {
         var context = BrowsingContext.New(Configuration.Default);
 
@@ -186,14 +186,14 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
         };
     }
 
-    public string GenerateBaseStoryAddress(string storyAddress)
+    public string GenerateBaseStoryAddress(string storyAddress, string siteAddress)
     {
-        var storyId = ExtractExternalStoryId(storyAddress);
+        var storyId = ExtractExternalStoryId(storyAddress, siteAddress);
         if (string.IsNullOrEmpty(storyId))
         {
             return string.Empty;
         }
 
-        return SiteConstants.ArchiveOfOurOwn_Address + "/works/" + storyId;
+        return siteAddress + "/works/" + storyId;
     }
 }

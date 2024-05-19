@@ -3,7 +3,7 @@
 public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStoriesRequest, UpdateStoriesResponse>
 {
     private readonly ILogger<UpdateStoriesCommandProcessor> _logger;
-    private readonly IRepository _repository;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
     private readonly IDateService _dateService;
     private readonly INotificationHub _notificationHub;
     private readonly IFandomService _fandomService;
@@ -11,9 +11,10 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
     private readonly INotificationCreationService _notificationCreationService;
     private readonly IServiceProvider _serviceProvider;
 
+
     public UpdateStoriesCommandProcessor(
         ILogger<UpdateStoriesCommandProcessor> logger,
-        IRepository repository,
+        IDbContext<BerlinDbContext> dbContext,
         IDateService dateService,
         INotificationHub notificationHub,
         IFandomService fandomService,
@@ -22,7 +23,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
         IServiceProvider serviceProvider)
     {
         _logger = logger;
-        _repository = repository;
+        _dbContext = dbContext;
         _dateService = dateService;
         _notificationHub = notificationHub;
         _fandomService = fandomService;
@@ -33,71 +34,73 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
 
     public async Task<UpdateStoriesResponse> ProcessAsync(UpdateStoriesRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
     {
-        await using (_repository.BeginTransaction())
+        var toUpdate = await GetStoriesToUpdate(request, cancellationToken);
+        var updates = new List<StoryUpdate>();
+
+        if (!toUpdate.Any())
         {
-            var toUpdate = await GetStoriesToUpdate(request, cancellationToken);
-            var updates = new List<StoryUpdate>();
+            return new() { Warnings = [ValidationMessages.NO_ITEMS] };
+        }
 
-            if (!toUpdate.Any())
-            {
-                return new() { Warnings = [ValidationMessages.NO_ITEMS] };
-            }
+        foreach (var g in toUpdate.GroupBy(_ => _.SiteId))
+        {
+            if (cancellationToken.IsCancellationRequested) { break; }
 
-            foreach (var g in toUpdate.GroupBy(_ => _.SiteId))
+            var site = await _dbContext.Set<Site>().FindAsync(g.Key, cancellationToken); // TODO: Cache
+            if (site == null) { continue; }
+
+            var storyInfoProcessor = _serviceProvider.GetKeyedService<IStoryInfoProcessor>(site.ShortName);
+            if (storyInfoProcessor == null) { continue; }
+
+            foreach (var story in g)
             {
                 if (cancellationToken.IsCancellationRequested) { break; }
 
-                var site = await _repository.GetEntityAsync<Site>(g.Key, cancellationToken); // TODO: Cache
-                if (site == null) { continue; }
-
-                var storyInfoProcessor = _serviceProvider.GetKeyedService<IStoryInfoProcessor>(site.ShortName);
-                if (storyInfoProcessor == null) { continue; }
-
-                foreach (var story in g)
-                {
-                    if (cancellationToken.IsCancellationRequested) { break; }
-
-                    var storyUpdates = await ProcessStory(site, story, currentUserContext, storyInfoProcessor, cancellationToken);
-                    updates.AddRange(storyUpdates);
-                }
+                var storyUpdates = await ProcessStory(site, story, currentUserContext, storyInfoProcessor, cancellationToken);
+                updates.AddRange(storyUpdates);
             }
-
-            if (toUpdate.Any())
-            {
-                await _repository.UpsertEntitiesAsync(toUpdate);
-            }
-
-            if (updates.Any())
-            {
-                await _repository.UpsertEntitiesAsync(updates);
-            }
-
-            return new()
-            {
-                Value = [.. toUpdate.Select(_ =>
-                    new StoryRowDto
-                    {
-                        StoryId = _.Id,
-                        Name = _.Name,
-                        CurrentChapters = _.CurrentChapters,
-                        TotalChapters = _.TotalChapters,
-                        ConsumedChapters = _.ConsumedChapters,
-                        IsComplete = _.Complete,
-                        UpdateTypeId = _.UpdateTypeId,
-                        IsFavourite = _.Favourite,
-                        Fandoms = [.. _.StoryFandomLinks.Select(_ => _.FandomId)],
-                        Authors = [.. _.StoryAuthorLinks.Select(_ => _.AuthorId)],
-                        LastAuthored = _.LastAuthored
-                    }
-                )]
-            };
         }
+
+        if (toUpdate.Any())
+        {
+            _dbContext.Set<Story>().UpdateRange(toUpdate); // TODO: Replace with upsert???
+        }
+
+        if (updates.Any())
+        {
+            await _dbContext.Set<StoryUpdate>().AddRangeAsync(updates, cancellationToken);
+        }
+
+        if (toUpdate.Any() || updates.Any())
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        return new()
+        {
+            Value = [.. toUpdate.Select(_ =>
+                new StoryRowDto
+                {
+                    StoryId = _.Id,
+                    Name = _.Name,
+                    CurrentChapters = _.CurrentChapters,
+                    TotalChapters = _.TotalChapters,
+                    ConsumedChapters = _.ConsumedChapters,
+                    IsComplete = _.Complete,
+                    UpdateTypeId = _.UpdateTypeId,
+                    IsFavourite = _.Favourite,
+                    Fandoms = [.. _.StoryFandomLinks.Select(_ => _.FandomId)],
+                    Authors = [.. _.StoryAuthorLinks.Select(_ => _.AuthorId)],
+                    LastAuthored = _.LastAuthored
+                }
+            )]
+        };
     }
 
     private async Task<List<StoryUpdate>> ProcessStory(Site site, Story story, ICurrentUserContext currentUserContext, IStoryInfoProcessor storyInfoProcessor, CancellationToken cancellationToken)
     {
         List<StoryUpdate> updates = [];
-        var info = await storyInfoProcessor.ExtractStoryInfo(story.Address, cancellationToken);
+        var info = await storyInfoProcessor.ExtractStoryInfo(story.Address, site.Address, cancellationToken);
 
         foreach (var fandomExternalName in info.Fandoms)
         {
@@ -111,7 +114,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
 
                     story.StoryFandomLinks.Add(link);
 
-                    await _repository.UpsertEntityAsync(link);
+                    await _dbContext.AddAsync(link, cancellationToken);
                 }
             }
         }
@@ -127,7 +130,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
 
                     story.StoryAuthorLinks.Add(link);
 
-                    await _repository.UpsertEntityAsync(link);
+                    await _dbContext.AddAsync(link, cancellationToken);
                 }
             }
         }
@@ -155,12 +158,11 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
 
             updates.Add(update);
 
-            var lastUpdates = await _repository.QueryEntities<StoryUpdate>()
+            var lastUpdate = await _dbContext
+                .Set<StoryUpdate>()
                 .Where(_ => _.StoryId == story.Id)
                 .OrderByDescending(_ => _.CurrentChapters)
-                .Take(1)
-                .ToListAsync();
-            var lastUpdate = lastUpdates.FirstOrDefault(); // TODO: FirstOrDefaultAsync fails with internal EF stuff
+                .FirstOrDefaultAsync();
 
             if (lastUpdate != null)
             {
@@ -223,22 +225,20 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
 
     public async Task<List<Story>> GetStoriesToUpdate(UpdateStoriesRequest request, CancellationToken cancellationToken)
     {
-        var includes = new Expression<Func<Story, object>>[] {
-            _ => _.StoryFandomLinks,
-            _ => _.StoryFandomLinks.Select(_ => _.Fandom),
-            _ => _.StoryAuthorLinks,
-            _ => _.StoryAuthorLinks.Select(_ => _.Author)
-        };
-
         var refreshOffset = TimeSpan.FromHours(12);// TODO: Configure/options
         var refreshOffsetFav = TimeSpan.FromHours(3);// TODO: Configure/options
 
         if (request.StoryIds.Any())
         {
-            var stories = await _repository.GetEntitiesAsync<Story>(
-                _ => request.StoryIds.Contains(_.Id),
-                includes,
-                cancellationToken);
+            var stories = await _dbContext
+                .Set<Story>()
+                .Include(_ => _.StoryFandomLinks)
+                .ThenInclude(sf => sf.Fandom)
+                .Include(_ => _.StoryAuthorLinks)
+                .ThenInclude(sa => sa.Author)
+                .Where(_ => request.StoryIds.Contains(_.Id))
+                .ToListAsync(cancellationToken);
+
             // TODO: Override max???
             return stories;
         }
@@ -252,11 +252,12 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
 
             // TODO: Order by !fav, where fav OR refresh??? 
             // So either its a non fav and needs checking, or everything else fills up on the favourites
-            var stories = await _repository.QueryEntities<Story>()
+            var stories = await _dbContext
+                .Set<Story>()
                 .Include(_ => _.StoryFandomLinks)
-                .ThenInclude(_ => _.Fandom)
+                .ThenInclude(sf => sf.Fandom)
                 .Include(_ => _.StoryAuthorLinks)
-                .ThenInclude(_ => _.Author)
+                .ThenInclude(sa => sa.Author)
                 .Where(_ => !_.Complete && _.LastChecked <= refreshDate)
                 .OrderBy(_ => _.LastChecked)
                 .Take(max)

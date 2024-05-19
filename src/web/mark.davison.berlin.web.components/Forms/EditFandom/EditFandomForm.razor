@@ -8,13 +8,14 @@
         For=@(() => FormViewModel.Name) 
         Immediate />
     <MudCheckBox 
-        id="edit-fandom-for-hidden" 
+        id="edit-fandom-form-hidden" 
         T="bool" 
         Label="Hidden" 
         LabelPosition="LabelPosition.End" 
         @bind-Value="FormViewModel.IsHidden" 
         For=@(() => FormViewModel.IsHidden) />
     <MudAutocomplete 
+        id="edit-fandom-form-parent-fandom" 
         T="Guid?"
         Label="Parent fandom"
         Placeholder="Enter text to search..."

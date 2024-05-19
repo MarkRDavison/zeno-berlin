@@ -10,8 +10,8 @@ else
 {
     <MudStack>
         <MudStack Row AlignItems="AlignItems.End" Class="d-flex align-center">
-            <MudText Typo="Typo.h5">@Data.Name</MudText>
-            <div class="float-right favourite-container-visible">
+            <MudText data-testid="@DataTestIds.StoryTitle"   Typo="Typo.h5">@Data.Name</MudText>
+            <div data-testid="@DataTestIds.StoryFavouriteIcon" class="float-right favourite-container-visible">
                 @if (Data.Favourite)
                 {
                     <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" onclick="@(() => FavouriteClick(false))" />
@@ -21,6 +21,7 @@ else
                     <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" onclick="@(() => FavouriteClick(true))" />
                 }
             </div>
+            @*TODO: data-testid*@
             <ClickableIcon 
                 Value="@_consumedChapterUpToDate"
                 ActiveIcon="@Icons.Material.Filled.CheckCircle"
@@ -52,7 +53,7 @@ else
                 OnClick="OpenDeleteConfirmationDialog">Delete</MudButton>
         </MudStack>
 
-        <MudText Typo="Typo.body1">@_chaptersText</MudText>
+        <MudText data-testid="@DataTestIds.StoryChapterText" Typo="Typo.body1">@_chaptersText</MudText>
         <MudText Typo="Typo.body1">@_lastAuthoredText</MudText>
         <MudText Typo="Typo.body1">@_updateTypeText</MudText>
         <MudDivider />
@@ -60,10 +61,10 @@ else
         {
         <MudStack>
             <span>TODO: Slider/toggle to show actual/hidden vs display???</span>
-            <ul>
+            <ul data-testid="@DataTestIds.StoryFandomsList">
             @foreach (var fandomId in Data.FandomIds)
             {
-                <li><MudLink Href="@RouteHelpers.Fandom(fandomId)" Typo="Typo.body1">@GetFandomName(fandomId)</MudLink></li>
+                <li><MudLink id="@fandomId" Href="@RouteHelpers.Fandom(fandomId)" Typo="Typo.body1">@GetFandomName(fandomId)</MudLink></li>
             }
             </ul>
         </MudStack>
@@ -72,10 +73,10 @@ else
 
         <MudStack>
             <span>TODO: Slider/toggle to show actual/hidden vs display???</span>
-            <ul>
+            <ul data-testid="@DataTestIds.StoryAuthorList">
                 @foreach (var authorId in Data.AuthorIds)
                 {
-                    <li><MudLink Href="@RouteHelpers.Author(authorId)" Typo="Typo.body1">@GetAuthorName(authorId)</MudLink></li>
+                    <li><MudLink id="@authorId" Href="@RouteHelpers.Author(authorId)" Typo="Typo.body1">@GetAuthorName(authorId)</MudLink></li>
                 }
             </ul>
         </MudStack>
@@ -94,7 +95,7 @@ else
                     IconSize="Size.Large"
                     OnClick="@AddStoryUpdate">Add</MudButton>
             </MudStack>
-            <MudTable Items="@Data.Updates.OrderByDescending(_ => _.CurrentChapters)" Hover Breakpoint="Breakpoint.Sm" Loading="@FandomListState.Value.IsLoading">
+            <MudTable data-testid="@DataTestIds.StoryUpdateTable" Items="@Data.Updates.OrderByDescending(_ => _.CurrentChapters)" Hover Breakpoint="Breakpoint.Sm" Loading="@FandomListState.Value.IsLoading">
                 <HeaderContent>
                     <MudTh>Chapters</MudTh>
                     <MudTh>Last authored</MudTh>

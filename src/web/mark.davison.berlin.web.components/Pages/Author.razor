@@ -9,7 +9,7 @@
 else 
 {
     <MudStack>
-        <MudText Typo="Typo.h5">@Data?.Name</MudText>
+        <MudText Typo="Typo.h5" data-testid="@DataTestIds.AuthorTitle">@Data?.Name</MudText>
         <MudDivider />
         <MudText Typo="Typo.subtitle1">Stories</MudText>
         @if (!StoryListState.Value.IsLoading)

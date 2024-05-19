@@ -2,19 +2,19 @@
 
 public sealed class FandomService : IFandomService
 {
-    private readonly IRepository _repository;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly IDateService _dateService;
     private readonly ILogger<FandomService> _logger;
     private readonly IDictionary<string, Fandom> _createdFandoms;
 
     public FandomService(
-        IRepository repository,
+        IDbContext<BerlinDbContext> dbContext,
         ICurrentUserContext currentUserContext,
         IDateService dateService,
         ILogger<FandomService> logger)
     {
-        _repository = repository;
+        _dbContext = dbContext;
         _currentUserContext = currentUserContext;
         _dateService = dateService;
         _logger = logger;
@@ -47,7 +47,8 @@ public sealed class FandomService : IFandomService
 
                 _createdFandoms.Add(externalName, fandom);
 
-                fandom = await _repository.UpsertEntityAsync(fandom, cancellationToken);
+                var fandomResult = await _dbContext.AddAsync(fandom, cancellationToken);
+                fandom = fandomResult?.Entity;
             }
 
             if (fandom == null)
@@ -69,7 +70,10 @@ public sealed class FandomService : IFandomService
         }
 
         // TODO: Cache... make a common thing or use validation context???
-        return await _repository.GetEntityAsync<Fandom>(
+        return await _dbContext
+            .Set<Fandom>()
+            .AsNoTracking()
+            .SingleOrDefaultAsync(
             _ =>
                 _.UserId == _currentUserContext.CurrentUser.Id &&
                 _.ExternalName == externalName,

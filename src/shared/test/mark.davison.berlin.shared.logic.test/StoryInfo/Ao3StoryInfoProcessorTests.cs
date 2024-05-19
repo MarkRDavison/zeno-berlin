@@ -4,7 +4,6 @@
 public sealed class Ao3StoryInfoProcessorTests
 {
     private readonly Ao3StoryInfoProcessor _processor;
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly IRateLimitService _rateLimitService;
     private readonly IRateLimitServiceFactory _rateLimitServiceFactory;
     private readonly TestHttpMessageHandler _handler;
@@ -13,12 +12,8 @@ public sealed class Ao3StoryInfoProcessorTests
     public Ao3StoryInfoProcessorTests()
     {
         _handler = new();
-        _httpClientFactory = Substitute.For<IHttpClientFactory>();
         _rateLimitService = Substitute.For<IRateLimitService>();
         _rateLimitServiceFactory = Substitute.For<IRateLimitServiceFactory>();
-        _httpClientFactory
-            .CreateClient(nameof(Ao3StoryInfoProcessor))
-            .Returns(new HttpClient(_handler));
 
         _config = new() { RATE_DELAY = 0 };
 
@@ -30,7 +25,7 @@ public sealed class Ao3StoryInfoProcessorTests
             .CreateRateLimiter(Arg.Any<TimeSpan>())
             .Returns(_rateLimitService);
 
-        _processor = new(_httpClientFactory, _rateLimitServiceFactory, Options.Create(_config));
+        _processor = new(new HttpClient(_handler), _rateLimitServiceFactory, Options.Create(_config));
     }
 
     [DataRow("https://archiveofourown.org/works/47216291/chapters/118921742", "47216291")]
@@ -40,7 +35,7 @@ public sealed class Ao3StoryInfoProcessorTests
     [DataTestMethod]
     public void ExtractExternalStoryId_ReturnsExpectedIds(string address, string externalId)
     {
-        var extractedStoryId = _processor.ExtractExternalStoryId(address);
+        var extractedStoryId = _processor.ExtractExternalStoryId(address, SiteConstants.ArchiveOfOurOwn_Address);
 
         Assert.AreEqual(externalId, extractedStoryId);
     }
@@ -52,7 +47,7 @@ public sealed class Ao3StoryInfoProcessorTests
     [DataTestMethod]
     public void GenerateBaseStoryAddress_ReturnsExpectedAddress(string address, string baseAddress)
     {
-        var extractedBaseAddress = _processor.GenerateBaseStoryAddress(address);
+        var extractedBaseAddress = _processor.GenerateBaseStoryAddress(address, SiteConstants.ArchiveOfOurOwn_Address);
 
         Assert.AreEqual(baseAddress, extractedBaseAddress);
     }
@@ -70,9 +65,9 @@ public sealed class Ao3StoryInfoProcessorTests
         };
 
         var storyUrl = "https://archiveofourown.org/works/123/chapters/47216291";
-        var baseStoryUrl = _processor.GenerateBaseStoryAddress(storyUrl);
+        var baseStoryUrl = _processor.GenerateBaseStoryAddress(storyUrl, SiteConstants.ArchiveOfOurOwn_Address);
 
-        var storyInfo = await _processor.ExtractStoryInfo(storyUrl, CancellationToken.None);
+        var storyInfo = await _processor.ExtractStoryInfo(storyUrl, SiteConstants.ArchiveOfOurOwn_Address, CancellationToken.None);
 
         Assert.AreEqual("All She Never Wanted", storyInfo.Name);
         Assert.AreEqual(2, storyInfo.Authors.Count);

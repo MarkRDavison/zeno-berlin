@@ -1,4 +1,5 @@
-﻿global using mark.davison.berlin.shared.constants;
+﻿global using mark.davison.berlin.api.persistence;
+global using mark.davison.berlin.shared.constants;
 global using mark.davison.berlin.shared.logic.Models;
 global using mark.davison.berlin.shared.logic.StoryInfo;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddFandom;
@@ -16,6 +17,7 @@ global using mark.davison.berlin.shared.models.dtos.Shared;
 global using mark.davison.berlin.shared.models.Entities;
 global using mark.davison.berlin.shared.validation;
 global using mark.davison.berlin.shared.validation.Context;
+global using mark.davison.common.persistence;
 global using mark.davison.common.server.abstractions.Authentication;
 global using mark.davison.common.server.abstractions.CQRS;
 global using mark.davison.common.server.abstractions.Notifications;

@@ -2,15 +2,15 @@
 
 public sealed class AddStoryCommandValidator : ICommandValidator<AddStoryCommandRequest, AddStoryCommandResponse>
 {
-    private readonly IValidationContext _validationContext;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
     private readonly IServiceProvider _serviceProvider;
 
     public AddStoryCommandValidator(
-        IValidationContext validationContext,
+        IDbContext<BerlinDbContext> dbContext,
         IServiceProvider serviceProvider
     )
     {
-        _validationContext = validationContext;
+        _dbContext = dbContext;
         _serviceProvider = serviceProvider;
     }
 
@@ -39,76 +39,77 @@ public sealed class AddStoryCommandValidator : ICommandValidator<AddStoryCommand
         }
 
         Site? site = null;
-        var repository = _serviceProvider.GetRequiredService<IRepository>();
-        await using (repository.BeginTransaction())
+
+        var sites = await _dbContext
+            .Set<Site>()
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+
+        if (request.SiteId == null)
         {
 
-            if (request.SiteId == null)
-            {
-                var sites = await _validationContext.GetAll<Site>(cancellationToken);
+            site = sites.FirstOrDefault(_ => request.StoryAddress.StartsWith(_.Address));
 
-                site = sites.FirstOrDefault(_ => request.StoryAddress.StartsWith(_.Address));
-
-                if (site == null)
-                {
-                    return ValidationMessages
-                        .CreateErrorResponse<AddStoryCommandResponse>(
-                            ValidationMessages.UNSUPPORTED_SITE);
-                }
-            }
-            else
-            {
-                site = await _validationContext.GetById<Site>(request.SiteId.Value, cancellationToken);
-                if (site == null)
-                {
-
-                    return ValidationMessages
-                        .CreateErrorResponse<AddStoryCommandResponse>(
-                                    ValidationMessages.FAILED_TO_FIND_ENTITY,
-                                    nameof(Site));
-                }
-
-                if (!request.StoryAddress.StartsWith(site.Address))
-                {
-                    return ValidationMessages
-                        .CreateErrorResponse<AddStoryCommandResponse>(
-                            ValidationMessages.SITE_STORY_MISMATCH);
-                }
-            }
-
-            var infoProcessor = _serviceProvider.GetKeyedService<IStoryInfoProcessor>(site.ShortName);
-
-            if (infoProcessor == null)
+            if (site == null)
             {
                 return ValidationMessages
                     .CreateErrorResponse<AddStoryCommandResponse>(
                         ValidationMessages.UNSUPPORTED_SITE);
             }
+        }
+        else
+        {
+            site = sites.FirstOrDefault(_ => _.Id == request.SiteId);
+            if (site == null)
+            {
 
-            request.SiteId = site.Id;
+                return ValidationMessages
+                    .CreateErrorResponse<AddStoryCommandResponse>(
+                                ValidationMessages.FAILED_TO_FIND_ENTITY,
+                                nameof(Site));
+            }
 
-            var externalId = infoProcessor.ExtractExternalStoryId(request.StoryAddress);
-
-            if (string.IsNullOrEmpty(externalId))
+            if (!request.StoryAddress.StartsWith(site.Address))
             {
                 return ValidationMessages
                     .CreateErrorResponse<AddStoryCommandResponse>(
-                        ValidationMessages.INVALID_PROPERTY,
-                        nameof(AddStoryCommandRequest.StoryAddress));
+                        ValidationMessages.SITE_STORY_MISMATCH);
             }
+        }
 
-            var existingStory = await _validationContext.GetByProperty<Story>(
-                _ => _.ExternalId == externalId,
-                nameof(Story.ExternalId),
-                cancellationToken);
+        var infoProcessor = _serviceProvider.GetKeyedService<IStoryInfoProcessor>(site.ShortName);
 
-            if (existingStory != null)
-            {
-                return ValidationMessages
-                    .CreateErrorResponse<AddStoryCommandResponse>(
-                        ValidationMessages.DUPLICATE_ENTITY,
-                        nameof(Story));
-            }
+        if (infoProcessor == null)
+        {
+            return ValidationMessages
+                .CreateErrorResponse<AddStoryCommandResponse>(
+                    ValidationMessages.UNSUPPORTED_SITE);
+        }
+
+        request.SiteId = site.Id;
+
+        var externalId = infoProcessor.ExtractExternalStoryId(request.StoryAddress, site.Address);
+
+        if (string.IsNullOrEmpty(externalId))
+        {
+            return ValidationMessages
+                .CreateErrorResponse<AddStoryCommandResponse>(
+                    ValidationMessages.INVALID_PROPERTY,
+                    nameof(AddStoryCommandRequest.StoryAddress));
+        }
+
+        var existingStory = await _dbContext
+            .Set<Story>()
+            .AsNoTracking()
+            .Where(_ => _.UserId == currentUserContext.CurrentUser.Id && _.ExternalId == externalId)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        if (existingStory != null)
+        {
+            return ValidationMessages
+                .CreateErrorResponse<AddStoryCommandResponse>(
+                    ValidationMessages.DUPLICATE_ENTITY,
+                    nameof(Story));
         }
 
         return new();

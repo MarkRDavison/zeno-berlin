@@ -2,19 +2,24 @@
 
 public sealed class ImportCommandValidator : ICommandValidator<ImportCommandRequest, ImportCommandResponse>
 {
-    private readonly IValidationContext _validationContext;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
 
     public ImportCommandValidator(
-        IValidationContext validationContext)
+        IDbContext<BerlinDbContext> dbContext)
     {
-        _validationContext = validationContext;
+        _dbContext = dbContext;
     }
 
     public async Task<ImportCommandResponse> ValidateAsync(ImportCommandRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
     {
-        var existingStories = await _validationContext.GetAllForUserId<Story>(currentUserContext.CurrentUser.Id, cancellationToken);
+        var addressList = await _dbContext
+            .Set<Story>()
+            .AsNoTracking()
+            .Where(_ => _.UserId == currentUserContext.CurrentUser.Id)
+            .Select(_ => _.Address)
+            .ToListAsync(cancellationToken);
 
-        var existingAddresses = existingStories.Select(_ => _.Address).ToHashSet();
+        var existingAddresses = addressList.ToHashSet();
 
         var response = new ImportCommandResponse();
 

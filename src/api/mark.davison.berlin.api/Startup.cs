@@ -19,12 +19,6 @@ public sealed class Startup
 
         Console.WriteLine(AppSettings.DumpAppSettings(AppSettings.PRODUCTION_MODE));
 
-        // TODO: retrieve these
-        AppSettings.DATABASE.MigrationAssemblyNames.Add(
-            DatabaseType.Postgres, "mark.davison.berlin.api.migrations.postgres");
-        AppSettings.DATABASE.MigrationAssemblyNames.Add(
-            DatabaseType.Sqlite, "mark.davison.berlin.api.migrations.sqlite");
-
         services
             .AddLogging()
             .AddAuthorization()
@@ -52,7 +46,7 @@ public sealed class Startup
                 .Build()
             ));
 
-        services.UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE);
+        services.UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory));
 
         services
             .AddScoped<IRepository>(_ =>
@@ -69,7 +63,7 @@ public sealed class Startup
             .AddHttpContextAccessor()
             .UseDataSeeders()
             .UseValidation()
-            .UseBerlinLogic()
+            .UseBerlinLogic(AppSettings.PRODUCTION_MODE)
             .UseSharedServices()
             .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
             .UseRateLimiter()
@@ -129,6 +123,11 @@ public sealed class Startup
                 .UseGet<User>()
                 .UseGetById<User>()
                 .UsePost<User>();
+
+            if (!AppSettings.PRODUCTION_MODE)
+            {
+                endpoints.MapResetEndpoints();
+            }
         });
     }
 }

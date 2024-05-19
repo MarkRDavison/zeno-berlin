@@ -7,10 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="markdavison.common.server" Version="8.3.2" />
+    <PackageReference Include="markdavison.common.server" Version="8.4.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\api\mark.davison.berlin.api.persistence\mark.davison.berlin.api.persistence.csproj" />
     <ProjectReference Include="..\..\mark.davison.berlin.shared.logic\mark.davison.berlin.shared.logic.csproj" />
     <ProjectReference Include="..\mark.davison.berlin.shared.models.dtos\mark.davison.berlin.shared.models.dtos.csproj" />
     <ProjectReference Include="..\mark.davison.berlin.shared.validation\mark.davison.berlin.shared.validation.csproj" />

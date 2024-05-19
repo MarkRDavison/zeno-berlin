@@ -32,11 +32,11 @@ jobs:
 
       - name: build
         working-directory: ./src
-        run: dotnet build
+        run: dotnet build ./mark.davison.berlin.sln
 
       - name: test
         working-directory: ./src
-        run: dotnet test --filter "TestCategory!=UI"
+        run: dotnet test ./mark.davison.berlin.sln --filter "TestCategory!=UI"
     
   build-image-api:
     runs-on: ubuntu-latest
