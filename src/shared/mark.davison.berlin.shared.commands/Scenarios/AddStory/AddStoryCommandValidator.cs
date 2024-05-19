@@ -88,7 +88,7 @@ public sealed class AddStoryCommandValidator : ICommandValidator<AddStoryCommand
 
         request.SiteId = site.Id;
 
-        var externalId = infoProcessor.ExtractExternalStoryId(request.StoryAddress);
+        var externalId = infoProcessor.ExtractExternalStoryId(request.StoryAddress, site.Address);
 
         if (string.IsNullOrEmpty(externalId))
         {

@@ -33,9 +33,9 @@ public sealed class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommand
 
         var infoProcessor = _serviceProvider.GetRequiredKeyedService<IStoryInfoProcessor>(site!.ShortName);
 
-        var externalId = infoProcessor.ExtractExternalStoryId(request.StoryAddress);
+        var externalId = infoProcessor.ExtractExternalStoryId(request.StoryAddress, site.Address);
 
-        var info = await infoProcessor.ExtractStoryInfo(request.StoryAddress, cancellationToken);
+        var info = await infoProcessor.ExtractStoryInfo(request.StoryAddress, site.Address, cancellationToken);
 
         var fandoms = await _fandomService.GetOrCreateFandomsByExternalNames(info.Fandoms, cancellationToken);
         var authors = await _authorService.GetOrCreateAuthorsByName(info.Authors, site.Id, cancellationToken);
@@ -44,7 +44,7 @@ public sealed class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommand
         var story = new Story
         {
             Id = storyId,
-            Address = infoProcessor.GenerateBaseStoryAddress(request.StoryAddress),
+            Address = infoProcessor.GenerateBaseStoryAddress(request.StoryAddress, site.Address),
             ExternalId = externalId,
             SiteId = site.Id,
             UserId = currentUserContext.CurrentUser.Id,
@@ -76,7 +76,7 @@ public sealed class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommand
             LastModified = _dateService.Now,
         };
 
-        await _dbContext.Set<Story>().AddAsync(story);
+        await _dbContext.Set<Story>().AddAsync(story, cancellationToken);
 
         if (!request.SuppressUpdateCreation)
         {

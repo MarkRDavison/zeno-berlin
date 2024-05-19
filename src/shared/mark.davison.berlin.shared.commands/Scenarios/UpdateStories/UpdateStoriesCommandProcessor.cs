@@ -100,7 +100,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
     private async Task<List<StoryUpdate>> ProcessStory(Site site, Story story, ICurrentUserContext currentUserContext, IStoryInfoProcessor storyInfoProcessor, CancellationToken cancellationToken)
     {
         List<StoryUpdate> updates = [];
-        var info = await storyInfoProcessor.ExtractStoryInfo(story.Address, cancellationToken);
+        var info = await storyInfoProcessor.ExtractStoryInfo(story.Address, site.Address, cancellationToken);
 
         foreach (var fandomExternalName in info.Fandoms)
         {

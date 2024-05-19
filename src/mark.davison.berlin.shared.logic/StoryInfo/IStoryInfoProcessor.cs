@@ -2,7 +2,7 @@
 
 public interface IStoryInfoProcessor
 {
-    string ExtractExternalStoryId(string storyAddress);
-    string GenerateBaseStoryAddress(string storyAddress);
-    Task<StoryInfoModel> ExtractStoryInfo(string storyAddress, CancellationToken cancellationToken);
+    string ExtractExternalStoryId(string storyAddress, string siteAddress);
+    string GenerateBaseStoryAddress(string storyAddress, string siteAddress);
+    Task<StoryInfoModel> ExtractStoryInfo(string storyAddress, string siteAddress, CancellationToken cancellationToken);
 }

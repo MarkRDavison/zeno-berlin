@@ -2,50 +2,49 @@
 
 public sealed class AddFandomCommandValidator : ICommandValidator<AddFandomCommandRequest, AddFandomCommandResponse>
 {
-    private readonly IReadonlyRepository _repository;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
 
-    public AddFandomCommandValidator(IReadonlyRepository repository)
+    public AddFandomCommandValidator(IDbContext<BerlinDbContext> dbContext)
     {
-        _repository = repository;
+        _dbContext = dbContext;
     }
 
     public async Task<AddFandomCommandResponse> ValidateAsync(AddFandomCommandRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
     {
-        await using (_repository.BeginTransaction())
+        var duplicate = await _dbContext.Set<Fandom>()
+            .AsNoTracking()
+            .AnyAsync(
+                _ =>
+                    _.ExternalName == request.ExternalName &&
+                    _.IsUserSpecified == request.IsUserSpecified,
+                cancellationToken);
+
+        if (duplicate)
         {
-            var duplicate = await _repository.QueryEntities<Fandom>()
+            return ValidationMessages.CreateErrorResponse<AddFandomCommandResponse>(
+                ValidationMessages.DUPLICATE_ENTITY,
+                nameof(Fandom),
+                nameof(Fandom.ExternalName));
+        }
+
+        if (request.ParentFandomId is Guid parentId)
+        {
+            var parentExists = await _dbContext.Set<Fandom>()
+                .AsNoTracking()
                 .AnyAsync(
-                    _ =>
-                        _.ExternalName == request.ExternalName &&
-                        _.IsUserSpecified == request.IsUserSpecified,
+                    _ => _.Id == parentId,
                     cancellationToken);
 
-            if (duplicate)
+            if (!parentExists)
             {
                 return ValidationMessages.CreateErrorResponse<AddFandomCommandResponse>(
-                    ValidationMessages.DUPLICATE_ENTITY,
+                    ValidationMessages.FAILED_TO_FIND_ENTITY,
                     nameof(Fandom),
-                    nameof(Fandom.ExternalName));
+                    nameof(Fandom.ParentFandomId),
+                    parentId.ToString());
             }
-
-            if (request.ParentFandomId is Guid parentId)
-            {
-                var parentExists = await _repository.QueryEntities<Fandom>()
-                    .AnyAsync(
-                        _ => _.Id == parentId,
-                        cancellationToken);
-
-                if (!parentExists)
-                {
-                    return ValidationMessages.CreateErrorResponse<AddFandomCommandResponse>(
-                        ValidationMessages.FAILED_TO_FIND_ENTITY,
-                        nameof(Fandom),
-                        nameof(Fandom.ParentFandomId),
-                        parentId.ToString());
-                }
-            }
-
-            return new AddFandomCommandResponse();
         }
+
+        return new AddFandomCommandResponse();
     }
 }

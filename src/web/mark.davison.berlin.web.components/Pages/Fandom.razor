@@ -9,7 +9,7 @@
 else {
 <MudStack>
     <MudStack Row AlignItems="AlignItems.End" Class="d-flex align-center">
-        <MudText Typo="Typo.h5">@Data?.Name</MudText>
+        <MudText Typo="Typo.h5" data-testid="@DataTestIds.FandomTitle">@Data?.Name</MudText>
         <MudSpacer />
         <MudButton 
             ButtonType="ButtonType.Submit" 
@@ -26,7 +26,7 @@ else {
         <MudText Typo="Typo.subtitle1">@Data?.ExternalName</MudText>
     }
     <MudDivider />
-    <MudText Typo="Typo.subtitle1">@(Parent?.Name ?? "No parent fandom selected")</MudText>
+    <MudText Typo="Typo.subtitle1" data-testid="@DataTestIds.FandomParentText">@(Parent?.Name ?? "No parent fandom selected")</MudText>
     @if (Children.Any())        
     {
         <MudDivider />

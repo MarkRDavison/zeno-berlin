@@ -179,11 +179,13 @@ public sealed class UpdateStoriesCommandProcessorTests
         _site1StoryInfoProcessor
             .ExtractStoryInfo(
                 Arg.Any<string>(),
+                Arg.Any<string>(),
                 Arg.Any<CancellationToken>())
             .Returns(new StoryInfoModel());
 
         _site2StoryInfoProcessor
             .ExtractStoryInfo(
+                Arg.Any<string>(),
                 Arg.Any<string>(),
                 Arg.Any<CancellationToken>())
             .Returns(new StoryInfoModel());
@@ -196,11 +198,13 @@ public sealed class UpdateStoriesCommandProcessorTests
             .Received(2)
             .ExtractStoryInfo(
                 Arg.Any<string>(),
+                Arg.Any<string>(),
                 Arg.Any<CancellationToken>());
 
         await _site2StoryInfoProcessor
             .Received(2)
             .ExtractStoryInfo(
+                Arg.Any<string>(),
                 Arg.Any<string>(),
                 Arg.Any<CancellationToken>());
     }
@@ -219,6 +223,7 @@ public sealed class UpdateStoriesCommandProcessorTests
 
         _site1StoryInfoProcessor
             .ExtractStoryInfo(
+                Arg.Any<string>(),
                 Arg.Any<string>(),
                 Arg.Any<CancellationToken>())
             .Returns(info);
@@ -260,6 +265,7 @@ public sealed class UpdateStoriesCommandProcessorTests
 
         _site1StoryInfoProcessor
             .ExtractStoryInfo(
+                Arg.Any<string>(),
                 Arg.Any<string>(),
                 Arg.Any<CancellationToken>())
             .Returns(info);
@@ -306,6 +312,7 @@ public sealed class UpdateStoriesCommandProcessorTests
 
         _site1StoryInfoProcessor
             .ExtractStoryInfo(
+                Arg.Any<string>(),
                 Arg.Any<string>(),
                 Arg.Any<CancellationToken>())
             .Returns(info);
@@ -357,6 +364,7 @@ public sealed class UpdateStoriesCommandProcessorTests
 
         _site1StoryInfoProcessor
             .ExtractStoryInfo(
+                Arg.Any<string>(),
                 Arg.Any<string>(),
                 Arg.Any<CancellationToken>())
             .Returns(info);

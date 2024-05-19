@@ -46,7 +46,7 @@ public class Startup
 
         services.AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc));
         services.UseValidation()
-            .UseBerlinLogic()
+            .UseBerlinLogic(AppSettings.PRODUCTION_MODE)
             .UseSharedServices()
             .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
             .UseRateLimiter()

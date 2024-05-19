@@ -71,6 +71,18 @@ public sealed class BerlinDataSeeder : IBerlinDataSeeder
             }
         };
 
+        if (!_appSettings.PRODUCTION_MODE)
+        {
+            sites.Add(new Site
+            {
+                Id = SiteConstants.FakeArchiveOfOurOwn_Id,
+                ShortName = SiteConstants.FakeArchiveOfOurOwn_ShortName,
+                LongName = SiteConstants.FakeArchiveOfOurOwn_LongName,
+                Address = SiteConstants.FakeArchiveOfOurOwn_Address,
+                UserId = user.Id
+            });
+        }
+
         await EnsureSeeded(repository, sites, cancellationToken);
     }
 

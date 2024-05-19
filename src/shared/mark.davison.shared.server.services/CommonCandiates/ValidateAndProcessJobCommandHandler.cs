@@ -16,19 +16,19 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
 {
     private readonly ICommandProcessor<TRequest, TResponse> _processor;
     private readonly ICommandValidator<TRequest, TResponse>? _validator;
-    private readonly IRepository _repository;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
     private readonly IDistributedPubSub _distributedPubSub;
     private readonly IOptions<JobAppSettings> _jobOptions;
 
     public ValidateAndProcessJobCommandHandler(
         ICommandProcessor<TRequest, TResponse> processor,
-        IRepository repository,
+        IDbContext<BerlinDbContext> dbContext,
         IDistributedPubSub distributedPubSub,
         IOptions<JobAppSettings> jobOptions)
     {
         _processor = processor;
         _validator = null;
-        _repository = repository;
+        _dbContext = dbContext;
         _distributedPubSub = distributedPubSub;
         _jobOptions = jobOptions;
     }
@@ -36,13 +36,13 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
     public ValidateAndProcessJobCommandHandler(
         ICommandProcessor<TRequest, TResponse> processor,
         ICommandValidator<TRequest, TResponse> validator,
-        IRepository repository,
+        IDbContext<BerlinDbContext> dbContext,
         IDistributedPubSub distributedPubSub,
         IOptions<JobAppSettings> jobOptions)
     {
         _processor = processor;
         _validator = validator;
-        _repository = repository;
+        _dbContext = dbContext;
         _distributedPubSub = distributedPubSub;
         _jobOptions = jobOptions;
     }
@@ -51,15 +51,12 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
     {
         if (command.UseJob)
         {
-            await using (_repository.BeginTransaction())
+            if (command.JobId != null)
             {
-                if (command.JobId != null)
-                {
-                    return await HandleExistingJobId(command.JobId.Value, command, cancellation);
-                }
-
-                return await HandleCreateJob(command, currentUserContext, cancellation);
+                return await HandleExistingJobId(command.JobId.Value, command, cancellation);
             }
+
+            return await HandleCreateJob(command, currentUserContext, cancellation);
         }
         else
         {
@@ -80,7 +77,7 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
     {
         // When this is picked up and run. It should just be regular job
         command.UseJob = false;
-        var job = await _repository.UpsertEntityAsync(new Job
+        var job = await _dbContext.AddAsync(new Job
         {
             Id = Guid.NewGuid(),
             ContextUserId = currentUserContext.CurrentUser.Id,
@@ -93,7 +90,9 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
             Created = DateTime.UtcNow
         }, cancellation);
 
-        if (job == null)
+        await _dbContext.SaveChangesAsync(cancellation);
+
+        if (job?.Entity == null)
         {
             return new TResponse()
             {
@@ -108,13 +107,16 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
 
         return new TResponse
         {
-            JobId = job.Id
+            JobId = job.Entity.Id
         };
     }
 
     private async Task<TResponse> HandleExistingJobId(Guid jobId, TRequest command, CancellationToken cancellationToken)
     {
-        var existingJob = await _repository.GetEntityAsync<Job>(jobId, cancellationToken);
+        var existingJob = await _dbContext
+            .Set<Job>()
+            .AsNoTracking()
+            .SingleOrDefaultAsync(_ => _.Id == jobId, cancellationToken);
 
         if (existingJob == null)
         {

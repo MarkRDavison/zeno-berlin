@@ -183,7 +183,10 @@ public partial class Story
             StoryId = Id
         };
 
-        Console.Error.WriteLine("TODO: If the story is complete prompt with confirmation, user/server setting to configure this check???");
+        if (Data.Complete)
+        {
+            Console.Error.WriteLine("TODO: If the story is complete prompt with confirmation, user/server setting to configure this check???");
+        }
 
         await StoreHelper.DispatchAndWaitForResponse<UpdateStoryAction, UpdateStoryActionResponse>(action);
 

@@ -38,6 +38,7 @@ public sealed class AddStoryCommandValidatorTests
 
         _storyInfoProcessor
             .ExtractExternalStoryId(
+                Arg.Any<string>(),
                 Arg.Any<string>())
             .Returns("1234");
     }
@@ -128,6 +129,7 @@ public sealed class AddStoryCommandValidatorTests
     {
         _storyInfoProcessor
             .ExtractExternalStoryId(
+                Arg.Any<string>(),
                 Arg.Any<string>())
             .Returns(string.Empty);
 
@@ -156,6 +158,7 @@ public sealed class AddStoryCommandValidatorTests
 
         _storyInfoProcessor
             .ExtractExternalStoryId(
+                Arg.Any<string>(),
                 Arg.Any<string>())
             .Returns(externalId);
 

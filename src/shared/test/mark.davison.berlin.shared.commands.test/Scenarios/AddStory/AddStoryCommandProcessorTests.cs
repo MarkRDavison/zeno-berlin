@@ -80,16 +80,17 @@ public sealed class AddStoryCommandProcessorTests
         };
 
         _storyInfoProcessor
-            .ExtractExternalStoryId(request.StoryAddress)
+            .ExtractExternalStoryId(request.StoryAddress, _site.Address)
                 .Returns(externalId);
 
         _storyInfoProcessor
-            .GenerateBaseStoryAddress(request.StoryAddress)
+            .GenerateBaseStoryAddress(request.StoryAddress, _site.Address)
                 .Returns(request.StoryAddress);
 
         _storyInfoProcessor
             .ExtractStoryInfo(
                 request.StoryAddress,
+                _site.Address,
                 Arg.Any<CancellationToken>())
             .Returns(_ => storyInfo);
 

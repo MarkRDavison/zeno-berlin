@@ -15,11 +15,11 @@
                 StartIcon="@Icons.Material.Filled.Add"
                 Variant="Variant.Filled"
                 Size="Size.Large"
-                Disabled="false"
+                Disabled="true"
                 IconSize="Size.Large">Add</MudButton>
         }
     </MudStack>
-    <MudTable Items="@_authors" Hover Breakpoint="Breakpoint.Sm" Loading="@AuthorListState.Value.IsLoading">
+    <MudTable data-testid="@DataTestIds.AuthorsTable" Items="@_authors" Hover Breakpoint="Breakpoint.Sm" Loading="@AuthorListState.Value.IsLoading">
         <HeaderContent>
             <MudTh>Name</MudTh>
             <MudTh>Parent</MudTh>

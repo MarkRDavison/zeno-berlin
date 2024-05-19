@@ -4,12 +4,12 @@ public sealed class ExportCommandHandler : ValidateAndProcessJobCommandHandler<E
 {
     public ExportCommandHandler(
         ICommandProcessor<ExportCommandRequest, ExportCommandResponse> processor,
-        IRepository repository,
+        IDbContext<BerlinDbContext> dbContext,
         IDistributedPubSub distributedPubSub,
         IOptions<JobAppSettings> jobOptions
     ) : base(
         processor,
-        repository,
+        dbContext,
         distributedPubSub,
         jobOptions)
     {

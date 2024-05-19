@@ -63,7 +63,7 @@ public sealed class Startup
             .AddHttpContextAccessor()
             .UseDataSeeders()
             .UseValidation()
-            .UseBerlinLogic()
+            .UseBerlinLogic(AppSettings.PRODUCTION_MODE)
             .UseSharedServices()
             .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
             .UseRateLimiter()
@@ -123,6 +123,11 @@ public sealed class Startup
                 .UseGet<User>()
                 .UseGetById<User>()
                 .UsePost<User>();
+
+            if (!AppSettings.PRODUCTION_MODE)
+            {
+                endpoints.MapResetEndpoints();
+            }
         });
     }
 }

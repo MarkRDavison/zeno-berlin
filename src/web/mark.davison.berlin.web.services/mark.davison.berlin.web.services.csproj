@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.constants\mark.davison.berlin.shared.constants.csproj" />
     <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.models.dtos\mark.davison.berlin.shared.models.dtos.csproj" />
   </ItemGroup>
 
