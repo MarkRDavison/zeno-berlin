@@ -32,7 +32,7 @@ jobs:
 
       - name: build
         working-directory: ./src
-        run: dotnet build
+        run: dotnet build ./mark.davison.berlin.sln
 
       - name: test
         working-directory: ./src
