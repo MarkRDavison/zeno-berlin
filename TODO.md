@@ -82,6 +82,7 @@ duplicate story gives no response exit in the console.  Message bar on modal??? 
 
 ## Bigger things
 Get proper auth going
+ - still need to fix having to up the proxy buffer size, use session to store tokens instead of putting token in cookie
 
 
 

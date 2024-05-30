@@ -33,7 +33,7 @@ public sealed class EditStoryCommandProcessor : ICommandProcessor<EditStoryComma
             prop.SetValue(existing, cs.Value);
         }
 
-        await _dbContext.AddAsync(existing, cancellationToken);
+        await _dbContext.UpsertEntityAsync(existing, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return new() { Value = existing.ToDto() };
