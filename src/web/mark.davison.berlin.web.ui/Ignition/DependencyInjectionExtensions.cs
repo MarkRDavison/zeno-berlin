@@ -8,8 +8,7 @@ public static class DependencyInjectionExtensions
         services
             .UseBerlinComponents(authConfig)
             .UseFluxorState(typeof(Program), typeof(FeaturesRootType))
-            .UseClientRepository(WebConstants.ApiClientName, WebConstants.LocalBffRoot)
-            .UseClientCQRS(typeof(Program), typeof(FeaturesRootType));
+            .UseClientRepository(WebConstants.ApiClientName, WebConstants.LocalBffRoot);
 
         return services;
     }

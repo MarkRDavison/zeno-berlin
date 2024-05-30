@@ -21,7 +21,7 @@ public class Startup
 
         services
             .AddLogging()
-            .ConfigureHealthCheckServices<InitializationHostedService>()
+            .AddHealthCheckServices<InitializationHostedService>()
             .AddCors(options =>
                 options.AddPolicy("AllowOrigin", _ => _
                     .SetIsOriginAllowedToAllowWildcardSubdomains()
@@ -33,7 +33,8 @@ public class Startup
                 ));
 
         services
-            .UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
+            .AddDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
+            .AddCoreDbContext<BerlinDbContext>()
             .AddSingleton<ICheckJobsService, CheckJobsService>();
 
         services.AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc));
@@ -47,8 +48,8 @@ public class Startup
             .UseMatrixNotifications()
             .UseConsoleNotifications(); // TODO: Consolidate whatever you need to connect to db, run cqrs etc???
 
-        services.UseCQRSServer();
         services
+            .AddCQRSServer()
             .AddHttpClient()
             .AddHttpContextAccessor()
             .UseRateLimiter()

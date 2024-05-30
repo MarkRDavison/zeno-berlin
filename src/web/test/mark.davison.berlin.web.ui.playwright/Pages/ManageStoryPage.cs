@@ -1,18 +1,21 @@
-﻿namespace mark.davison.berlin.web.ui.playwright.PageObjectModels.Pages;
+﻿namespace mark.davison.berlin.web.ui.playwright.Pages;
 
-public sealed class ManageStoryPage
+public sealed class ManageStoryPage : FanficBasePage
 {
-    private readonly IPage _page;
-
-    private ManageStoryPage(IPage page, Guid storyId)
+    public ManageStoryPage(
+        IPage page,
+        AppSettings appSettings,
+        Guid storyId
+    ) : base(
+        page,
+        appSettings)
     {
-        _page = page;
         StoryId = storyId;
     }
 
-    public Guid StoryId { get; private set; }
+    public Guid StoryId { get; }
 
-    public static async Task<ManageStoryPage> GotoAsync(IPage page)
+    public static async Task<ManageStoryPage> GotoAsync(IPage page, AppSettings appSettings)
     {
         await Assertions.Expect(page).ToHaveURLAsync(
             new Regex("/stories/"),// TODO: Constants
@@ -23,22 +26,22 @@ public sealed class ManageStoryPage
 
         var storyId = Guid.Parse(page.Url.Split("/").Last());
 
-        var pom = new ManageStoryPage(page, storyId);
+        var msp = new ManageStoryPage(page, appSettings, storyId);
 
         await page.GetByTestId(DataTestIds.StoryTitle).WaitForAsync();
 
-        return pom;
+        return msp;
     }
 
     public async Task CheckStoryForUpdates()
     {
-        await _page.GetByRole(AriaRole.Button, new PageGetByRoleOptions
+        await Page.GetByRole(AriaRole.Button, new PageGetByRoleOptions
         {
             NameString = ButtonNames.Check
         }).ClickAsync();
 
         // Wait for the check button to not be disabled
-        await _page.GetByRole(AriaRole.Button, new PageGetByRoleOptions
+        await Page.GetByRole(AriaRole.Button, new PageGetByRoleOptions
         {
             NameString = ButtonNames.Check
         }).WaitForAsync();
@@ -46,7 +49,7 @@ public sealed class ManageStoryPage
 
     public async Task CheckIsFavourite(bool isFavourite)
     {
-        var icon = _page.GetByTestId(DataTestIds.StoryFavouriteIcon);
+        var icon = Page.GetByTestId(DataTestIds.StoryFavouriteIcon);
 
         await icon.WaitForAsync();
 
@@ -62,14 +65,14 @@ public sealed class ManageStoryPage
 
     public async Task ToggleFavourite()
     {
-        await _page.GetByTestId(DataTestIds.StoryFavouriteIcon).ClickAsync();
+        await Page.GetByTestId(DataTestIds.StoryFavouriteIcon).ClickAsync();
     }
 
     public async Task<List<(string, Guid)>> GetAuthorNamesAndIds()
     {
-        var authorList = _page.GetByTestId(DataTestIds.StoryAuthorList);
+        var authorList = Page.GetByTestId(DataTestIds.StoryAuthorList);
 
-        await _page.ReloadAsync(); // TODO: Temp
+        await Page.ReloadAsync(); // TODO: Temp
 
         await authorList.WaitForAsync();
 
@@ -82,10 +85,12 @@ public sealed class ManageStoryPage
             var authorName = await authorLink.InnerTextAsync();
             var authorId = await authorLink.GetAttributeAsync("id");
 
-            Assert.IsFalse(string.IsNullOrEmpty(authorName));
-            Assert.IsFalse(string.IsNullOrEmpty(authorId));
+            authorName.Should().NotBeNullOrEmpty();
+            authorId.Should().NotBeNullOrEmpty();
 
-            Assert.IsTrue(Guid.TryParse(authorId, out var id));
+            _ = Guid.TryParse(authorId, out var id);
+            id.Should().NotBeEmpty();
+
             info.Add((authorName, id));
         }
 
@@ -94,9 +99,9 @@ public sealed class ManageStoryPage
 
     public async Task<List<(string, Guid)>> GetFandomNamesAndIds()
     {
-        var fandomList = _page.GetByTestId(DataTestIds.StoryFandomsList);
+        var fandomList = Page.GetByTestId(DataTestIds.StoryFandomsList);
 
-        await _page.ReloadAsync(); // TODO: Temp
+        await Page.ReloadAsync(); // TODO: Temp
 
         await fandomList.WaitForAsync();
 
@@ -109,10 +114,10 @@ public sealed class ManageStoryPage
             var fandomName = await fandomLink.InnerTextAsync();
             var fandomId = await fandomLink.GetAttributeAsync("id");
 
-            Assert.IsFalse(string.IsNullOrEmpty(fandomName));
-            Assert.IsFalse(string.IsNullOrEmpty(fandomId));
+            fandomName.Should().NotBeNullOrEmpty();
+            fandomId.Should().NotBeNullOrEmpty();
 
-            Assert.IsTrue(Guid.TryParse(fandomId, out var id));
+            _ = Guid.TryParse(fandomId, out var id);
             info.Add((fandomName, id));
         }
 
@@ -122,7 +127,7 @@ public sealed class ManageStoryPage
     public async Task<(int, int?)> GetChapters()
     {
         await Task.Delay(TimeSpan.FromMilliseconds(500));
-        var locator = _page.GetByTestId(DataTestIds.StoryChapterText);
+        var locator = Page.GetByTestId(DataTestIds.StoryChapterText);
 
         await locator.WaitForAsync(new LocatorWaitForOptions
         {

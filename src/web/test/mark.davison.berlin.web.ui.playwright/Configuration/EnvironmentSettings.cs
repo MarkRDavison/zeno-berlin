@@ -8,6 +8,7 @@ public class EnvironmentSettings
     public string BFF_ORIGIN { get; set; } = string.Empty;
     public string API_ORIGIN { get; set; } = string.Empty;
     public string STORY_URL { get; set; } = string.Empty;
+    public string? TEMP_DIR { get; set; }
 
 
     public void EnsureValid()

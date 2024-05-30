@@ -1,15 +1,19 @@
 ﻿namespace mark.davison.berlin.web.ui.playwright.Scenarios.Sanity;
 
 [TestClass]
-public sealed class DashboardTests : LoggedInTest
+public sealed class DashboardTests : BerlinBaseTest
 {
     [TestMethod]
     public async Task CanCreateStory()
     {
-        var addStoryModal = await AddStoryModal.GotoAsync(CurrentPage);
+        var addStoryModal = await Dashboard
+            .AddStory();
 
-        await addStoryModal.AddAsync(StoryUrlHelper.RandomStoryUrl);
+        var manageStoryPage = await addStoryModal
+            .AddAsync(StoryUrlHelper.RandomStoryUrl);
 
-        await ManageStoryPage.GotoAsync(CurrentPage);
+        manageStoryPage.StoryId
+            .Should()
+            .NotBeEmpty();
     }
 }

@@ -1,70 +1,66 @@
 ﻿namespace mark.davison.berlin.web.ui.playwright.Scenarios.Smoke.Fandom;
 
 [TestClass]
-public sealed class AddFandomTests : LoggedInTest
+public sealed class AddFandomTests : BerlinBaseTest
 {
+
     [TestMethod]
-    public async Task AddingManualFandomWorks()
+    public async Task CanAddManualFandom()
     {
-        var fandomPage = await FandomsPage.GotoAsync(CurrentPage);
+        var fandomName = GetSentence();
 
-        var fandomName = GetNoun();
+        var fandomsPage = await Dashboard
+            .GoToPage<FandomsPage>();
 
-        var modal = await AddFandomModal.GotoAsync(CurrentPage);
-        await modal.AddAsync(fandomName);
+        var addFandomModal = await fandomsPage
+            .OpenAddFandomModal();
 
-        await Task.Delay(500);
-        var rows = await fandomPage.GetFandomTableInfo();
+        await addFandomModal.Submit(new(fandomName));
 
-        Assert.AreEqual(1, rows.Count);
-        Assert.AreEqual(fandomName, rows[0].Name);
+        await fandomsPage.GetFandomLinkInfoByName(fandomName);
     }
 
     [TestMethod]
     public async Task AddingParentFandomWorks()
     {
-        var fandomsPage = await FandomsPage.GotoAsync(CurrentPage);
-
         var parentFandomName = GetNoun();
         var childFandomName = GetNoun();
 
-        var modal = await AddFandomModal.GotoAsync(CurrentPage);
-        await modal.AddAsync(parentFandomName);
-        modal = await AddFandomModal.GotoAsync(CurrentPage);
-        await modal.AddAsync(childFandomName);
+        var fandomsPage = await Dashboard
+            .GoToPage<FandomsPage>();
 
-        await Task.Delay(500);
+        var addFandomModal = await fandomsPage
+            .OpenAddFandomModal()
+            .ThenAsync(_ => _.Submit(new(parentFandomName)));
 
-        var rows = await fandomsPage.GetFandomTableInfo();
+        addFandomModal = await fandomsPage
+            .OpenAddFandomModal()
+            .ThenAsync(_ => _.Submit(new(childFandomName)));
 
-        var parentFandom = rows.First(_ => _.Name.Equals(parentFandomName));
-        var childFandom = rows.First(_ => _.Name.Equals(childFandomName));
+        await fandomsPage
+            .ValidateTableHasFandoms(parentFandomName, childFandomName);
 
-        Assert.IsNotNull(childFandom.Fandom);
+        var manageFandomPage = await fandomsPage
+            .NavigateToFandomByName(childFandomName);
 
-        await childFandom.Fandom.GetByRole(AriaRole.Link).ClickAsync();
+        await manageFandomPage
+            .ExpectNoParentFandom();
 
-        var fandomPage = await ManageFandomPage.GotoAsync(CurrentPage);
+        var editFandomModal = await manageFandomPage
+            .OpenEditFandomModal();
 
-        await fandomPage.ExpectNoParentFandom();
+        await editFandomModal
+            .SetParent(parentFandomName)
+            .ThenAsync(_ => _.Submit());
 
-        var editFandomModal = await fandomPage.EditFandomAsync();
+        await manageFandomPage
+            .ExpectParentFandom(parentFandomName);
 
-        await editFandomModal.SetParent(parentFandomName);
+        manageFandomPage = await manageFandomPage
+            .GoToPage<FandomsPage>()
+            .ThenAsync(_ => _.NavigateToFandomByName(parentFandomName));
 
-        await editFandomModal.Save();
-
-        await fandomPage.ExpectParentFandom(parentFandomName);
-
-        fandomsPage = await FandomsPage.GotoAsync(CurrentPage);
-
-        await Task.Delay(500);
-
-        rows = await fandomsPage.GetFandomTableInfo();
-
-        parentFandom = rows.First(_ => _.Name.Equals(parentFandomName));
-        childFandom = rows.First(_ => _.Name.Equals(childFandomName));
-
-        Assert.AreEqual(childFandom.ParentName, parentFandomName);
+        await manageFandomPage
+            .ExpectChildFandomContains(childFandomName);
     }
 }
