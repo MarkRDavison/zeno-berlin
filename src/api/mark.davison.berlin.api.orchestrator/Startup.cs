@@ -24,9 +24,8 @@ public class Startup
             .AddCoreDbContext<BerlinDbContext>()
             .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc))
             .AddRedis(AppSettings.REDIS, "BERLIN_JOBS", AppSettings.PRODUCTION_MODE)
-            .AddSingleton<IRedisService, RedisService>()
             .AddHostedService<HostedService>()
-            .UseSharedServerServices(true);
+            .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST));
 
         services.AddCronJob<CheckJobsCron>(_ =>
         {

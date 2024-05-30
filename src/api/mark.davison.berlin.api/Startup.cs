@@ -46,8 +46,7 @@ public sealed class Startup
             .UseMatrixClient()
             .UseMatrixNotifications()
             .UseConsoleNotifications()
-            .AddRedis(AppSettings.REDIS, AppSettings.SECTION, AppSettings.PRODUCTION_MODE)
-            .AddSingleton<IRedisService, RedisService>();
+            .AddRedis(AppSettings.REDIS, AppSettings.SECTION, AppSettings.PRODUCTION_MODE);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

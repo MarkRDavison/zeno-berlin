@@ -23,7 +23,7 @@ public static class DependencyInjectionExtensions
                     Options.Create(new Ao3Config
                     {
                         RATE_DELAY = 0,
-                        SiteAddress = SiteConstants.FakeArchiveOfOurOwn_Address
+                        SITE_ADDRESS = SiteConstants.FakeArchiveOfOurOwn_Address
                     })));
         }
 

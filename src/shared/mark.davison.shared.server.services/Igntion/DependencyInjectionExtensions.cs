@@ -13,7 +13,8 @@ public static class DependencyInjectionExtensions
         {
             services
                 .AddSingleton<IDistributedPubSub, DistributedPubSub>()
-                .AddSingleton<ILockService, LockService>();
+                .AddSingleton<ILockService, LockService>()
+                .AddSingleton<IRedisService, RedisService>();
         }
         else
         {

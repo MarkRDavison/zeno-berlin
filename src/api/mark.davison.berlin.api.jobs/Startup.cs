@@ -46,9 +46,9 @@ public class Startup
             .UseNotificationHub()
             .UseMatrixClient()
             .UseMatrixNotifications()
-            .UseConsoleNotifications(); // TODO: Consolidate whatever you need to connect to db, run cqrs etc???
-
-        services
+            .UseConsoleNotifications() // TODO: Consolidate whatever you need to connect to db, run cqrs etc???
+            .AddSingleton<IJobOrchestrationService, JobOrchestrationService>()
+            .AddSingleton<ICheckJobsService, CheckJobsService>()
             .AddCQRSServer()
             .AddHttpClient()
             .AddHttpContextAccessor()
@@ -65,25 +65,6 @@ public class Startup
                     Username = "Berlin.System"
                 }
             });
-
-        if (!string.IsNullOrEmpty(AppSettings.REDIS.PASSWORD))
-        {
-            var config = new ConfigurationOptions
-            {
-                EndPoints = { AppSettings.REDIS.HOST + ":" + AppSettings.REDIS.PORT },
-                Password = AppSettings.REDIS.PASSWORD
-            };
-            IConnectionMultiplexer redis = ConnectionMultiplexer.Connect(config);
-            services.AddStackExchangeRedisCache(_ =>
-            {
-                _.InstanceName = "BERLIN_JOBS_" + (AppSettings.PRODUCTION_MODE ? "prod_" : "dev_");
-                _.Configuration = redis.Configuration;
-            });
-            services.AddSingleton(redis);
-            services.AddSingleton<IRedisService, RedisService>();
-            services.AddSingleton<IJobOrchestrationService, JobOrchestrationService>();
-            services.AddSingleton<ICheckJobsService, CheckJobsService>();
-        }
     }
 
 
