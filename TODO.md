@@ -81,7 +81,6 @@ duplicate story gives no response exit in the console.  Message bar on modal??? 
 
 
 ## Bigger things
-Get rid of IRepository, investigate dbcontext and transactions but use a prebuilt solution
 Get proper auth going
 
 
@@ -127,6 +126,7 @@ Async background job processing
  - trial scaling api/job runner containers :)
 
 Investigate distributed pub sub or is redis fine for this???
+Get rid of IRepository, investigate dbcontext and transactions but use a prebuilt solution
 
 ## BUGS
 

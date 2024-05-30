@@ -22,11 +22,9 @@ public class ApiIntegrationTestBase : IntegrationTestBase<BerlinApiWebApplicatio
     {
         await base.SeedData(serviceProvider);
         using var scope = Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
-        var repository = scope.ServiceProvider.GetRequiredService<IRepository>();
-        await using (repository.BeginTransaction())
-        {
-            await repository.UpsertEntityAsync(CurrentUser, CancellationToken.None);
-        }
+        var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext<BerlinDbContext>>();
+        await dbContext.AddAsync(CurrentUser, CancellationToken.None);
+        await dbContext.SaveChangesAsync(CancellationToken.None);
         await SeedTestData();
     }
 

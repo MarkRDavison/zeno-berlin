@@ -15,7 +15,6 @@ global using mark.davison.berlin.shared.models.dtos.Shared;
 global using mark.davison.berlin.shared.models.Entities;
 global using mark.davison.berlin.shared.server.common.candidate.test.Persistence;
 global using mark.davison.berlin.shared.validation;
-global using mark.davison.berlin.shared.validation.Context;
 global using mark.davison.common.CQRS;
 global using mark.davison.common.persistence;
 global using mark.davison.common.server.abstractions.Authentication;

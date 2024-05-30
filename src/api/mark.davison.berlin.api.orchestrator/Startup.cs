@@ -21,15 +21,7 @@ public class Startup
 
         services
             .AddLogging()
-            .UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory));
-
-        services
-            .AddScoped<IRepository>(_ =>
-                new BerlinRepository(
-                    _.GetRequiredService<IDbContextFactory<BerlinDbContext>>(),
-                    _.GetRequiredService<ILogger<BerlinRepository>>())
-                )
-            .AddScoped<IReadonlyRepository>(_ => _.GetRequiredService<IRepository>())
+            .UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
             .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc));
 
 

@@ -43,7 +43,7 @@ public class StoryGenerationStateService : IStoryGenerationStateService
             Notes = "This is the current iteration of the tales of Avalon, it will never end",
             Authors = [FakeStoryConstants.Avalon_Author1, FakeStoryConstants.Avalon_Author2],
             Fandoms = [FakeStoryConstants.Avalon_Fandom1, FakeStoryConstants.Avalon_Fandom2],
-            Chapters = Enumerable.Range(1, chapters).Select(_ => $"Chapter {_}: {_faker.Lorem.Word}").ToList(),
+            Chapters = Enumerable.Range(1, chapters).Select(_ => $"Chapter {_}: {_faker.Lorem.Word()}").ToList(),
             ChapterIds = Enumerable.Range(0, chapters).Select(_ => CreateChapterId(externalId)).ToList(),
             Published = DateOnly.FromDateTime(DateTime.Today).AddDays(-500),
             Updated = DateOnly.FromDateTime(DateTime.Today).AddDays(chapters - 500),

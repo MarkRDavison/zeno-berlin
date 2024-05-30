@@ -46,23 +46,14 @@ public sealed class Startup
                 .Build()
             ));
 
-        services.UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory));
-
         services
-            .AddScoped<IRepository>(_ =>
-                new BerlinRepository(
-                    _.GetRequiredService<IDbContextFactory<BerlinDbContext>>(),
-                    _.GetRequiredService<ILogger<BerlinRepository>>())
-                )
-            .AddScoped<IReadonlyRepository>(_ => _.GetRequiredService<IRepository>());
-
-        services.AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc));
-        services.UseCQRSServer();
-        services
+            .UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
+            .UseCoreDbContext<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
+            .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc))
+            .UseCQRSServer()
             .AddHttpClient()
             .AddHttpContextAccessor()
             .UseDataSeeders()
-            .UseValidation()
             .UseBerlinLogic(AppSettings.PRODUCTION_MODE)
             .UseSharedServices()
             .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))

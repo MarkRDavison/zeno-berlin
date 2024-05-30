@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Fluxor.Blazor.Web" Version="5.9.1" />
-    <PackageReference Include="markdavison.common.client" Version="8.4.0" />
+    <PackageReference Include="markdavison.common.client" Version="8.4.1" />
     <PackageReference Include="MudBlazor" Version="6.19.1" />
   </ItemGroup>
 

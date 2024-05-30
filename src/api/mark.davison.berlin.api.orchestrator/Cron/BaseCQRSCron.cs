@@ -40,14 +40,12 @@ public abstract class BaseCQRSCron<TRequest, TResponse, TCron> : CronJobService
 
         using var scope = _serviceScopeFactory.CreateScope();
 
-        var repository = scope.ServiceProvider.GetRequiredService<IRepository>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext<BerlinDbContext>>();
 
-        await using (repository.BeginTransaction())
-        {
-            var job = CreateJob(request);
+        var job = CreateJob(request);
 
-            await repository.UpsertEntityAsync(job, cancellationToken);
-        }
+        await dbContext.AddAsync(job, cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Scheduled '{0}' job request created", typeof(TRequest).Name);
 

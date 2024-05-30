@@ -2,14 +2,14 @@
 
 public sealed class AddStoryUpdateCommandProcessor : ICommandProcessor<AddStoryUpdateCommandRequest, AddStoryUpdateCommandResponse>
 {
-    private readonly IRepository _repository;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
     private readonly IDateService _dateService;
 
     public AddStoryUpdateCommandProcessor(
-        IRepository repository,
+        IDbContext<BerlinDbContext> dbContext,
         IDateService dateService)
     {
-        _repository = repository;
+        _dbContext = dbContext;
         _dateService = dateService;
     }
 
@@ -29,10 +29,8 @@ public sealed class AddStoryUpdateCommandProcessor : ICommandProcessor<AddStoryU
             UserId = currentUserContext.CurrentUser.Id
         };
 
-        await using (_repository.BeginTransaction())
-        {
-            await _repository.UpsertEntityAsync(update, cancellationToken);
-        }
+        await _dbContext.AddAsync(update, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return new AddStoryUpdateCommandResponse
         {

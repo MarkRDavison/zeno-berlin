@@ -26,25 +26,24 @@ public class CheckJobsCron : CronJobService
     {
         using var scope = _serviceScopeFactory.CreateScope();
 
-        var repository = scope.ServiceProvider.GetRequiredService<IRepository>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext<BerlinDbContext>>();
 
-        await using (repository.BeginTransaction())
+        var jobs = await dbContext
+            .Set<Job>()
+            .Where(
+                _ =>
+                    _.Status != JobStatusConstants.Complete &&
+                    _.Status != JobStatusConstants.Running &&
+                    _.Status != JobStatusConstants.Errored)
+            .CountAsync(cancellationToken);
+
+        if (jobs == 0)
         {
-            var jobs = await repository.QueryEntities<Job>()
-                .Where(
-                    _ =>
-                        _.Status != JobStatusConstants.Complete &&
-                        _.Status != JobStatusConstants.Running &&
-                        _.Status != JobStatusConstants.Errored)
-                .CountAsync(cancellationToken);
-
-            if (jobs == 0)
-            {
-                _logger.LogInformation("There are no jobs, not triggering a check");
-                return;
-            }
-
-            await _distributedPubSubService.TriggerNotificationAsync(_appSettings.JOBS.JOB_CHECK_EVENT_KEY, cancellationToken);
+            return;
         }
+
+        _logger.LogInformation("Found {0} jobs, triggering a check", jobs);
+
+        await _distributedPubSubService.TriggerNotificationAsync(_appSettings.JOBS.JOB_CHECK_EVENT_KEY, cancellationToken);
     }
 }
