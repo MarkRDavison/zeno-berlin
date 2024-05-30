@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject IAuthenticationConfig authConfig
+@inject IAuthenticationContext authContext
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />
@@ -10,10 +11,11 @@
         <MudIconButton Icon="@Icons.Material.Outlined.QuestionMark" Color="Color.Inherit" />
         <MudText Typo="Typo.h4" Class="app-title">Fanfic</MudText>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudSpacer />        
+        <MudSpacer />   
+        <span data-testid="@DataTestIds.Username">@authContext.User?.preferred_username</span>
         <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Size="Size.Large">
             <ActivatorContent>
-                <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" Edge="Edge.End" />
+                <MudIconButton data-testid="@DataTestIds.ManageIcon" Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" Edge="Edge.End" />
             </ActivatorContent>
             <ChildContent>
                 <MudMenuItem Href="@Routes.UserSettings">Settings</MudMenuItem>

@@ -21,7 +21,7 @@ public class Startup
 
         services
             .AddLogging()
-            .ConfigureHealthCheckServices<InitializationHostedService>()
+            .AddHealthCheckServices<InitializationHostedService>()
             .AddCors(options =>
                 options.AddPolicy("AllowOrigin", _ => _
                     .SetIsOriginAllowedToAllowWildcardSubdomains()
@@ -33,19 +33,9 @@ public class Startup
                 ));
 
         services
-            .UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
-            .AddSingleton<ICheckJobsService, CheckJobsService>();
-
-        services
-            .AddScoped<IRepository>(_ =>
-                new BerlinRepository(
-                    _.GetRequiredService<IDbContextFactory<BerlinDbContext>>(),
-                    _.GetRequiredService<ILogger<BerlinRepository>>())
-                )
-            .AddScoped<IReadonlyRepository>(_ => _.GetRequiredService<IRepository>());
-
-        services.AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc));
-        services.UseValidation()
+            .AddDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
+            .AddCoreDbContext<BerlinDbContext>()
+            .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc))
             .UseBerlinLogic(AppSettings.PRODUCTION_MODE)
             .UseSharedServices()
             .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
@@ -53,10 +43,11 @@ public class Startup
             .UseNotificationHub()
             .UseMatrixClient()
             .UseMatrixNotifications()
-            .UseConsoleNotifications(); // TODO: Consolidate whatever you need to connect to db, run cqrs etc???
-
-        services.UseCQRSServer();
-        services
+            .UseConsoleNotifications() // TODO: Consolidate whatever you need to connect to db, run cqrs etc???
+            .AddRedis(AppSettings.REDIS, AppSettings.SECTION, AppSettings.PRODUCTION_MODE)
+            .AddSingleton<IJobOrchestrationService, JobOrchestrationService>()
+            .AddSingleton<ICheckJobsService, CheckJobsService>()
+            .AddCQRSServer()
             .AddHttpClient()
             .AddHttpContextAccessor()
             .UseRateLimiter()
@@ -72,25 +63,6 @@ public class Startup
                     Username = "Berlin.System"
                 }
             });
-
-        if (!string.IsNullOrEmpty(AppSettings.REDIS.PASSWORD))
-        {
-            var config = new ConfigurationOptions
-            {
-                EndPoints = { AppSettings.REDIS.HOST + ":" + AppSettings.REDIS.PORT },
-                Password = AppSettings.REDIS.PASSWORD
-            };
-            IConnectionMultiplexer redis = ConnectionMultiplexer.Connect(config);
-            services.AddStackExchangeRedisCache(_ =>
-            {
-                _.InstanceName = "BERLIN_JOBS_" + (AppSettings.PRODUCTION_MODE ? "prod_" : "dev_");
-                _.Configuration = redis.Configuration;
-            });
-            services.AddSingleton(redis);
-            services.AddSingleton<IRedisService, RedisService>();
-            services.AddSingleton<IJobOrchestrationService, JobOrchestrationService>();
-            services.AddSingleton<ICheckJobsService, CheckJobsService>();
-        }
     }
 
 
@@ -104,16 +76,6 @@ public class Startup
         {
             endpoints
                 .MapHealthChecks();
-
-            endpoints.MapPost("/api/notify", (HttpContext context) =>
-            {
-                Console.WriteLine("Checking for jobs");
-                return Results.Ok();
-            });
-
-            // TODO: Don't think we want this???
-            // endpoints
-            //     .ConfigureCQRSEndpoints();
         });
     }
 }

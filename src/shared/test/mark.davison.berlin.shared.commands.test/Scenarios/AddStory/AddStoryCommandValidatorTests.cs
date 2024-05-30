@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.shared.commands.test.Scenarios.AddStory;
+﻿using mark.davison.berlin.shared.server.common.candidate.test.Persistence;
+
+namespace mark.davison.berlin.shared.commands.test.Scenarios.AddStory;
 
 [TestClass]
 public sealed class AddStoryCommandValidatorTests

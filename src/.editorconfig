@@ -1,4 +1,6 @@
-﻿[*.cs]
+[*.cs]
+
+csharp_style_prefer_primary_constructors = false
 
 # CA1860: Avoid using 'Enumerable.Any()' extension method
 dotnet_diagnostic.CA1860.severity = none

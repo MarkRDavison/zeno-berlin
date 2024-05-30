@@ -32,10 +32,12 @@ else {
         <MudDivider />
         <MudStack>
         <MudText Typo="Typo.subtitle1">Children</MudText>
+        <div data-testid="@DataTestIds.FandomChildrenContainer">
         @foreach (var child in Children)
         {
             <MudLink Href="@RouteHelpers.Fandom(child.FandomId)" Typo="Typo.body1">@child.Name</MudLink>
         }
+        </div>
         </MudStack>
     }
     <MudDivider />

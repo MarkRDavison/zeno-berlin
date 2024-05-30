@@ -44,8 +44,6 @@ public sealed class MonthlyNotificationsCommandProcessor : ICommandProcessor<Mon
                 _.Story!.UpdateTypeId == UpdateTypeConstants.MonthlyWithUpdateId &&
                 _.LastAuthored >= startRange)
             .OrderByDescending(_ => _.CurrentChapters)
-            .GroupBy(_ => _.StoryId)
-            .SelectMany(_ => _)
             .ToListAsync();
 
         foreach (var storyUpdates in stories.GroupBy(_ => _.StoryId))

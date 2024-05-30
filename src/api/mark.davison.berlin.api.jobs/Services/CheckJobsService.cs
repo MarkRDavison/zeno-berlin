@@ -47,31 +47,31 @@ public sealed class CheckJobsService : ICheckJobsService
                 return (false, null);
             }
 
-            var repository = scope.ServiceProvider.GetRequiredService<IRepository>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext<BerlinDbContext>>();
 
-            await using (repository.BeginTransaction())
+            var jobs = await dbContext.Set<Job>()
+                .Include(_ => _.ContextUser)
+                .Where(_ =>
+                    !idsToIgnore.Contains(_.Id) &&
+                    (_.Status == JobStatusConstants.Submitted && _.PerformerId == string.Empty))
+                .OrderBy(_ => _.SubmittedAt)
+                .Take(1)
+                .ToListAsync(cancellationToken); // TODO: EF testing stuff/FirstOrDefaultAsync not working
+
+            if (jobs.FirstOrDefault() is Job job)
             {
-                var jobs = await repository.QueryEntities<Job>()
-                    .Include(_ => _.ContextUser)
-                    .Where(_ =>
-                        !idsToIgnore.Contains(_.Id) &&
-                        (_.Status == JobStatusConstants.Submitted && _.PerformerId == string.Empty))
-                    .OrderBy(_ => _.SubmittedAt)
-                    .Take(1)
-                    .ToListAsync(cancellationToken); // TODO: EF testing stuff/FirstOrDefaultAsync not working
+                Console.WriteLine("Found job: {0} with status {1}", job.Id, job.Status);
 
+                job.Status = JobStatusConstants.Selected;
+                job.PerformerId = Environment.MachineName;
+                job.SelectedAt = _dateService.Now;
+                job.LastModified = job.SelectedAt;
 
-                if (jobs.FirstOrDefault() is Job job)
-                {
-                    Console.WriteLine("Found job: {0} with status {1}", job.Id, job.Status);
+                dbContext.Set<Job>().Update(job);
 
-                    job.Status = JobStatusConstants.Selected;
-                    job.PerformerId = Environment.MachineName;
-                    job.SelectedAt = _dateService.Now;
-                    job.LastModified = job.SelectedAt;
+                await dbContext.SaveChangesAsync(cancellationToken);
 
-                    availableJob = await repository.UpsertEntityAsync(job, cancellationToken);
-                }
+                availableJob = job;
             }
         }
 

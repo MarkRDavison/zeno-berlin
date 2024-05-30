@@ -145,24 +145,20 @@ public sealed class JobOrchestrationService : IJobOrchestrationService
         return await handler.Handle(request, currentUserContext, cancellationToken);
     }
 
-    private static async Task<Job> SaveJob(Job job, IRepository repository, CancellationToken cancellationToken)
+    private static async Task<Job> SaveJob(Job job, IDbContext<BerlinDbContext> dbContext, CancellationToken cancellationToken)
     {
+        dbContext.Set<Job>().Update(job);
 
-        await using (repository.BeginTransaction())
-        {
-            var jobo = await repository.UpsertEntityAsync(job, cancellationToken) ?? job;
+        await dbContext.SaveChangesAsync(cancellationToken);
 
-            await repository.CommitTransactionAsync();
-
-            return jobo;
-        }
+        return job;
     }
 
     public async Task<Job> PerformJob(Job job, CancellationToken cancellationToken)
     {
         using var scope = _serviceScopeFactory.CreateScope();
 
-        var repository = scope.ServiceProvider.GetRequiredService<IRepository>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext<BerlinDbContext>>();
 
         job.StartedAt = _dateService.Now;
 
@@ -175,7 +171,7 @@ public sealed class JobOrchestrationService : IJobOrchestrationService
                 Errors = ["Failed to deserialize job, type not recongnised"]
             });
 
-            return await SaveJob(job, repository, cancellationToken);
+            return await SaveJob(job, dbContext, cancellationToken);
         }
 
         object? request = null;
@@ -201,7 +197,7 @@ public sealed class JobOrchestrationService : IJobOrchestrationService
 
         if (request == null)
         {
-            return await SaveJob(job, repository, cancellationToken);
+            return await SaveJob(job, dbContext, cancellationToken);
         }
 
         var (extractedRequestType, extractedResponseType) = ExtractCommandRequestResponseTypes(request.GetType());
@@ -214,7 +210,7 @@ public sealed class JobOrchestrationService : IJobOrchestrationService
             {
                 Errors = ["Unknown job type", request.GetType().FullName ?? request.GetType().Name]
             });
-            return await SaveJob(job, repository, cancellationToken);
+            return await SaveJob(job, dbContext, cancellationToken);
         }
 
         var handlerType = ConstructCommandHandlerType(extractedRequestType, extractedResponseType);
@@ -243,7 +239,7 @@ public sealed class JobOrchestrationService : IJobOrchestrationService
                 job.LastModified = _dateService.Now;
                 job.JobResponse = JsonSerializer.Serialize(responseObject);
 
-                var jobo = await SaveJob(job, repository, cancellationToken);
+                var jobo = await SaveJob(job, dbContext, cancellationToken);
 
                 Console.WriteLine("Finished job: {0} with status {1}", job.Id, job.Status);
 
@@ -258,7 +254,7 @@ public sealed class JobOrchestrationService : IJobOrchestrationService
             Errors = ["Technical error submitting job to handler"]
         });
 
-        return await SaveJob(job, repository, cancellationToken);
+        return await SaveJob(job, dbContext, cancellationToken);
     }
 
     public async Task InitialiseJobMonitoring()

@@ -1,4 +1,4 @@
-﻿namespace mark.davison.berlin.web.ui.playwright.Helpers;
+﻿namespace mark.davison.berlin.web.ui.playwright.CommonCandidates;
 
 public abstract class LoggedInTest : BaseTest
 {

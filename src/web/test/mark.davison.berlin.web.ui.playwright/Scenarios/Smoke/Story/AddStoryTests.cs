@@ -1,29 +1,28 @@
 ﻿namespace mark.davison.berlin.web.ui.playwright.Scenarios.Smoke.Story;
 
 [TestClass]
-public sealed class AddStoryTests : LoggedInTest
+public sealed class AddStoryTests : BerlinBaseTest
 {
     [TestMethod]
     public async Task AddingStoryWillDisplayExpectedProperties()
     {
-        var addStoryModal = await AddStoryModal.GotoAsync(CurrentPage);
+        var manageStoryPage = await Dashboard
+            .AddStory()
+            .ThenAsync(_ => _.AddAsync(StoryUrlHelper.FinishedStoryUrl));
 
-        await addStoryModal.AddAsync(StoryUrlHelper.FinishedStoryUrl);
+        await manageStoryPage.CheckIsFavourite(false);
 
-        var manageStory = await ManageStoryPage.GotoAsync(CurrentPage);
+        var authorInfo = await manageStoryPage.GetAuthorNamesAndIds();
 
-        await manageStory.CheckIsFavourite(false);
+        authorInfo.Should().HaveCount(2);
+        authorInfo.Select(_ => _.Item1).Should().Contain(FakeStoryConstants.Avalon_Author1);
+        authorInfo.Select(_ => _.Item1).Should().Contain(FakeStoryConstants.Avalon_Author2);
 
-        var authorInfo = await manageStory.GetAuthorNamesAndIds();
+        var fandomInfo = await manageStoryPage.GetFandomNamesAndIds();
 
-        Assert.AreEqual(2, authorInfo.Count);
-        Assert.IsTrue(authorInfo.Select(_ => _.Item1).Contains(FakeStoryConstants.Avalon_Author1));
-        Assert.IsTrue(authorInfo.Select(_ => _.Item1).Contains(FakeStoryConstants.Avalon_Author2));
-
-        var fandomInfo = await manageStory.GetFandomNamesAndIds();
-
-        Assert.AreEqual(2, fandomInfo.Count);
-        Assert.IsTrue(fandomInfo.Select(_ => _.Item1).Contains(FakeStoryConstants.Avalon_Fandom1));
-        Assert.IsTrue(fandomInfo.Select(_ => _.Item1).Contains(FakeStoryConstants.Avalon_Fandom2));
+        fandomInfo.Should().HaveCount(2);
+        fandomInfo.Select(_ => _.Item1).Should().Contain(FakeStoryConstants.Avalon_Fandom1);
+        fandomInfo.Select(_ => _.Item1).Should().Contain(FakeStoryConstants.Avalon_Fandom2);
     }
+
 }

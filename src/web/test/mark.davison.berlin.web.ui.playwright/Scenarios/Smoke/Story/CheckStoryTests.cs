@@ -1,28 +1,25 @@
 ﻿namespace mark.davison.berlin.web.ui.playwright.Scenarios.Smoke.CheckStory;
 
 [TestClass]
-public sealed class CheckStoryTests : LoggedInTest
+public sealed class CheckStoryTests : BerlinBaseTest
 {
     [TestMethod]
     public async Task CheckingStoryWillTriggerAnUpdate()
     {
-        var addStoryModal = await AddStoryModal.GotoAsync(CurrentPage);
+        var manageStoryPage = await Dashboard
+            .AddStory()
+            .ThenAsync(_ => _.AddAsync(StoryUrlHelper.NeverFinishedStoryUrl));
 
-        await addStoryModal.AddAsync(StoryUrlHelper.NeverFinishedStoryUrl);
-
-        var manageStory = await ManageStoryPage.GotoAsync(CurrentPage);
-
-        var (currentChapters, totalChapters) = await manageStory.GetChapters();
+        var (currentChapters, totalChapters) = await manageStoryPage.GetChapters();
 
         for (var i = 0; i < 3; ++i)
         {
-            await manageStory.CheckStoryForUpdates();
+            await manageStoryPage.CheckStoryForUpdates();
 
-            var (updatedCurrentChapters, updatedTotalChapters) = await manageStory.GetChapters();
+            var (updatedCurrentChapters, updatedTotalChapters) = await manageStoryPage.GetChapters();
 
-            Assert.AreEqual(totalChapters, updatedTotalChapters);
-
-            Assert.AreEqual(currentChapters + 1, updatedCurrentChapters);
+            updatedTotalChapters.Should().Be(totalChapters);
+            updatedCurrentChapters.Should().Be(currentChapters + 1);
 
             currentChapters = updatedCurrentChapters;
             totalChapters = updatedTotalChapters;

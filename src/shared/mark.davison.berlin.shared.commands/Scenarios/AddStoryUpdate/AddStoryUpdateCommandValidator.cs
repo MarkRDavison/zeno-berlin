@@ -2,16 +2,20 @@
 
 public sealed class AddStoryUpdateCommandValidator : ICommandValidator<AddStoryUpdateCommandRequest, AddStoryUpdateCommandResponse>
 {
-    private readonly IValidationContext _validationContext;
+    private readonly IDbContext<BerlinDbContext> _dbContext;
 
-    public AddStoryUpdateCommandValidator(IValidationContext validationContext)
+    public AddStoryUpdateCommandValidator(IDbContext<BerlinDbContext> dbContext)
     {
-        _validationContext = validationContext;
+        _dbContext = dbContext;
     }
 
     public async Task<AddStoryUpdateCommandResponse> ValidateAsync(AddStoryUpdateCommandRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
     {
-        var story = await _validationContext.GetById<Story>(request.StoryId, cancellationToken);
+        var story = await _dbContext
+            .Set<Story>()
+            .AsNoTracking()
+            .Where(_ => _.Id == request.StoryId)
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (story == null)
         {
@@ -27,10 +31,11 @@ public sealed class AddStoryUpdateCommandValidator : ICommandValidator<AddStoryU
                 ValidationMessages.OWNERSHIP_MISMATCH);
         }
 
-        var update = await _validationContext.GetByProperty<StoryUpdate>(
-            _ => _.StoryId == request.StoryId && _.CurrentChapters == request.CurrentChapters,
-            nameof(StoryUpdate) + "_" + nameof(StoryUpdate.CurrentChapters),
-            cancellationToken);
+        var update = await _dbContext
+            .Set<StoryUpdate>()
+            .AsNoTracking()
+            .Where(_ => _.StoryId == request.StoryId && _.CurrentChapters == request.CurrentChapters)
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (update != null)
         {

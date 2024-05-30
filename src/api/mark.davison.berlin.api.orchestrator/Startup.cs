@@ -11,7 +11,6 @@ public class Startup
         Configuration = configuration;
     }
 
-
     public void ConfigureServices(IServiceCollection services)
     {
         AppSettings = services.ConfigureSettingsServices<AppSettings>(Configuration);
@@ -21,35 +20,12 @@ public class Startup
 
         services
             .AddLogging()
-            .UseDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory));
-
-        services
-            .AddScoped<IRepository>(_ =>
-                new BerlinRepository(
-                    _.GetRequiredService<IDbContextFactory<BerlinDbContext>>(),
-                    _.GetRequiredService<ILogger<BerlinRepository>>())
-                )
-            .AddScoped<IReadonlyRepository>(_ => _.GetRequiredService<IRepository>())
-            .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc));
-
-
-        var config = new ConfigurationOptions
-        {
-            EndPoints = { AppSettings.REDIS.HOST + ":" + AppSettings.REDIS.PORT },
-            Password = AppSettings.REDIS.PASSWORD
-        };
-
-        IConnectionMultiplexer redis = ConnectionMultiplexer.Connect(config);
-        services
-            .AddStackExchangeRedisCache(_ =>
-            {
-                _.InstanceName = "BERLIN_JOBS_" + (AppSettings.PRODUCTION_MODE ? "prod_" : "dev_");
-                _.Configuration = redis.Configuration;
-            })
-            .AddSingleton(redis)
-            .AddSingleton<IRedisService, RedisService>()
+            .AddDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
+            .AddCoreDbContext<BerlinDbContext>()
+            .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc))
+            .AddRedis(AppSettings.REDIS, "BERLIN_JOBS", AppSettings.PRODUCTION_MODE)
             .AddHostedService<HostedService>()
-            .UseSharedServerServices(true);
+            .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST));
 
         services.AddCronJob<CheckJobsCron>(_ =>
         {

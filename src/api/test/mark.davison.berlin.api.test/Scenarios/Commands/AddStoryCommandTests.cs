@@ -29,14 +29,11 @@ public sealed class AddStoryCommandTests : ApiIntegrationTestBase
         Assert.IsTrue(response.SuccessWithValue);
         Assert.AreNotEqual(Guid.Empty, response.Value.Id);
 
-        var repository = GetRequiredService<IReadonlyRepository>();
-        await using (repository.BeginTransaction())
-        {
-            var stories = await repository.GetEntitiesAsync<Story>(_ => _.Id == response.Value.Id, CancellationToken.None);
-            var storyUpdates = await repository.GetEntitiesAsync<StoryUpdate>(_ => _.StoryId == response.Value.Id, CancellationToken.None);
+        var dbContext = GetRequiredService<IDbContext<BerlinDbContext>>();
+        var stories = await dbContext.Set<Story>().Where(_ => _.Id == response.Value.Id).ToListAsync(CancellationToken.None);
+        var storyUpdates = await dbContext.Set<StoryUpdate>().Where(_ => _.StoryId == response.Value.Id).ToListAsync(CancellationToken.None);
 
-            Assert.AreEqual(1, stories.Count);
-            Assert.AreEqual(1, storyUpdates.Count);
-        }
+        Assert.AreEqual(1, stories.Count);
+        Assert.AreEqual(1, storyUpdates.Count);
     }
 }
