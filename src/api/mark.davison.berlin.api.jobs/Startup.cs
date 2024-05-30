@@ -35,10 +35,7 @@ public class Startup
         services
             .AddDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
             .AddCoreDbContext<BerlinDbContext>()
-            .AddSingleton<ICheckJobsService, CheckJobsService>();
-
-        services.AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc));
-        services
+            .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc))
             .UseBerlinLogic(AppSettings.PRODUCTION_MODE)
             .UseSharedServices()
             .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
@@ -47,6 +44,7 @@ public class Startup
             .UseMatrixClient()
             .UseMatrixNotifications()
             .UseConsoleNotifications() // TODO: Consolidate whatever you need to connect to db, run cqrs etc???
+            .AddRedis(AppSettings.REDIS, AppSettings.SECTION, AppSettings.PRODUCTION_MODE)
             .AddSingleton<IJobOrchestrationService, JobOrchestrationService>()
             .AddSingleton<ICheckJobsService, CheckJobsService>()
             .AddCQRSServer()
@@ -78,16 +76,6 @@ public class Startup
         {
             endpoints
                 .MapHealthChecks();
-
-            endpoints.MapPost("/api/notify", (HttpContext context) =>
-            {
-                Console.WriteLine("Checking for jobs");
-                return Results.Ok();
-            });
-
-            // TODO: Don't think we want this???
-            // endpoints
-            //     .ConfigureCQRSEndpoints();
         });
     }
 }

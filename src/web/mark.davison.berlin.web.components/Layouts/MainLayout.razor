@@ -15,7 +15,7 @@
         <span data-testid="@DataTestIds.Username">@authContext.User?.preferred_username</span>
         <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Size="Size.Large">
             <ActivatorContent>
-                <MudIconButton Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" Edge="Edge.End" />
+                <MudIconButton data-testid="@DataTestIds.ManageIcon" Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" Edge="Edge.End" />
             </ActivatorContent>
             <ChildContent>
                 <MudMenuItem Href="@Routes.UserSettings">Settings</MudMenuItem>

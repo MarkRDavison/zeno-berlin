@@ -24,9 +24,32 @@ public abstract class FanficBasePage(IPage page, AppSettings appSettings) : Base
 
             return (TPage)(object)storiesPage;
         }
+        else if (typeof(TPage) == typeof(SettingsPage))
+        {
+            var settingsPage = await GoToSettingsPage();
+
+            return (TPage)(object)settingsPage;
+        }
 
         return await base.GoToPage<TPage>();
     }
+
+    public async Task<SettingsPage> GoToSettingsPage()
+    {
+        await Page
+            .GetByTestId(DataTestIds.ManageIcon)
+            .ClickAsync();
+
+        await Page
+            .GetByText(SettingsMenuName.Settings, new PageGetByTextOptions
+            {
+                Exact = true
+            })
+            .ClickAsync();
+
+        return new SettingsPage(Page, AppSettings);
+    }
+
 
     private async Task<AuthorsPage> GoToAuthorsPage()
     {
