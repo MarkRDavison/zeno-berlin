@@ -73,6 +73,7 @@ public sealed class Startup
             .UseAuthentication()
             .UseAuthorization()
             .UseMiddleware<PopulateUserContextMiddleware>()
+            .UseMiddleware<ValidateUserExistsInDbMiddleware>() // TODO: To common
             .UseEndpoints(endpoints =>
         {
             endpoints

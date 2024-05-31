@@ -25,6 +25,7 @@ public sealed class AddFandomModal : BaseModal
 
         return await Submit();
     }
+
     public async Task<FandomsPage> Submit()
     {
         await Page.GetByRole(AriaRole.Button, new PageGetByRoleOptions

@@ -19,7 +19,7 @@ public sealed class StoryGenerationServiceTests
         return new StoryGenerationInfo
         {
             Title = "The never finished tales of Avalon",
-            Summary = "Once upon a time, a long time ago, in a land without time... things continued to keep happening!",
+            Summary = ["Once upon a time, a long time ago, in a land without time... things continued to keep happening!"],
             Notes = "This is the current iteration of the tales of Avalon, it will never end",
             Authors = [FakeStoryConstants.Avalon_Author1, FakeStoryConstants.Avalon_Author2],
             Fandoms = [FakeStoryConstants.Avalon_Fandom1, FakeStoryConstants.Avalon_Fandom2],

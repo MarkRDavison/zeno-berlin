@@ -3,105 +3,34 @@
 public sealed class AddStoryCommandValidator : ICommandValidator<AddStoryCommandRequest, AddStoryCommandResponse>
 {
     private readonly IDbContext<BerlinDbContext> _dbContext;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly ISiteService _siteService;
 
     public AddStoryCommandValidator(
         IDbContext<BerlinDbContext> dbContext,
-        IServiceProvider serviceProvider
+        ISiteService siteService
     )
     {
         _dbContext = dbContext;
-        _serviceProvider = serviceProvider;
+        _siteService = siteService;
     }
 
     public async Task<AddStoryCommandResponse> ValidateAsync(AddStoryCommandRequest request, ICurrentUserContext currentUserContext, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrEmpty(request.StoryAddress))
+        var siteInfo = await _siteService.DetermineSiteAsync(request.StoryAddress, request.SiteId, cancellationToken);
+
+        if (!siteInfo.Valid)
         {
             return ValidationMessages
-                .CreateErrorResponse<AddStoryCommandResponse>(
-                    ValidationMessages.INVALID_PROPERTY,
-                    nameof(AddStoryCommandRequest.StoryAddress));
+                .CreateErrorResponse<AddStoryCommandResponse>(siteInfo.Error);
         }
 
-        if (request.StoryAddress.StartsWith("http:"))
-        {
-            request.StoryAddress = request.StoryAddress.Replace("http:", "https:");
-        }
-
-        if (request.UpdateTypeId is Guid updateTypeId &&
-            UpdateTypeConstants.AllIds.All(_ => _ != updateTypeId))
-        {
-            return ValidationMessages
-                .CreateErrorResponse<AddStoryCommandResponse>(
-                    ValidationMessages.INVALID_PROPERTY,
-                    nameof(AddStoryCommandRequest.UpdateTypeId));
-        }
-
-        Site? site = null;
-
-        var sites = await _dbContext
-            .Set<Site>()
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
-
-        if (request.SiteId == null)
-        {
-
-            site = sites.FirstOrDefault(_ => request.StoryAddress.StartsWith(_.Address));
-
-            if (site == null)
-            {
-                return ValidationMessages
-                    .CreateErrorResponse<AddStoryCommandResponse>(
-                        ValidationMessages.UNSUPPORTED_SITE);
-            }
-        }
-        else
-        {
-            site = sites.FirstOrDefault(_ => _.Id == request.SiteId);
-            if (site == null)
-            {
-
-                return ValidationMessages
-                    .CreateErrorResponse<AddStoryCommandResponse>(
-                                ValidationMessages.FAILED_TO_FIND_ENTITY,
-                                nameof(Site));
-            }
-
-            if (!request.StoryAddress.StartsWith(site.Address))
-            {
-                return ValidationMessages
-                    .CreateErrorResponse<AddStoryCommandResponse>(
-                        ValidationMessages.SITE_STORY_MISMATCH);
-            }
-        }
-
-        var infoProcessor = _serviceProvider.GetKeyedService<IStoryInfoProcessor>(site.ShortName);
-
-        if (infoProcessor == null)
-        {
-            return ValidationMessages
-                .CreateErrorResponse<AddStoryCommandResponse>(
-                    ValidationMessages.UNSUPPORTED_SITE);
-        }
-
-        request.SiteId = site.Id;
-
-        var externalId = infoProcessor.ExtractExternalStoryId(request.StoryAddress, site.Address);
-
-        if (string.IsNullOrEmpty(externalId))
-        {
-            return ValidationMessages
-                .CreateErrorResponse<AddStoryCommandResponse>(
-                    ValidationMessages.INVALID_PROPERTY,
-                    nameof(AddStoryCommandRequest.StoryAddress));
-        }
+        request.SiteId = siteInfo.Site.Id;
+        request.StoryAddress = siteInfo.UpdatedAddress;
 
         var existingStory = await _dbContext
             .Set<Story>()
             .AsNoTracking()
-            .Where(_ => _.UserId == currentUserContext.CurrentUser.Id && _.ExternalId == externalId)
+            .Where(_ => _.UserId == currentUserContext.CurrentUser.Id && _.ExternalId == siteInfo.ExternalId)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (existingStory != null)

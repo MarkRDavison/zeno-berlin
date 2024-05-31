@@ -7,6 +7,7 @@ public static class DependencyInjectionExtensions
         services
             .AddScoped<IFandomService, FandomService>()
             .AddScoped<IAuthorService, AuthorService>()
+            .AddScoped<ISiteService, SiteService>()
             .AddTransient<INotificationCreationService, NotificationCreationService>();
 
         if (redisInUse)

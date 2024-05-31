@@ -173,7 +173,10 @@ public sealed class StoryGenerationService : IStoryGenerationService
 
                                             WriteStartElementWithAttributes(xml, "blockquote", [new("class", ["userstuff"])], () =>
                                             {
-                                                WriteStartElementWithAttributes(xml, "p", () => xml.WriteString(info.Summary));
+                                                foreach (var summaryBlock in info.Summary)
+                                                {
+                                                    WriteStartElementWithAttributes(xml, "p", () => xml.WriteString(summaryBlock));
+                                                }
                                             });
                                         });
                                         WriteStartElementWithAttributes(xml, "div", [new("class", ["notes", "module"])], () =>

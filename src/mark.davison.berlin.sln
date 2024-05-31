@@ -98,11 +98,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.api.job
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.api.orchestrator", "api\mark.davison.berlin.api.orchestrator\mark.davison.berlin.api.orchestrator.csproj", "{E5B909D3-D2B5-46C8-AD5A-E34D335781D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.berlin.shared.server.common.candidate.test", "shared\test\mark.davison.berlin.shared.server.common.candidate.test\mark.davison.berlin.shared.server.common.candidate.test.csproj", "{6237DD30-EB73-4AAA-8F2B-863C23FD58BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.shared.server.common.candidate.test", "shared\test\mark.davison.berlin.shared.server.common.candidate.test\mark.davison.berlin.shared.server.common.candidate.test.csproj", "{6237DD30-EB73-4AAA-8F2B-863C23FD58BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.berlin.api.fakesite", "api\mark.davison.berlin.api.fakesite\mark.davison.berlin.api.fakesite.csproj", "{11139863-4D9F-43BD-933D-F297917B8E45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.api.fakesite", "api\mark.davison.berlin.api.fakesite\mark.davison.berlin.api.fakesite.csproj", "{11139863-4D9F-43BD-933D-F297917B8E45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mark.davison.berlin.api.fakesite.test", "api\test\mark.davison.berlin.api.fakesite.test\mark.davison.berlin.api.fakesite.test.csproj", "{30EF83D7-50D1-4CCE-96D7-DAB8C496AC21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mark.davison.berlin.api.fakesite.test", "api\test\mark.davison.berlin.api.fakesite.test\mark.davison.berlin.api.fakesite.test.csproj", "{30EF83D7-50D1-4CCE-96D7-DAB8C496AC21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

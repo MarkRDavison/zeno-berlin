@@ -8,4 +8,5 @@ public static class ButtonNames
     public const string SignIn = "Sign In";
     public const string Edit = "Edit";
     public const string Export = "Export";
+    public const string Grab = "Grab";
 }

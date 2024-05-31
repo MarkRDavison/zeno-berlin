@@ -15,7 +15,7 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.4");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
 
             modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Author", b =>
                 {
@@ -151,6 +151,39 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Job");
+                });
+
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.PotentialStory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Summary")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PotentialStory");
                 });
 
             modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Site", b =>
@@ -478,6 +511,17 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .IsRequired();
 
                     b.Navigation("ContextUser");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.PotentialStory", b =>
+                {
+                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

@@ -24,6 +24,12 @@ public abstract class FanficBasePage(IPage page, AppSettings appSettings) : Base
 
             return (TPage)(object)storiesPage;
         }
+        else if (typeof(TPage) == typeof(PotentialStoriesPage))
+        {
+            var settingsPage = await GoToPotentialStoriesPage();
+
+            return (TPage)(object)settingsPage;
+        }
         else if (typeof(TPage) == typeof(SettingsPage))
         {
             var settingsPage = await GoToSettingsPage();
@@ -34,7 +40,7 @@ public abstract class FanficBasePage(IPage page, AppSettings appSettings) : Base
         return await base.GoToPage<TPage>();
     }
 
-    public async Task<SettingsPage> GoToSettingsPage()
+    private async Task<SettingsPage> GoToSettingsPage()
     {
         await Page
             .GetByTestId(DataTestIds.ManageIcon)
@@ -91,5 +97,19 @@ public abstract class FanficBasePage(IPage page, AppSettings appSettings) : Base
         await link.ClickAsync();
 
         return new StoriesPage(Page, AppSettings);
+    }
+
+    private async Task<PotentialStoriesPage> GoToPotentialStoriesPage()
+    {
+        var link = Page.GetByRole(AriaRole.Link,
+
+            new PageGetByRoleOptions
+            {
+                Name = NavMenuNames.PotentialStories
+            });
+
+        await link.ClickAsync();
+
+        return new PotentialStoriesPage(Page, AppSettings);
     }
 }

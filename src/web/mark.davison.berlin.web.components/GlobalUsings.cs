@@ -7,6 +7,7 @@ global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.SendNotif
 global using mark.davison.berlin.shared.models.dtos.Shared;
 global using mark.davison.berlin.shared.validation;
 global using mark.davison.berlin.web.components.Forms.AddFandom;
+global using mark.davison.berlin.web.components.Forms.AddPotentialStory;
 global using mark.davison.berlin.web.components.Forms.AddStory;
 global using mark.davison.berlin.web.components.Forms.AddStoryUpdate;
 global using mark.davison.berlin.web.components.Forms.EditFandom;
@@ -15,6 +16,7 @@ global using mark.davison.berlin.web.features.Store.AuthorListUseCase;
 global using mark.davison.berlin.web.features.Store.DashboardListUseCase;
 global using mark.davison.berlin.web.features.Store.FandomListUseCase;
 global using mark.davison.berlin.web.features.Store.ManageStoryUseCase;
+global using mark.davison.berlin.web.features.Store.PotentialStoryUseCase;
 global using mark.davison.berlin.web.features.Store.SharedStoryUseCase;
 global using mark.davison.berlin.web.features.Store.StartupUseCase;
 global using mark.davison.berlin.web.features.Store.StoryListUseCase;

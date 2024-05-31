@@ -17,7 +17,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("ProductVersion", "8.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -156,6 +156,39 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Job");
+                });
+
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.PotentialStory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Summary")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PotentialStory");
                 });
 
             modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Site", b =>
@@ -483,6 +516,17 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .IsRequired();
 
                     b.Navigation("ContextUser");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.PotentialStory", b =>
+                {
+                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

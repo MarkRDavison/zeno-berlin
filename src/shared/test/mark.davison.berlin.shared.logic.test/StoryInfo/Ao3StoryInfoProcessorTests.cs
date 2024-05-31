@@ -70,6 +70,7 @@ public sealed class Ao3StoryInfoProcessorTests
         var storyInfo = await _processor.ExtractStoryInfo(storyUrl, SiteConstants.ArchiveOfOurOwn_Address, CancellationToken.None);
 
         Assert.AreEqual("All She Never Wanted", storyInfo.Name);
+        Assert.IsTrue(storyInfo.Summary.Contains("As Minister for Magic, Kingsley Shacklebolt knew he was capable of a great many things."));
         Assert.AreEqual(2, storyInfo.Authors.Count);
         Assert.IsTrue(storyInfo.Authors.Contains("Ragana62"));
         Assert.IsTrue(storyInfo.Authors.Contains("Ragana612"));
