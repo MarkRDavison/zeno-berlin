@@ -39,7 +39,7 @@ public class StoryGenerationStateService : IStoryGenerationStateService
         return new StoryGenerationInfo
         {
             Title = "The never finished tales of Avalon",
-            Summary = "Once upon a time, a long time ago, in a land without time... things continued to keep happening!",
+            Summary = ["Once upon a time, a long time ago, in a land without time... things continued to keep happening!"],
             Notes = "This is the current iteration of the tales of Avalon, it will never end",
             Authors = [FakeStoryConstants.Avalon_Author1, FakeStoryConstants.Avalon_Author2],
             Fandoms = [FakeStoryConstants.Avalon_Fandom1, FakeStoryConstants.Avalon_Fandom2],
@@ -71,7 +71,7 @@ public class StoryGenerationStateService : IStoryGenerationStateService
         return new StoryGenerationInfo
         {
             Title = _faker.Hacker.Phrase(),
-            Summary = _faker.Rant.Review("story"),
+            Summary = [.. Enumerable.Range(1, 3).Select(_ => _faker.Rant.Review("story"))],
             Notes = _faker.Rant.Review("story"),
             Authors = Enumerable.Range(1, 3).Select(_ => $"{_faker.Name.FirstName()}_{_faker.Name.LastName()}").ToList(),
             Fandoms = Enumerable.Range(1, 5).Select(_ => _faker.Commerce.ProductName()).ToList(),
@@ -94,11 +94,11 @@ public class StoryGenerationStateService : IStoryGenerationStateService
         return new StoryGenerationInfo
         {
             Title = "The complete tales of Avalon",
-            Summary = "Once upon a time, a long time ago, in a land without time...",
+            Summary = ["Once upon a time, a long time ago, in a land without time..."],
             Notes = "This is the first iteration of the tales of Avalon",
             Authors = ["The first prophet", "A random person"],
             Fandoms = ["Stories of Avalon", "Avalon (2024)"],
-            Chapters = Enumerable.Range(1, chapters).Select(_ => $"Chapter {_}: {_faker.Lorem.Word}").ToList(),
+            Chapters = Enumerable.Range(1, chapters).Select(_ => $"Chapter {_}: {_faker.Lorem.Word()}").ToList(),
             ChapterIds = Enumerable.Range(0, chapters).Select(_ => CreateChapterId(externalId)).ToList(),
             Published = DateOnly.FromDateTime(DateTime.Today).AddDays(-125),
             Updated = DateOnly.FromDateTime(DateTime.Today),

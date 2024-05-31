@@ -68,6 +68,14 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
             .Trim();
         title = HttpUtility.HtmlDecode(title);
 
+        var summary = document
+            .GetElementsByClassName("summary module")?
+            .SelectMany(_ => _.GetElementsByTagName("blockquote"))?
+            .FirstOrDefault()?
+            .InnerHtml?
+            .Trim();
+        // summary = HttpUtility.HtmlDecode(summary);
+
         var chapterInfo = document
             .GetElementsByClassName("chapters")?
             .Select(_ => _.TextContent?.Trim())
@@ -175,6 +183,7 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
         return new StoryInfoModel
         {
             Name = title,
+            Summary = summary,
             Authors = authors,
             IsCompleted = currentChapters == totalChapters,
             CurrentChapters = currentChapters,

@@ -3,7 +3,7 @@
 public class StoryGenerationInfo
 {
     public required string Title { get; set; }
-    public required string Summary { get; set; }
+    public required List<string> Summary { get; set; }
     public required string Notes { get; set; }
     public required List<string> Authors { get; set; }
     public required List<string> Fandoms { get; set; }

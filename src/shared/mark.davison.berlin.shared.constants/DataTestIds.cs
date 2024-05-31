@@ -12,6 +12,7 @@ public static class DataTestIds
     public const string StoryUpdateTable = "story-update-table";
     public const string StoryConsumedIcon = "story-consumed-icon";
     public const string StoryFavouriteIcon = "story-favourite-icon";
+    public const string StorySummaryContainer = "story-summary-container";
 
     public const string FandomsTable = "fandoms-table";
     public const string FandomTitle = "fandom-title-text";
@@ -20,4 +21,7 @@ public static class DataTestIds
 
     public const string AuthorsTable = "authors-table";
     public const string AuthorTitle = "author-title-text";
+
+
+    public const string PotentialStoriesTable = "potential-stories-table";
 }

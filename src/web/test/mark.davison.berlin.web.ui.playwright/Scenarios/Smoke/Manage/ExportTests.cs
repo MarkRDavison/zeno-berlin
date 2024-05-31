@@ -9,7 +9,7 @@ public sealed class ExportTests : BerlinBaseTest
         var settingsPage = await Dashboard
             .AddStory()
             .ThenAsync(_ => _.AddAsync(StoryUrlHelper.FinishedStoryUrl))
-            .ThenAsync(_ => _.GoToSettingsPage());
+            .ThenAsync(_ => _.GoToPage<SettingsPage>());
 
         await settingsPage.ExportAsync();
     }

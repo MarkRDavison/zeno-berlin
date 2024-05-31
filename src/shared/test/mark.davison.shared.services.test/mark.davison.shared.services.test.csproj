@@ -22,7 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\mark.davison.shared.server.services\mark.davison.shared.server.services.csproj" />
     <ProjectReference Include="..\..\mark.davison.shared.services\mark.davison.shared.services.csproj" />
+    <ProjectReference Include="..\mark.davison.berlin.shared.server.common.candidate.test\mark.davison.berlin.shared.server.common.candidate.test.csproj" />
   </ItemGroup>
 
   <ItemGroup>
