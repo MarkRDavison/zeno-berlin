@@ -43,7 +43,7 @@ public sealed class ImportCommandValidatorTests
             },
         };
 
-        _dbContext.Add(existingStories);
+        _dbContext.AddSync(existingStories);
 
         var request = new ImportCommandRequest
         {

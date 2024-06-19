@@ -43,7 +43,7 @@ public sealed class AddStoryCommandValidatorTests
     {
         const string externalId = "1234";
 
-        _dbContext.Add(new Story
+        _dbContext.AddSync(new Story
         {
             Id = Guid.NewGuid(),
             UserId = _currentUser.Id,

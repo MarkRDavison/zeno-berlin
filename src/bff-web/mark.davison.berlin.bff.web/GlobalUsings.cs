@@ -1,5 +1,6 @@
 ﻿global using mark.davison.berlin.bff.common.Configuration;
 global using mark.davison.berlin.bff.web;
+global using mark.davison.common.persistence;
 global using mark.davison.common.server;
 global using mark.davison.common.server.abstractions.Authentication;
 global using mark.davison.common.server.abstractions.Configuration;

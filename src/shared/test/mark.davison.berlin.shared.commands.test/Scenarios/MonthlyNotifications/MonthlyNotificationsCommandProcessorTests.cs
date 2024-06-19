@@ -107,7 +107,7 @@ public sealed class MonthlyNotificationsCommandProcessorTests
             update.Story = story;
         }
 
-        _dbContext.Add(updates);
+        _dbContext.AddSync(updates);
 
         var response = await _processor.ProcessAsync(new(), _currentUserContext, CancellationToken.None);
 

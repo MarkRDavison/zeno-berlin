@@ -19,6 +19,7 @@ public sealed class Startup
 
         services
             .AddCors()
+            .AddRedis(AppSettings.REDIS, AppSettings.SECTION, AppSettings.PRODUCTION_MODE)
             .UseCookieOidcAuth(
                 AppSettings.AUTH,
                 AppSettings.CLAIMS, _ =>

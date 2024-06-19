@@ -67,10 +67,10 @@ public sealed class ExportCommandProcessorTests
             new(){ Id = Guid.NewGuid(), UserId = Guid.NewGuid(), StoryId = otherUserStories[3].Id }
         };
 
-        _dbContext.Add(currentUserStories);
-        _dbContext.Add(otherUserStories);
-        _dbContext.Add(currentUserStoryUpdates);
-        _dbContext.Add(otherUserStoryUpdates);
+        _dbContext.AddSync(currentUserStories);
+        _dbContext.AddSync(otherUserStories);
+        _dbContext.AddSync(currentUserStoryUpdates);
+        _dbContext.AddSync(otherUserStoryUpdates);
 
         var request = new ExportCommandRequest { };
 
@@ -108,8 +108,8 @@ public sealed class ExportCommandProcessorTests
             LastAuthored = DateOnly.FromDateTime(DateTime.Now)
         };
 
-        _dbContext.Add(story);
-        _dbContext.Add(update);
+        _dbContext.AddSync(story);
+        _dbContext.AddSync(update);
 
         var request = new ExportCommandRequest { };
 

@@ -20,10 +20,9 @@ public sealed class Startup
         Console.WriteLine(AppSettings.DumpAppSettings(AppSettings.PRODUCTION_MODE));
 
         services
-            .AddCors()
+        .AddCors()
             .AddLogging()
             .AddJwtAuth(AppSettings.AUTH)
-            .AddAuthorization()
             .AddEndpointsApiExplorer()
             .AddSwaggerGen()
             .AddHttpContextAccessor()

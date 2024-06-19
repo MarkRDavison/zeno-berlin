@@ -94,7 +94,7 @@ public sealed class UpdateStoriesCommandProcessorTests
     public void Initialise()
     {
         _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
-        _dbContext.Add([_site1, _site2]);
+        _dbContext.AddSync([_site1, _site2]);
 
         var services = new ServiceCollection();
         services.AddKeyedTransient(_site1.ShortName, (_, __) => _site1StoryInfoProcessor);
@@ -127,7 +127,7 @@ public sealed class UpdateStoriesCommandProcessorTests
         stories[2].LastModified = _dateService.Now.AddDays(-1);
         stories[3].LastModified = _dateService.Now.AddDays(-0);
 
-        _dbContext.Add(stories);
+        _dbContext.AddSync(stories);
 
         var request = new UpdateStoriesRequest();
 
@@ -174,7 +174,7 @@ public sealed class UpdateStoriesCommandProcessorTests
             StoryIds = [.. stories.Select(_ => _.Id)]
         };
 
-        _dbContext.Add(stories);
+        _dbContext.AddSync(stories);
 
         _site1StoryInfoProcessor
             .ExtractStoryInfo(
@@ -217,7 +217,7 @@ public sealed class UpdateStoriesCommandProcessorTests
             StoryIds = [_story1Site1.Id]
         };
 
-        _dbContext.Add(_story1Site1);
+        _dbContext.AddSync(_story1Site1);
 
         var info = new StoryInfoModel { };
 
@@ -256,7 +256,7 @@ public sealed class UpdateStoriesCommandProcessorTests
             StoryIds = [_story1Site1.Id]
         };
 
-        _dbContext.Add(_story1Site1);
+        _dbContext.AddSync(_story1Site1);
 
         var info = new StoryInfoModel
         {
@@ -291,7 +291,7 @@ public sealed class UpdateStoriesCommandProcessorTests
             StoryIds = [_story1Site1.Id]
         };
 
-        _dbContext.Add(_story1Site1);
+        _dbContext.AddSync(_story1Site1);
 
         var info = new StoryInfoModel
         {
@@ -308,7 +308,7 @@ public sealed class UpdateStoriesCommandProcessorTests
             CurrentChapters = info.CurrentChapters - missingChapters
         };
 
-        _dbContext.Add(existingUpdate);
+        _dbContext.AddSync(existingUpdate);
 
         _site1StoryInfoProcessor
             .ExtractStoryInfo(
@@ -338,7 +338,7 @@ public sealed class UpdateStoriesCommandProcessorTests
             StoryIds = [_story1Site1.Id]
         };
 
-        _dbContext.Add(_story1Site1);
+        _dbContext.AddSync(_story1Site1);
 
         var info = new StoryInfoModel
         {
@@ -360,7 +360,7 @@ public sealed class UpdateStoriesCommandProcessorTests
                 CurrentChapters = info.CurrentChapters - missingChapters
             };
 
-        _dbContext.Add(existingUpdate);
+        _dbContext.AddSync(existingUpdate);
 
         _site1StoryInfoProcessor
             .ExtractStoryInfo(

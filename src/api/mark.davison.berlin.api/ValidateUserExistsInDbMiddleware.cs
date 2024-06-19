@@ -4,6 +4,7 @@ public sealed class ValidateUserExistsInDbMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly AppSettings _appSettings;
+    private static object _lock = new();
 
     public ValidateUserExistsInDbMiddleware(
         RequestDelegate next,
@@ -20,14 +21,27 @@ public sealed class ValidateUserExistsInDbMiddleware
             var currentUserContext = context.RequestServices.GetRequiredService<ICurrentUserContext>();
             if (currentUserContext.CurrentUser != null)
             {
-                var dbContext = context.RequestServices.GetRequiredService<IDbContext>();
-
-                var user = await dbContext.GetByIdAsync<User>(currentUserContext.CurrentUser.Id, CancellationToken.None);
-
-                if (user == null)
+                bool lockTaken = false;
+                try
                 {
-                    await dbContext.UpsertEntityAsync(currentUserContext.CurrentUser, CancellationToken.None);
-                    await dbContext.SaveChangesAsync(CancellationToken.None);
+                    Monitor.Enter(_lock, ref lockTaken);
+
+                    var dbContext = context.RequestServices.GetRequiredService<IDbContext>();
+
+                    var user = await dbContext.GetByIdAsync<User>(currentUserContext.CurrentUser.Id, CancellationToken.None);
+
+                    if (user == null)
+                    {
+                        await dbContext.UpsertEntityAsync(currentUserContext.CurrentUser, CancellationToken.None);
+                        await dbContext.SaveChangesAsync(CancellationToken.None);
+                    }
+                }
+                finally
+                {
+                    if (lockTaken)
+                    {
+                        Monitor.Exit(_lock);
+                    }
                 }
             }
         }

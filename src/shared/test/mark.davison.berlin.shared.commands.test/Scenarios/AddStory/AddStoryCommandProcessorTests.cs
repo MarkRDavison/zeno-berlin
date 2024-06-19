@@ -44,7 +44,7 @@ public sealed class AddStoryCommandProcessorTests
     public void Initialize()
     {
         _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
-        _dbContext.Add(_site);
+        _dbContext.AddSync(_site);
 
         var services = new ServiceCollection();
         services.AddKeyedTransient(_site.ShortName, (_, __) => _storyInfoProcessor);

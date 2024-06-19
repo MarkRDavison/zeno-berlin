@@ -2,7 +2,6 @@ global:
   ingress:
     hostname: prod-ingress.markdavison.kiwi
     certIssuer: letsencrypt-staging
-    proxyBufferSize: 64k
 api:
   app: zeno-fanfic-api
   replicas: 1
@@ -22,7 +21,6 @@ api:
       - NOTIFICATIONS__MATRIX__PASSWORD
     public:
       BERLIN__AUTH__CLIENT_ID: zeno-berlin
-      BERLIN__AUTH__AUDIENCE: zeno-berlin
       BERLIN__AUTH__SESSION_NAME: zeno-berlin-prod-session
       BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-berlin
       BERLIN__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi

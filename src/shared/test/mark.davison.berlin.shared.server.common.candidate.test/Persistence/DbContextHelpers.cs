@@ -23,13 +23,13 @@ public static class DbContextHelpers
         return creator(optionsBuilder.Options);
     }
 
-    public static void Add<TContext, TEntity>(this IDbContext<TContext> dbContext, TEntity entity)
+    public static void AddSync<TContext, TEntity>(this IDbContext<TContext> dbContext, TEntity entity)
         where TContext : DbContextBase<TContext>
         where TEntity : BaseEntity
     {
-        dbContext.Add([entity]);
+        dbContext.AddSync([entity]);
     }
-    public static void Add<TContext, TEntity>(this IDbContext<TContext> dbContext, IEnumerable<TEntity> entities)
+    public static void AddSync<TContext, TEntity>(this IDbContext<TContext> dbContext, IEnumerable<TEntity> entities)
         where TContext : DbContextBase<TContext>
         where TEntity : BaseEntity
     {

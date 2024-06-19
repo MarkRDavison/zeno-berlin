@@ -32,7 +32,7 @@ public sealed class SiteServiceTests
     public void Initialize()
     {
         _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
-        _dbContext.Add([_siteRegistered, _siteUnregistered]);
+        _dbContext.AddSync([_siteRegistered, _siteUnregistered]);
 
         var services = new ServiceCollection();
         services.AddKeyedTransient(_siteRegistered.ShortName, (_, __) => _storyInfoProcessor);
