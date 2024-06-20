@@ -22,7 +22,7 @@ api:
     public:
       BERLIN__AUTH__CLIENT_ID: zeno-berlin
       BERLIN__AUTH__SESSION_NAME: zeno-berlin-prod-session
-      BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-berlin
+      BERLIN__AUTH__SCOPE: openid profile email offline_access
       BERLIN__AUTH__AUTHORITY: https://keycloak.markdavison.kiwi/auth/realms/markdavison.kiwi
       BERLIN__CLAIMS__OIDC_ID_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier
       BERLIN__CLAIMS__OIDC_EMAIL_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
@@ -115,7 +115,7 @@ bffweb:
       BERLIN__AUTH__CLIENT_ID: zeno-berlin
       BERLIN__AUTH__AUDIENCE: zeno-berlin
       BERLIN__AUTH__SESSION_NAME: zeno-berlin-prod-session
-      BERLIN__AUTH__SCOPE: openid profile email offline_access zeno-berlin
+      BERLIN__AUTH__SCOPE: openid profile email offline_access
       BERLIN__CLAIMS__OIDC_ID_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier
       BERLIN__CLAIMS__OIDC_EMAIL_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
       BERLIN__CLAIMS__OIDC_FIRST_NAME_ATTRIBUTE: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname
