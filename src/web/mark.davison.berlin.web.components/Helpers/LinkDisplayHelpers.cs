@@ -12,6 +12,36 @@ public static class LinkDisplayHelpers
         return string.Join(", ", names);
     }
 
+    public static FandomDto? GetFandom(Guid id, bool displayParent, ICollection<FandomDto> fandoms)
+    {
+        if (fandoms.FirstOrDefault(_ => _.FandomId == id) is not { } fandom)
+        {
+            return null;
+        }
+
+        if (displayParent)
+        {
+            return GetParentRecursively(fandom, fandoms);
+        }
+
+        return fandom;
+    }
+
+    public static AuthorDto? GetAuthor(Guid id, bool displayParent, ICollection<AuthorDto> authors)
+    {
+        if (authors.FirstOrDefault(_ => _.AuthorId == id) is not { } author)
+        {
+            return null;
+        }
+
+        if (displayParent)
+        {
+            return GetParentRecursively(author, authors);
+        }
+
+        return author;
+    }
+
     public static IEnumerable<FandomDto> FandomIdsToSummaryFandoms(IEnumerable<Guid> fandomIds, ICollection<FandomDto> fandoms)
     {
         var fandomsToDisplay = new List<FandomDto>();

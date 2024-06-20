@@ -60,11 +60,14 @@ else
         @if (!FandomListState.Value.IsLoading)
         {
         <MudStack>
-            <span>TODO: Slider/toggle to show actual/hidden vs display???</span>
+            <MudSwitch @bind-Value="_showActualFandoms" Label="Show actual fandoms" />
             <ul data-testid="@DataTestIds.StoryFandomsList">
-            @foreach (var fandomId in Data.FandomIds)
+            @foreach (var fandom in Data.FandomIds
+                .Select(_ => LinkDisplayHelpers.GetFandom(_, !_showActualFandoms, FandomListState.Value.Entities))
+                .OfType<FandomDto>()
+                .DistinctBy(_ => _.FandomId))
             {
-                <li><MudLink id="@fandomId" Href="@RouteHelpers.Fandom(fandomId)" Typo="Typo.body1">@GetFandomName(fandomId)</MudLink></li>
+                <li><MudLink id="@fandom.FandomId" Href="@RouteHelpers.Fandom(fandom.FandomId)" Typo="Typo.body1">@fandom.Name</MudLink></li>
             }
             </ul>
         </MudStack>
@@ -72,11 +75,14 @@ else
         <MudDivider />
 
         <MudStack>
-            <span>TODO: Slider/toggle to show actual/hidden vs display???</span>
+            <MudSwitch @bind-Value="_showActualAuthors" Label="Show actual authors" />
             <ul data-testid="@DataTestIds.StoryAuthorList">
-                @foreach (var authorId in Data.AuthorIds)
+                @foreach (var author in Data.AuthorIds
+                   .Select(_ => LinkDisplayHelpers.GetAuthor(_, !_showActualAuthors, AuthorListState.Value.Entities))
+                   .OfType<AuthorDto>()
+                   .DistinctBy(_ => _.AuthorId))
                 {
-                    <li><MudLink id="@authorId" Href="@RouteHelpers.Author(authorId)" Typo="Typo.body1">@GetAuthorName(authorId)</MudLink></li>
+                    <li><MudLink id="@author.AuthorId" Href="@RouteHelpers.Author(author.AuthorId)" Typo="Typo.body1">@author.Name</MudLink></li>
                 }
             </ul>
         </MudStack>
