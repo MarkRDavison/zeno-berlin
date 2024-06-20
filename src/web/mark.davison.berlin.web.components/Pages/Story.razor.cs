@@ -36,6 +36,9 @@ public partial class Story
 
     public StoryManageDto Data => ManageStoryState.Value.Data;
 
+    private bool _showActualFandoms;
+    private bool _showActualAuthors;
+
     protected override void OnParametersSet()
     {
         if (Id != default && !ManageStoryState.Value.IsLoading && Data.StoryId != Id)
