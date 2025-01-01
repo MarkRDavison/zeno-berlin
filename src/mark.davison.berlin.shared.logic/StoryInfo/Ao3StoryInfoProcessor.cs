@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.shared.logic.StoryInfo;
+﻿using HttpMethod = System.Net.Http.HttpMethod;
+
+namespace mark.davison.berlin.shared.logic.StoryInfo;
 
 public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
 {
@@ -54,13 +56,20 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
 
             var response = await _client.SendAsync(request, cancellationToken);
 
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError("Extracting AO3 story info for {0} failed - status {1}", request.RequestUri.ToString(), response.StatusCode);
+
+                return null;
+            }
+
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
             return await ParseStoryInfoFromContent(GenerateBaseStoryAddress(storyAddress, siteAddress), content, cancellationToken);
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Failed to extract AO3 story info");
+            _logger.LogError(e, "Failed to extract AO3 story info for {0}", storyAddress + "?view_adult=true");
 
             return null;
         }
