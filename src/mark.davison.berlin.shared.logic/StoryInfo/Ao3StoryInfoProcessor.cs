@@ -194,7 +194,7 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
         return new StoryInfoModel
         {
             Name = title,
-            Summary = summary,
+            Summary = summary ?? string.Empty,
             Authors = authors,
             IsCompleted = currentChapters == totalChapters,
             CurrentChapters = currentChapters,
