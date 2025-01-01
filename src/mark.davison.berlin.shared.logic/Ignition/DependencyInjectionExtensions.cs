@@ -10,7 +10,8 @@ public static class DependencyInjectionExtensions
             (_, __) => new Ao3StoryInfoProcessor(
                 _.GetRequiredService<IHttpClientFactory>().CreateClient(nameof(Ao3StoryInfoProcessor)),
                 _.GetRequiredService<IRateLimitServiceFactory>(),
-                _.GetRequiredService<IOptions<Ao3Config>>()));
+                _.GetRequiredService<IOptions<Ao3Config>>(),
+                _.GetRequiredService<ILogger<Ao3StoryInfoProcessor>>()));
 
         if (!productionMode)
         {
@@ -24,7 +25,8 @@ public static class DependencyInjectionExtensions
                     {
                         RATE_DELAY = 0,
                         SITE_ADDRESS = SiteConstants.FakeArchiveOfOurOwn_Address
-                    })));
+                    }),
+                    _.GetRequiredService<ILogger<Ao3StoryInfoProcessor>>()));
         }
 
         return services;

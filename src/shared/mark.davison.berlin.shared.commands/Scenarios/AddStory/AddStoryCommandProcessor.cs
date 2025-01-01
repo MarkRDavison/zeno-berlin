@@ -37,6 +37,11 @@ public sealed class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommand
 
         var info = await infoProcessor.ExtractStoryInfo(request.StoryAddress, site.Address, cancellationToken);
 
+        if (info is null)
+        {
+            return ValidationMessages.CreateErrorResponse<AddStoryCommandResponse>(ValidationMessages.FAILED_RETRIEVE);
+        }
+
         var fandoms = await _fandomService.GetOrCreateFandomsByExternalNames(info.Fandoms, cancellationToken);
         var authors = await _authorService.GetOrCreateAuthorsByName(info.Authors, site.Id, cancellationToken);
 

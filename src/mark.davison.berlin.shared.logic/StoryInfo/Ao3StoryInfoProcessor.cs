@@ -5,15 +5,17 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
     private const string ChapterNumberTitleSeparator = ". ";
     private readonly HttpClient _client;
     private readonly IRateLimitService _rateLimitService;
+    private readonly ILogger<Ao3StoryInfoProcessor> _logger;
 
     public Ao3StoryInfoProcessor(
         HttpClient httpClient,
         IRateLimitServiceFactory rateLimitServiceFactory,
-        IOptions<Ao3Config> ao3ConfigOptions
-    )
+        IOptions<Ao3Config> ao3ConfigOptions,
+        ILogger<Ao3StoryInfoProcessor> logger)
     {
         _client = httpClient;
         _rateLimitService = rateLimitServiceFactory.CreateRateLimiter(TimeSpan.FromSeconds(ao3ConfigOptions.Value.RATE_DELAY));
+        _logger = logger;
     }
 
     public string ExtractExternalStoryId(string storyAddress, string siteAddress)
@@ -38,21 +40,30 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
         return tokens[1];
     }
 
-    public async Task<StoryInfoModel> ExtractStoryInfo(string storyAddress, string siteAddress, CancellationToken cancellationToken)
+    public async Task<StoryInfoModel?> ExtractStoryInfo(string storyAddress, string siteAddress, CancellationToken cancellationToken)
     {
-        var request = new HttpRequestMessage
+        try
         {
-            Method = HttpMethod.Get,
-            RequestUri = new Uri(storyAddress + "?view_adult=true")
-        };
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(storyAddress + "?view_adult=true")
+            };
 
-        await _rateLimitService.Wait(cancellationToken);
+            await _rateLimitService.Wait(cancellationToken);
 
-        var response = await _client.SendAsync(request, cancellationToken);
+            var response = await _client.SendAsync(request, cancellationToken);
 
-        var content = await response.Content.ReadAsStringAsync(cancellationToken);
+            var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
-        return await ParseStoryInfoFromContent(GenerateBaseStoryAddress(storyAddress, siteAddress), content, cancellationToken);
+            return await ParseStoryInfoFromContent(GenerateBaseStoryAddress(storyAddress, siteAddress), content, cancellationToken);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed to extract AO3 story info");
+
+            return null;
+        }
     }
 
     public static async Task<StoryInfoModel> ParseStoryInfoFromContent(string address, string content, CancellationToken cancellationToken)

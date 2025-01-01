@@ -66,8 +66,8 @@ public sealed class JobOrchestrationService : IJobOrchestrationService
                         if (timesBackedOff > 0)
                         {
                             timesBackedOff--;
-                            await Task.Delay(backoffIncrement);
                             _logger.LogInformation("Failed to acquire a lock to check for jobs, waiting to check again");
+                            await Task.Delay(backoffIncrement);
                             continue;
                         }
 

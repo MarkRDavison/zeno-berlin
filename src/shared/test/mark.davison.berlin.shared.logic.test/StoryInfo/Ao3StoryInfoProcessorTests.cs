@@ -6,6 +6,7 @@ public sealed class Ao3StoryInfoProcessorTests
     private readonly Ao3StoryInfoProcessor _processor;
     private readonly IRateLimitService _rateLimitService;
     private readonly IRateLimitServiceFactory _rateLimitServiceFactory;
+    private readonly ILogger<Ao3StoryInfoProcessor> _logger;
     private readonly TestHttpMessageHandler _handler;
     private readonly Ao3Config _config;
 
@@ -14,6 +15,7 @@ public sealed class Ao3StoryInfoProcessorTests
         _handler = new();
         _rateLimitService = Substitute.For<IRateLimitService>();
         _rateLimitServiceFactory = Substitute.For<IRateLimitServiceFactory>();
+        _logger = Substitute.For<ILogger<Ao3StoryInfoProcessor>>();
 
         _config = new() { RATE_DELAY = 0 };
 
@@ -25,7 +27,7 @@ public sealed class Ao3StoryInfoProcessorTests
             .CreateRateLimiter(Arg.Any<TimeSpan>())
             .Returns(_rateLimitService);
 
-        _processor = new(new HttpClient(_handler), _rateLimitServiceFactory, Options.Create(_config));
+        _processor = new(new HttpClient(_handler), _rateLimitServiceFactory, Options.Create(_config), _logger);
     }
 
     [DataRow("https://archiveofourown.org/works/47216291/chapters/118921742", "47216291")]
@@ -69,6 +71,7 @@ public sealed class Ao3StoryInfoProcessorTests
 
         var storyInfo = await _processor.ExtractStoryInfo(storyUrl, SiteConstants.ArchiveOfOurOwn_Address, CancellationToken.None);
 
+        Assert.IsNotNull(storyInfo);
         Assert.AreEqual("All She Never Wanted", storyInfo.Name);
         Assert.IsTrue(storyInfo.Summary.Contains("As Minister for Magic, Kingsley Shacklebolt knew he was capable of a great many things."));
         Assert.AreEqual(2, storyInfo.Authors.Count);

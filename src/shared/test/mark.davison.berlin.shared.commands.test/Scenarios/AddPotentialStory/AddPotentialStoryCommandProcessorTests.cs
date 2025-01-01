@@ -60,7 +60,7 @@ public sealed class AddPotentialStoryCommandProcessorTests
                 Arg.Is<string>(_ => _ == request.StoryAddress),
                 Arg.Is<string>(_ => _ == _site.Address),
                 Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(storyInfo));
+            .Returns(Task.FromResult<StoryInfoModel?>(storyInfo));
 
         var response = await _processor.ProcessAsync(request, _currentUserContext, CancellationToken.None);
 

@@ -102,6 +102,11 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
         List<StoryUpdate> updates = [];
         var info = await storyInfoProcessor.ExtractStoryInfo(story.Address, site.Address, cancellationToken);
 
+        if (info is null)
+        {
+            return updates;
+        }
+
         foreach (var fandomExternalName in info.Fandoms)
         {
             if (story.StoryFandomLinks.All(_ => _.Fandom?.ExternalName != fandomExternalName))
