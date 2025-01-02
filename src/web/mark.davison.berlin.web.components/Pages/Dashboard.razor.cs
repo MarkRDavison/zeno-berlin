@@ -10,13 +10,16 @@ public partial class Dashboard
     public required IState<StartupState> StartupState { get; set; }
 
     [Inject]
-    public required IDialogService _dialogService { get; set; }
+    public required IDialogService DialogService { get; set; }
 
     [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
     [Inject]
     public required IClientNavigationManager ClientNavigationManager { get; set; }
+
+    [Inject]
+    public required IDateService DateService { get; set; }
 
     private readonly List<Guid> _storyIds = new();
     private bool _loaded;
@@ -85,7 +88,7 @@ public partial class Dashboard
             { _ => _.Instance, instance }
         };
 
-        var dialog = _dialogService.Show<FormModal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>("Add Story", param, options);
+        var dialog = DialogService.Show<FormModal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>("Add Story", param, options);
 
         var result = await dialog.Result;
 
@@ -123,14 +126,16 @@ public partial class Dashboard
     {
         return $"Chapters: {tile.CurrentChapters}/{tile.TotalChapters?.ToString() ?? "?"}";
     }
-    private string StoryCardUpdatedText(DashboardTileDto tile)
+
+    internal string StoryCardUpdatedText(DashboardTileDto tile)
     {
-        var humanised = tile.LastAuthored.Humanize(dateToCompareAgainst: DateOnly.FromDateTime(DateTime.Today));
+        var humanised = tile.LastAuthored.ToDateTime(TimeOnly.MinValue).Humanize(dateToCompareAgainst: DateService.Today.ToDateTime(TimeOnly.MinValue));
         return $"Updated {(humanised == "now" ? "today" : humanised)}";
     }
+
     private string StoryCardCheckedText(DashboardTileDto tile)
     {
-        return $"Checked {tile.LastChecked.Humanize(dateToCompareAgainst: DateTime.Now)}";
+        return $"Checked {tile.LastChecked.Humanize(dateToCompareAgainst: DateService.Now)}";
     }
 
     private string StoryCardClasses(DashboardTileDto tile)

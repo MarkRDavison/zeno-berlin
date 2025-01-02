@@ -1,4 +1,8 @@
-﻿namespace mark.davison.berlin.web.components;
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("mark.davison.berlin.web.ui.test")]
+
+namespace mark.davison.berlin.web.components;
 
 public sealed class Routes
 {

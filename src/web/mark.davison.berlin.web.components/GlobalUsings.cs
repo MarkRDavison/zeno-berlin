@@ -31,6 +31,7 @@ global using mark.davison.common.client.Components;
 global using mark.davison.common.client.Form;
 global using mark.davison.common.client.Ignition;
 global using mark.davison.common.CQRS;
+global using mark.davison.common.Services;
 global using Microsoft.AspNetCore.Components;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.JSInterop;
