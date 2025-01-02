@@ -109,7 +109,7 @@ else
                 </HeaderContent>
                 <RowTemplate>
                     <MudTd DataLabel="Chapters">@UpdateChapterText(context)</MudTd>
-                    <MudTd DataLabel="Last authored">@context.LastAuthored.Humanize()</MudTd>
+                    <MudTd DataLabel="Last authored">@context.LastAuthored.ToDateTime(TimeOnly.MinValue).Humanize()</MudTd>
                     <MudTd DataLabel="Checked">@context.LastChecked.Humanize()</MudTd>
                 </RowTemplate>
             </MudTable>

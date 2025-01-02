@@ -215,7 +215,7 @@ public partial class Story
         : Data.Address;
 
     private string _lastCheckedText => $"Last checked {Data.LastChecked.Humanize()}";
-    private string _lastAuthoredText => $"Last authored {Data.LastAuthored.Humanize()}";
+    private string _lastAuthoredText => $"Last authored {Data.LastAuthored.ToDateTime(TimeOnly.MinValue).Humanize()}";
     private string _updateTypeText
     {
         get
