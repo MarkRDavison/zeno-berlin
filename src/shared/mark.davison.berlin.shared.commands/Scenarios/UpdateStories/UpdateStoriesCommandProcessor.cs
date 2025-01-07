@@ -10,7 +10,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
     private readonly IAuthorService _authorService;
     private readonly INotificationCreationService _notificationCreationService;
     private readonly IServiceProvider _serviceProvider;
-
+    private readonly IOptions<Ao3Config> _ao3Config;
 
     public UpdateStoriesCommandProcessor(
         ILogger<UpdateStoriesCommandProcessor> logger,
@@ -20,6 +20,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
         IFandomService fandomService,
         IAuthorService authorService,
         INotificationCreationService notificationCreationService,
+        IOptions<Ao3Config> ao3Config,
         IServiceProvider serviceProvider)
     {
         _logger = logger;
@@ -29,6 +30,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
         _fandomService = fandomService;
         _authorService = authorService;
         _notificationCreationService = notificationCreationService;
+        _ao3Config = ao3Config;
         _serviceProvider = serviceProvider;
     }
 
@@ -218,7 +220,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
 
         var notificationText = _notificationCreationService.CreateNotification(site, story, info);
 
-        _logger.LogInformation("Attempting to send notification for chapter {0} for {1}", info.CurrentChapters, info.Name);
+        _logger.LogInformation("Attempting to send notification for chapter {0} of {1}", info.CurrentChapters, info.Name);
 
         var response = await _notificationHub.SendNotification(notificationText);
 
@@ -230,8 +232,8 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
 
     public async Task<List<Story>> GetStoriesToUpdate(UpdateStoriesRequest request, CancellationToken cancellationToken)
     {
-        var refreshOffset = TimeSpan.FromHours(12);// TODO: Configure/options
-        var refreshOffsetFav = TimeSpan.FromHours(3);// TODO: Configure/options
+        var refreshOffset = TimeSpan.FromHours(_ao3Config.Value.NONFAV_UPDATE_DELAY_HOURS);
+        var refreshOffsetFav = TimeSpan.FromHours(_ao3Config.Value.FAV_UPDATE_DELAY_HOURS);
 
         if (request.StoryIds.Any())
         {

@@ -10,6 +10,7 @@ public sealed class UpdateStoriesCommandProcessorTests
     private readonly IAuthorService _authorService;
     private readonly ICurrentUserContext _currentUserContext;
     private readonly INotificationCreationService _notificationCreationService;
+    private readonly IOptions<Ao3Config> _ao3Config;
     private IDbContext<BerlinDbContext> _dbContext = default!;
     private UpdateStoriesCommandProcessor _processor = default!;
 
@@ -34,6 +35,7 @@ public sealed class UpdateStoriesCommandProcessorTests
         _fandomService = Substitute.For<IFandomService>();
         _authorService = Substitute.For<IAuthorService>();
         _notificationCreationService = Substitute.For<INotificationCreationService>();
+        _ao3Config = Options.Create<Ao3Config>(new Ao3Config());
         _currentUserContext = Substitute.For<ICurrentUserContext>();
 
         _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
@@ -108,6 +110,7 @@ public sealed class UpdateStoriesCommandProcessorTests
             _fandomService,
             _authorService,
             _notificationCreationService,
+            _ao3Config,
             services.BuildServiceProvider());
     }
 

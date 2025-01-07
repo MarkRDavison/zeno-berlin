@@ -1,6 +1,7 @@
 ﻿global using mark.davison.berlin.api.persistence;
 global using mark.davison.berlin.shared.constants;
 global using mark.davison.berlin.shared.logic.Models;
+global using mark.davison.berlin.shared.logic.Settings;
 global using mark.davison.berlin.shared.logic.StoryInfo;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddFandom;
 global using mark.davison.berlin.shared.models.dtos.Scenarios.Commands.AddPotentialStory;
