@@ -150,7 +150,7 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
         }
         if (!groupedStats.TryGetValue("status", out var updatedValue) || !DateOnly.TryParse(updatedValue, out DateOnly updated))
         {
-            throw new InvalidDataException("Could not extract updated date");
+            updated = published;
         }
 
         var fandoms = document.GetElementsByClassName("fandom tags")
