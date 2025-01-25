@@ -18,7 +18,7 @@ public sealed class ManageStoryQueryProcessor : IQueryProcessor<ManageStoryQuery
             .Include(_ => _!.StoryFandomLinks)
             .Include(_ => _!.StoryAuthorLinks)
             .Where(_ => _.Id == request.StoryId && _.UserId == currentUserContext.CurrentUser.Id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (story == null)
         {
@@ -32,7 +32,9 @@ public sealed class ManageStoryQueryProcessor : IQueryProcessor<ManageStoryQuery
             .Set<StoryUpdate>()
             .AsNoTracking()
             .Where(_ => _.StoryId == request.StoryId && _.UserId == currentUserContext.CurrentUser.Id)
-            .ToListAsync();
+            .OrderByDescending(_ => _.LastAuthored)
+            .Take(20)
+            .ToListAsync(cancellationToken);
 
         var response = new ManageStoryQueryResponse
         {
