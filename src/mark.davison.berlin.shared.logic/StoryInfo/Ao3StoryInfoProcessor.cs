@@ -8,6 +8,7 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
     private readonly HttpClient _client;
     private readonly IRateLimitService _rateLimitService;
     private readonly ILogger<Ao3StoryInfoProcessor> _logger;
+    private readonly IOptions<Ao3Config> _ao3ConfigOptions;
 
     public Ao3StoryInfoProcessor(
         HttpClient httpClient,
@@ -17,6 +18,7 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
     {
         _client = httpClient;
         _rateLimitService = rateLimitServiceFactory.CreateRateLimiter(TimeSpan.FromSeconds(ao3ConfigOptions.Value.RATE_DELAY));
+        _ao3ConfigOptions = ao3ConfigOptions;
         _logger = logger;
     }
 
@@ -52,6 +54,11 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
                 RequestUri = new Uri(storyAddress + "?view_adult=true")
             };
 
+            if (!string.IsNullOrEmpty(_ao3ConfigOptions.Value.USER_AGENT))
+            {
+                request.Headers.Add("User-Agent", _ao3ConfigOptions.Value.USER_AGENT);
+            }
+
             await _rateLimitService.Wait(cancellationToken);
 
             var response = await _client.SendAsync(request, cancellationToken);
@@ -59,6 +66,14 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogError("Extracting AO3 story info for {0} failed - status {1}", request.RequestUri.ToString(), response.StatusCode);
+                try
+                {
+                    var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
+
+
+                    _logger.LogError("Error content: {0}", errorContent);
+                }
+                catch { }
 
                 return null;
             }

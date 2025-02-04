@@ -8,4 +8,5 @@ public sealed class Ao3Config : IAppSettings
     public int FAV_UPDATE_DELAY_HOURS { get; set; } = 12;
     public int NONFAV_UPDATE_DELAY_HOURS { get; set; } = 24;
     public string SITE_ADDRESS { get; set; } = SiteConstants.ArchiveOfOurOwn_Address;
+    public string USER_AGENT { get; set; } = string.Empty;
 }
