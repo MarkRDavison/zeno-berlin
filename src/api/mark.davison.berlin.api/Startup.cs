@@ -28,8 +28,6 @@ public sealed class Startup
             .AddHttpContextAccessor()
             .AddHealthCheckServices<InitializationHostedService>()
             .AddScoped<ICurrentUserContext, CurrentUserContext>()
-            .AddEndpointsApiExplorer()
-            .AddSwaggerGen()
             .AddDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
             .AddCoreDbContext<BerlinDbContext>()
             .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc))
