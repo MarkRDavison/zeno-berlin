@@ -7,7 +7,7 @@ api:
   replicas: 1
   name: zeno-fanfic-api
   image: ghcr.io/markrdavison/markdavison-berlin-api
-  tag: v0.0.45
+  tag: v0.0.46
   port: 50000
   ingress:
     host: fanfic-api.markdavison.kiwi
@@ -48,7 +48,7 @@ apijobs:
   replicas: 1
   name: zeno-fanfic-api-jobs
   image: ghcr.io/markrdavison/markdavison-berlin-api-jobs
-  tag: v0.0.45
+  tag: v0.0.46
   port: 50001
   env:
     secret:
@@ -76,7 +76,7 @@ apiorchestrator:
   replicas: 1
   name: zeno-fanfic-api-orchestrator
   image: ghcr.io/markrdavison/markdavison-berlin-api-orchestrator
-  tag: v0.0.45
+  tag: v0.0.46
   port: 50001
   env:
     secret:
@@ -101,7 +101,7 @@ bffweb:
   replicas: 1
   name: zeno-fanfic-bff
   image: ghcr.io/markrdavison/markdavison-berlin-bff-web
-  tag: v0.0.45
+  tag: v0.0.46
   port: 40000
   ingress:
     host: fanfic-bff.markdavison.kiwi
@@ -131,7 +131,7 @@ web:
   replicas: 1
   name: zeno-fanfic-web
   image: ghcr.io/markrdavison/markdavison-berlin-web
-  tag: v0.0.45
+  tag: v0.0.46
   port: 80
   ingress:
     host: fanfic.markdavison.kiwi
