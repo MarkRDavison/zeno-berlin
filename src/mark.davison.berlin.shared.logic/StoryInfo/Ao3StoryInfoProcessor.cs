@@ -8,7 +8,6 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
     private readonly HttpClient _client;
     private readonly IRateLimitService _rateLimitService;
     private readonly ILogger<Ao3StoryInfoProcessor> _logger;
-    private readonly IOptions<Ao3Config> _ao3ConfigOptions;
 
     public Ao3StoryInfoProcessor(
         HttpClient httpClient,
@@ -18,8 +17,12 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
     {
         _client = httpClient;
         _rateLimitService = rateLimitServiceFactory.CreateRateLimiter(TimeSpan.FromSeconds(ao3ConfigOptions.Value.RATE_DELAY));
-        _ao3ConfigOptions = ao3ConfigOptions;
         _logger = logger;
+
+        if (!string.IsNullOrEmpty(ao3ConfigOptions.Value.USER_AGENT))
+        {
+            _client.DefaultRequestHeaders.Add("User-Agent", ao3ConfigOptions.Value.USER_AGENT);
+        }
     }
 
     public string ExtractExternalStoryId(string storyAddress, string siteAddress)
@@ -53,11 +56,6 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
                 Method = HttpMethod.Get,
                 RequestUri = new Uri(storyAddress + "?view_adult=true")
             };
-
-            if (!string.IsNullOrEmpty(_ao3ConfigOptions.Value.USER_AGENT))
-            {
-                request.Headers.Add("User-Agent", _ao3ConfigOptions.Value.USER_AGENT);
-            }
 
             await _rateLimitService.Wait(cancellationToken);
 

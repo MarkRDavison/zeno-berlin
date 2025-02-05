@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.api.jobs.Configuration;
+﻿using mark.davison.berlin.shared.logic.Settings;
+
+namespace mark.davison.berlin.api.jobs.Configuration;
 
 public sealed class AppSettings : IAppSettings
 {
@@ -7,5 +9,6 @@ public sealed class AppSettings : IAppSettings
     public RedisAppSettings REDIS { get; set; } = new();
     public NotificationSettings NOTIFICATIONS { get; set; } = new();
     public JobAppSettings JOBS { get; set; } = new();
+    public Ao3Config AO3 { get; set; } = new();
     public bool PRODUCTION_MODE { get; set; }
 }
