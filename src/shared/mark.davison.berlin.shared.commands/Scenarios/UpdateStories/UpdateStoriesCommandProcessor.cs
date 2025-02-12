@@ -58,6 +58,12 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
             {
                 if (cancellationToken.IsCancellationRequested) { break; }
 
+                if (storyInfoProcessor.HasSiteFailure)
+                {
+                    _logger.LogWarning("General site failure detected for {0} - cancelling current update process", site.ShortName);
+                    break;
+                }
+
                 var storyUpdates = await ProcessStory(site, story, currentUserContext, storyInfoProcessor, cancellationToken);
                 updates.AddRange(storyUpdates);
             }

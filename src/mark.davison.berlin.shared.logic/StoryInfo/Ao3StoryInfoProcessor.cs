@@ -68,8 +68,12 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
                 {
                     var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
 
-
                     _logger.LogError("Error content: {0}", errorContent);
+
+                    if ((int)response.StatusCode >= 500)
+                    {
+                        HasSiteFailure = true;
+                    }
                 }
                 catch { }
 
@@ -238,4 +242,5 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
 
         return siteAddress + "/works/" + storyId;
     }
+    public bool HasSiteFailure { get; private set; }
 }
