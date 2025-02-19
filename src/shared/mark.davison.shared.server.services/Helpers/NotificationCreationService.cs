@@ -15,7 +15,6 @@ public sealed class NotificationCreationService : INotificationCreationService
         builder.AppendLine($"|  Chapters: {string.Join(", ", updateChapterNumbers)}");
         builder.AppendLine($"|  Status: {(story.Complete ? "Complete" : "In progress")}");
         builder.AppendLine($"|  Site: {site.LongName} ({site.ShortName})");
-        builder.AppendLine($"|  Url: {firstUpdate?.Address ?? story.Address}");
         builder.AppendLine("|");
         builder.AppendLine("===================");
 
@@ -34,7 +33,6 @@ public sealed class NotificationCreationService : INotificationCreationService
         builder.AppendLine($"|  Chapters: {info.CurrentChapters}/{(info.TotalChapters?.ToString() ?? "?")} - previously {story.CurrentChapters}/{(story.TotalChapters?.ToString() ?? "?")}");
         builder.AppendLine($"|  Status: {(info.IsCompleted ? "Complete" : "In progress")} - previously {(story.Complete ? "Complete" : "In progress")}");
         builder.AppendLine($"|  Site: {site.LongName} ({site.ShortName})");
-        builder.AppendLine($"|  Url: {chapterInfo?.Address ?? story.Address}");
         builder.AppendLine("|");
         builder.AppendLine("===================");
 
