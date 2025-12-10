@@ -6,5 +6,5 @@ public sealed class SqliteContextFactory : SqliteDbContextFactory<BerlinDbContex
 {
     protected override BerlinDbContext DbContextCreation(
             DbContextOptions<BerlinDbContext> options
-        ) => new BerlinDbContext(options);
+        ) => new(options);
 }

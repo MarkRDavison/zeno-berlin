@@ -1,0 +1,22 @@
+<Solution>
+  <Folder Name="/api/">
+    <Project Path="api/mark.davison.berlin.api.commands/mark.davison.berlin.api.commands.csproj" Id="10523ff5-b87c-4e04-8549-5f877566cf49" />
+    <Project Path="api/mark.davison.berlin.api.models.configuration/mark.davison.berlin.api.models.configuration.csproj" Id="0c5855b0-45d9-4ec6-9956-eb183c185c4a" />
+    <Project Path="api/mark.davison.berlin.api.models/mark.davison.berlin.api.models.csproj" Id="858d87a2-90d7-49db-b8f0-d6ffeb939458" />
+    <Project Path="api/mark.davison.berlin.api.persistence/mark.davison.berlin.api.persistence.csproj" Id="7a23e43d-87ab-4854-8a28-63995bdc9ae0" />
+    <Project Path="api/mark.davison.berlin.api.queries/mark.davison.berlin.api.queries.csproj" Id="d68fde63-26c6-45a5-ba17-373fd106ab2b" />
+    <Project Path="api/mark.davison.berlin.api/mark.davison.berlin.api.csproj" Id="e16453f4-2285-4857-9e78-9d53ae9dbce3" />
+  </Folder>
+  <Folder Name="/api/migrations/">
+    <Project Path="api/migrations/mark.davison.berlin.api.migrations.sqlite/mark.davison.berlin.api.migrations.sqlite.csproj" Id="21a24879-7679-4184-ae2b-6a39edd528a9" />
+  </Folder>
+  <Folder Name="/bff/" />
+  <Folder Name="/shared/">
+    <Project Path="shared/mark.davison.berlin.shared.constants/mark.davison.berlin.shared.constants.csproj" Id="15214597-0528-48e1-b312-755a9395560b" />
+    <Project Path="shared/mark.davison.berlin.shared.logic/mark.davison.berlin.shared.logic.csproj" Id="9ba18a76-22a4-4048-a7d4-52f9313cf930" />
+    <Project Path="shared/mark.davison.berlin.shared.models.dto/mark.davison.berlin.shared.models.dto.csproj" Id="28f0d961-24c6-4455-93de-bc2f298b359e" />
+    <Project Path="shared/mark.davison.berlin.shared.server.services/mark.davison.berlin.shared.server.services.csproj" Id="64e98a28-0cee-443e-b3c5-00390adcbd30" />
+    <Project Path="shared/mark.davison.berlin.shared.validation/mark.davison.berlin.shared.validation.csproj" Id="9b6abd0a-8aa0-48f1-9682-30ad1602471d" />
+  </Folder>
+  <Folder Name="/web/" />
+</Solution>

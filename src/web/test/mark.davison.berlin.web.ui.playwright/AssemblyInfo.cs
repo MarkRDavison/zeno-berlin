@@ -1,1 +1,0 @@
-﻿[assembly: TestCategory("UI")]

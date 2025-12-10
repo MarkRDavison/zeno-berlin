@@ -1,0 +1,16 @@
+﻿global using mark.davison.berlin.api.models.Entities;
+global using mark.davison.berlin.api.persistence;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Queries.AuthorList;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Queries.DashboardList;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Queries.FandomList;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Queries.ManageStory;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Queries.PotentialStoryList;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Queries.Startup;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Queries.StoryList;
+global using mark.davison.berlin.shared.models.dto.Shared;
+global using mark.davison.berlin.shared.validation;
+global using mark.davison.common.authentication.server.abstractions.Services;
+global using mark.davison.common.persistence;
+global using mark.davison.common.server.abstractions.CQRS;
+global using mark.davison.common.server.CQRS;
+global using Microsoft.EntityFrameworkCore;

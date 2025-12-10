@@ -22,6 +22,5 @@ public static class DataTestIds
     public const string AuthorsTable = "authors-table";
     public const string AuthorTitle = "author-title-text";
 
-
     public const string PotentialStoriesTable = "potential-stories-table";
 }
