@@ -1,7 +1,4 @@
-﻿using mark.davison.common.Constants;
-using System.Linq.Expressions;
-
-namespace mark.davison.berlin.api.persistence;
+﻿namespace mark.davison.berlin.api.persistence;
 
 public sealed class BerlinDataSeeder : IDataSeeder
 {
@@ -27,6 +24,7 @@ public sealed class BerlinDataSeeder : IDataSeeder
         var user = await EnsureUserSeeded(dbContext, cancellationToken);
         await EnsureTenantSeeded(dbContext, cancellationToken);
         await EnsureRolesSeeded(dbContext, cancellationToken);
+
         await dbContext.SaveChangesAsync(cancellationToken);
 
         await EnsureSitesSeeded(dbContext, user, cancellationToken);

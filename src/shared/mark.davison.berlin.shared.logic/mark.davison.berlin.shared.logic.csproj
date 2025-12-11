@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="1.4.0" />
-    <PackageReference Include="markdavison.common" Version="10.0.5" />
-    <PackageReference Include="markdavison.common.server.abstractions" Version="10.0.5" />
+    <PackageReference Include="markdavison.common" Version="10.0.7" />
+    <PackageReference Include="markdavison.common.server.abstractions" Version="10.0.7" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.1" />
   </ItemGroup>
 

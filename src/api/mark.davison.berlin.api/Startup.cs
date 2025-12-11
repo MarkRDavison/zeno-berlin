@@ -8,7 +8,6 @@ public class Startup(IConfiguration Configuration)
     public void ConfigureServices(IServiceCollection services)
     {
         AppSettings = services.BindAppSettings(Configuration);
-        AppSettings.DATABASE.CONNECTION_STRING = "RANDOM";
 
         services
             .AddCors(o =>
@@ -29,16 +28,44 @@ public class Startup(IConfiguration Configuration)
                 AppSettings.PRODUCTION_MODE))
             .AddAuthorization()
             .AddJwtAuthentication<BerlinDbContext>(AppSettings.AUTHENTICATION)
-            .AddRedis(AppSettings.REDIS, AppSettings.REDIS.INSTANCE_NAME + (AppSettings.PRODUCTION_MODE ? "_prod_" : "_dev_")) // TODO: Add this to common
-            .AddDatabase<BerlinDbContext>(
-                AppSettings.PRODUCTION_MODE,
-                AppSettings.DATABASE,
-                typeof(SqliteContextFactory))
             .AddCoreDbContext<BerlinDbContext>()
             .AddHealthCheckServices<ApplicationHealthStateHostedService>()
             .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
+            .UseBerlinLogic(AppSettings.PRODUCTION_MODE)
             .AddServerCore()
             .AddCQRSServer();
+
+        // TODO: Remove when common updated
+        if (string.IsNullOrEmpty(AppSettings.REDIS.HOST))
+        {
+            services.AddDistributedMemoryCache();
+        }
+        else
+        {
+            services.AddRedis(AppSettings.REDIS, AppSettings.REDIS.INSTANCE_NAME + (AppSettings.PRODUCTION_MODE ? "_prod_" : "_dev_")); // TODO: Add this to common
+        }
+
+        // TODO: Add to common, so we have RANDOM, MEMORY etc
+        if (AppSettings.DATABASE.CONNECTION_STRING == "MEMORY")
+        {
+            services.AddDbContextFactory<BerlinDbContext>(options =>
+            {
+                options
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors()
+                    .UseInMemoryDatabase("BERLIN_IN_MEMORY_DB_CONTEXT")
+                    .ConfigureWarnings((WarningsConfigurationBuilder _) => _.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+            });
+            services.AddScoped<IDbContext<BerlinDbContext>>(_ => _.GetRequiredService<BerlinDbContext>());
+        }
+        else
+        {
+            services
+                .AddDatabase<BerlinDbContext>(
+                    AppSettings.PRODUCTION_MODE,
+                    AppSettings.DATABASE,
+                    typeof(SqliteContextFactory));
+        }
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

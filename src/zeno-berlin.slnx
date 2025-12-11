@@ -10,7 +10,13 @@
   <Folder Name="/api/migrations/">
     <Project Path="api/migrations/mark.davison.berlin.api.migrations.sqlite/mark.davison.berlin.api.migrations.sqlite.csproj" Id="21a24879-7679-4184-ae2b-6a39edd528a9" />
   </Folder>
-  <Folder Name="/bff/" />
+  <Folder Name="/api/tests/">
+    <Project Path="api/tests/mark.davison.berlin.api.tests/mark.davison.berlin.api.tests.csproj" Id="d19b7b9a-23ca-4f31-8bef-286695afdcf7" />
+  </Folder>
+  <Folder Name="/bff/">
+    <Project Path="bff/mark.davison.berlin.bff/mark.davison.berlin.bff.csproj" Id="96236b8a-ed1f-4a1c-a74b-4efe9d2f2db4" />
+  </Folder>
+  <Folder Name="/bff/tests/" />
   <Folder Name="/shared/">
     <Project Path="shared/mark.davison.berlin.shared.constants/mark.davison.berlin.shared.constants.csproj" Id="15214597-0528-48e1-b312-755a9395560b" />
     <Project Path="shared/mark.davison.berlin.shared.logic/mark.davison.berlin.shared.logic.csproj" Id="9ba18a76-22a4-4048-a7d4-52f9313cf930" />
@@ -19,4 +25,5 @@
     <Project Path="shared/mark.davison.berlin.shared.validation/mark.davison.berlin.shared.validation.csproj" Id="9b6abd0a-8aa0-48f1-9682-30ad1602471d" />
   </Folder>
   <Folder Name="/web/" />
+  <Folder Name="/web/tests/" />
 </Solution>
