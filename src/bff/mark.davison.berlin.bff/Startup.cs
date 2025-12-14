@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.bff;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+
+namespace mark.davison.berlin.bff;
 
 public class Startup(IConfiguration Configuration)
 {
@@ -9,6 +11,15 @@ public class Startup(IConfiguration Configuration)
         AppSettings = services.BindAppSettings(Configuration);
 
         services
+            .Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedFor |
+                    ForwardedHeaders.XForwardedProto;
+
+                options.KnownIPNetworks.Clear();
+                options.KnownProxies.Clear();
+            })
             .AddCors(o =>
             {
                 o.AddDefaultPolicy(builder =>
@@ -31,14 +42,14 @@ public class Startup(IConfiguration Configuration)
                 {
                     var now = s.GetRequiredService<IDateService>().Now;
                     return new UserDto(Guid.NewGuid(), TenantIds.SystemTenantId, email, name, true, now, now);
-                })
-            .AddHealthChecks();
+                });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
 
         app
+            .UseForwardedHeaders()
             .UseHttpsRedirection()
             .UseRouting()
             .UseCors()

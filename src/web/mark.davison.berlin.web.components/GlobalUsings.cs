@@ -1,0 +1,13 @@
+﻿global using Humanizer;
+global using mark.davison.berlin.shared.models.dto.Shared;
+global using mark.davison.berlin.web.features.Store.DashboardListUseCase;
+global using mark.davison.berlin.web.features.Store.FandomListUseCase;
+global using mark.davison.berlin.web.features.Store.StartupUseCase;
+global using mark.davison.common.abstractions.Services;
+global using mark.davison.common.client.abstractions.Store;
+global using mark.davison.common.client.web;
+global using mark.davison.common.client.web.abstractions.Navigation;
+global using mark.davison.common.client.web.Ignition;
+global using Microsoft.AspNetCore.Components;
+global using Microsoft.Extensions.DependencyInjection;
+global using System.Runtime.CompilerServices;

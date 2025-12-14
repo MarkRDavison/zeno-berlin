@@ -4,6 +4,7 @@ public static class DataTestIds
 {
     public const string Username = "username";
     public const string ManageIcon = "manage-icon";
+    public const string AdminIcon = "admin-icon";
 
     public const string StoryChapterText = "chapter-text";
     public const string StoryTitle = "story-title-text";

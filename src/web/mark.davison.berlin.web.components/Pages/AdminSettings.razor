@@ -1,0 +1,20 @@
+﻿@attribute [Authorize(Roles = "Admin")]
+@attribute [Route(Routes.AdminSettings)]
+
+@inject AuthenticationStateProvider _authStateProvider
+
+<h1>Admin Settings</h1>
+
+@if (_authState is not null)
+{
+	<span>@($"{_authState.User?.FindFirst(ClaimTypes.Name)?.Value}"), you are an authorized admin :)</span>
+}
+
+@code {
+	private AuthenticationState? _authState;
+
+	protected override async Task OnInitializedAsync()
+	{
+		_authState = await _authStateProvider.GetAuthenticationStateAsync();
+	}
+}

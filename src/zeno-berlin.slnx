@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/api/">
     <Project Path="api/mark.davison.berlin.api.commands/mark.davison.berlin.api.commands.csproj" Id="10523ff5-b87c-4e04-8549-5f877566cf49" />
+    <Project Path="api/mark.davison.berlin.api.fakesite/mark.davison.berlin.api.fakesite.csproj" Id="6fdfc6b9-1af3-481e-9b2f-61f02424c0e7" />
     <Project Path="api/mark.davison.berlin.api.models.configuration/mark.davison.berlin.api.models.configuration.csproj" Id="0c5855b0-45d9-4ec6-9956-eb183c185c4a" />
     <Project Path="api/mark.davison.berlin.api.models/mark.davison.berlin.api.models.csproj" Id="858d87a2-90d7-49db-b8f0-d6ffeb939458" />
     <Project Path="api/mark.davison.berlin.api.persistence/mark.davison.berlin.api.persistence.csproj" Id="7a23e43d-87ab-4854-8a28-63995bdc9ae0" />
@@ -13,6 +14,10 @@
   <Folder Name="/api/tests/">
     <Project Path="api/tests/mark.davison.berlin.api.tests/mark.davison.berlin.api.tests.csproj" Id="d19b7b9a-23ca-4f31-8bef-286695afdcf7" />
   </Folder>
+  <Folder Name="/aspire/">
+    <Project Path="aspire/mark.davison.berlin.aspire/mark.davison.berlin.aspire.AppHost/mark.davison.berlin.aspire.AppHost.csproj" Id="a15bddce-c452-42ab-a7fb-9727e3fcc284" />
+    <Project Path="aspire/mark.davison.berlin.aspire/mark.davison.berlin.aspire.ServiceDefaults/mark.davison.berlin.aspire.ServiceDefaults.csproj" />
+  </Folder>
   <Folder Name="/bff/">
     <Project Path="bff/mark.davison.berlin.bff/mark.davison.berlin.bff.csproj" Id="96236b8a-ed1f-4a1c-a74b-4efe9d2f2db4" />
   </Folder>
@@ -24,6 +29,11 @@
     <Project Path="shared/mark.davison.berlin.shared.server.services/mark.davison.berlin.shared.server.services.csproj" Id="64e98a28-0cee-443e-b3c5-00390adcbd30" />
     <Project Path="shared/mark.davison.berlin.shared.validation/mark.davison.berlin.shared.validation.csproj" Id="9b6abd0a-8aa0-48f1-9682-30ad1602471d" />
   </Folder>
-  <Folder Name="/web/" />
+  <Folder Name="/web/">
+    <Project Path="web/mark.davison.berlin.web.components/mark.davison.berlin.web.components.csproj" Id="59af7c2f-b77e-4af4-9071-537edcbc71ed" />
+    <Project Path="web/mark.davison.berlin.web.features/mark.davison.berlin.web.features.csproj" Id="7d9c741b-3c2f-4c3e-8bb0-418836bd00d3" />
+    <Project Path="web/mark.davison.berlin.web.services/mark.davison.berlin.web.services.csproj" Id="052005fd-4aa8-4e89-b1dc-45bfa2232192" />
+    <Project Path="web/mark.davison.berlin.web.ui/mark.davison.berlin.web.ui.csproj" Id="f80f4890-15b0-4377-bde8-19f031b93d9d" />
+  </Folder>
   <Folder Name="/web/tests/" />
 </Solution>

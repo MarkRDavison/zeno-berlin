@@ -1,0 +1,13 @@
+﻿global using mark.davison.berlin.shared.models.dto.Scenarios.Commands.AddFandom;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Commands.EditFandom;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Queries.AuthorList;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Queries.DashboardList;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Queries.FandomList;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Queries.Startup;
+global using mark.davison.berlin.shared.models.dto.Shared;
+global using mark.davison.common.Changeset;
+global using mark.davison.common.client.abstractions.Repository;
+global using mark.davison.common.client.abstractions.Store;
+global using mark.davison.common.client.state.generators;
+global using Microsoft.Extensions.DependencyInjection;
+global using System.Collections.ObjectModel;
