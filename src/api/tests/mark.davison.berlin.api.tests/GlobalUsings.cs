@@ -1,13 +1,16 @@
 ﻿global using mark.davison.berlin.api.Configuration;
+global using mark.davison.berlin.api.models.Entities;
 global using mark.davison.berlin.api.persistence;
 global using mark.davison.berlin.api.tests.Framework;
 global using mark.davison.berlin.shared.constants;
 global using mark.davison.berlin.shared.logic.StoryInfo;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Commands.AddStory;
 global using mark.davison.common.authentication.server.abstractions.Services;
 global using mark.davison.common.authentication.server.Services;
 global using mark.davison.common.persistence;
 global using mark.davison.common.persistence.Configuration;
 global using mark.davison.common.persistence.Helpers;
+global using mark.davison.common.server.abstractions.CQRS;
 global using mark.davison.common.server.Models;
 global using mark.davison.common.server.test.Framework;
 global using mark.davison.common.test;

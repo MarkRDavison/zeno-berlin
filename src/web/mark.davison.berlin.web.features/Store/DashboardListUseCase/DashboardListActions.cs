@@ -9,3 +9,15 @@ public sealed class FetchDashboardListActionResponse : BaseActionResponse<List<D
 {
 
 }
+
+public sealed class SetFavouriteDashboardListAction : BaseAction
+{
+    public Guid StoryId { get; set; }
+    public bool IsFavourite { get; set; }
+}
+
+public sealed class SetFavouriteDashboardListActionResponse : BaseActionResponse
+{
+    public Guid StoryId { get; set; }
+    public bool IsFavourite { get; set; }
+}

@@ -17,4 +17,10 @@ public class ApplicationHealthStateHostedService(
     {
         await dbContext.Database.MigrateAsync(cancellationToken);
     }
+
+    protected override async Task InitDatabaseDevelopment(BerlinDbContext dbContext, CancellationToken cancellationToken)
+    {
+        await dbContext.Database.EnsureDeletedAsync(cancellationToken);
+        await dbContext.Database.EnsureCreatedAsync(cancellationToken);
+    }
 }

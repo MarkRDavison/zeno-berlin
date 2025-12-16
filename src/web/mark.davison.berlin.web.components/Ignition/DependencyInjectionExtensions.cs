@@ -7,7 +7,7 @@ public static class DependencyInjectionExtensions
         services.UseClientRepository(WebConstants.ApiClientName, WebConstants.LocalBffRoot);
         services.UseAuthentication(WebConstants.ApiClientName);
         services.UseClientCQRS(typeof(Routes));
-        services.UseCommonClient();
+        services.UseCommonClient(typeof(Routes));
 
         return services;
     }

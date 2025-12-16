@@ -16,10 +16,7 @@ public sealed class Program
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
-                if (!IsAspire())
-                {
-                    webBuilder.UseUrls(urls: Environment.GetEnvironmentVariable("BERLIN__URL") ?? "https://0.0.0.0:40000");
-                }
+                webBuilder.UseUrls(urls: Environment.GetEnvironmentVariable("BERLIN__URL") ?? "https://0.0.0.0:40000");
             })
             .ConfigureAppConfiguration((hostingContext, configurationBuilder) =>
             {

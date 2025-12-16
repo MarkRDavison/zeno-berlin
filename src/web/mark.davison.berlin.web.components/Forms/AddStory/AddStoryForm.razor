@@ -1,0 +1,18 @@
+﻿@inherits Form<AddStoryFormViewModel>
+
+<MudForm>
+    <MudTextField
+        id="add-story-form-story-address" 
+        T="string" 
+        Label="Address" 
+        @bind-Text="FormViewModel.StoryAddress" 
+        For=@(() => FormViewModel.StoryAddress)
+        Immediate
+        Required />
+    <Dropdown 
+        Id="add-story-form-update-type"
+        Label="Update type"
+        Items="@FormViewModel.UpdateTypeItems"
+        @bind-Value="FormViewModel.UpdateTypeId"
+        For=@(() => FormViewModel.UpdateTypeId) />
+</MudForm>

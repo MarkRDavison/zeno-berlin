@@ -9,7 +9,7 @@
                     @if (!context.User.Identity?.IsAuthenticated ?? true)
                     {
                         @*TODO: Add redirect_url*@
-                        <Redirect Url="@Routes.Login" />
+                       <Redirect Url="@Routes.Login" />
                     }
                     else
                     {

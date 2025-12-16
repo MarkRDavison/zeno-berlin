@@ -46,6 +46,7 @@ public class Startup(IConfiguration Configuration)
         }
 
         // TODO: Add to common, so we have RANDOM, MEMORY etc
+        // Rethink how we activate this mode....
         if (AppSettings.DATABASE.CONNECTION_STRING == "MEMORY")
         {
             services.AddDbContextFactory<BerlinDbContext>(options =>
@@ -53,7 +54,7 @@ public class Startup(IConfiguration Configuration)
                 options
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors()
-                    .UseInMemoryDatabase("BERLIN_IN_MEMORY_DB_CONTEXT")
+                    .UseInMemoryDatabase("BERLIN_IN_MEMORY_DB_CONTEXT_" + Guid.NewGuid().ToString())
                     .ConfigureWarnings((WarningsConfigurationBuilder _) => _.Ignore(InMemoryEventId.TransactionIgnoredWarning));
             });
             services.AddScoped<IDbContext<BerlinDbContext>>(_ => _.GetRequiredService<BerlinDbContext>());

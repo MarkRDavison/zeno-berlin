@@ -1,5 +1,9 @@
-﻿namespace mark.davison.berlin.web.components.Pages;
+﻿using mark.davison.berlin.web.components.Forms.AddStory;
+using mark.davison.common.client.web.Components.Form;
 
+namespace mark.davison.berlin.web.components.Pages;
+
+[StateProperty<StartupState>]
 [StateProperty<DashboardListState>]
 [StateProperty<FandomListState>]
 public partial class Dashboard : StateComponent
@@ -13,7 +17,13 @@ public partial class Dashboard : StateComponent
     [Inject]
     public required IDateService DateService { get; set; }
 
-    private readonly List<Guid> _storyIds = new();
+    [Inject]
+    public required IDialogService DialogService { get; set; }
+
+    [Inject]
+    public required AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    private readonly List<Guid> _storyIds = [];
     private bool _loaded;
     private bool _propagationStopper = false;
 
@@ -51,28 +61,54 @@ public partial class Dashboard : StateComponent
 
     private async Task EnsureStateLoaded(bool force)
     {
-        await StoreHelper.DispatchAndWaitForResponse<FetchDashboardListAction, FetchDashboardListActionResponse>(new FetchDashboardListAction());
+        if (await AuthenticationStateProvider.GetAuthenticationStateAsync() is { } state &&
+            (state.User.Identity?.IsAuthenticated ?? false))
+        {
+            await StoreHelper.DispatchAndWaitForResponse<FetchDashboardListAction, FetchDashboardListActionResponse>(new FetchDashboardListAction());
+        }
     }
 
     private async Task OpenAddStoryModal()
     {
-        await Task.CompletedTask;
-        throw new NotImplementedException();
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var instance = new AddStoryFormViewModel
+        {
+            UpdateTypes = [.. StartupState.Data.UpdateTypes]
+        };
+
+        var param = new DialogParameters<FormModal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>
+        {
+            { _ => _.PrimaryText, "Save" },
+            { _ => _.Instance, instance }
+        };
+
+        var dialog = await DialogService.ShowAsync<FormModal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>("Add Story", param, options);
+
+        var result = await dialog.Result;
+
+        if (result is not null &&
+            !result.Canceled)
+        {
+            _loaded = false;
+            //TODO: Navigate to newly created story???
+        }
     }
 
     private void MudIconClick(Guid storyId, bool set)
     {
         _propagationStopper = true;
 
-        Console.Error.WriteLine("TODO: MudIconClick");
-        // TODO
-        /*
         StoreHelper.Dispatch(new SetStoryFavouriteAction
         {
             StoryId = storyId,
             IsFavourite = set
         });
-        */
     }
 
     private void CardClick(Guid storyId)

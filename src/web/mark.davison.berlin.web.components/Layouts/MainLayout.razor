@@ -12,11 +12,11 @@
 
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Outlined.QuestionMark" Color="Color.Inherit" />
         <MudText Typo="Typo.h4" Class="app-title">Fanfic</MudText>
-        <MudSpacer />
         <AuthorizeView>
             <Authorized>
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+                <MudSpacer />
                 @if (context.User.IsInRole("Admin"))
                 {
                     <MudTooltip Text="Admin User">
@@ -42,6 +42,13 @@
             </Authorized>
         </AuthorizeView>
     </MudAppBar>
+    <AuthorizeView>
+        <Authorized>
+            <MudDrawer Elevation="2" @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always">
+                <NavMenu />
+            </MudDrawer>
+        </Authorized>
+    </AuthorizeView>
     <MudMainContent>
         <MudContainer>
             @Body
@@ -50,9 +57,15 @@
 </MudLayout>
 
 @code {
+    bool _drawerOpen = true;
     private bool _isDarkMode;
     private MudThemeProvider? _mudThemeProvider;
     private bool disposedValue;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
 
     protected override void OnInitialized()
     {
@@ -89,7 +102,11 @@
 
     public void Dispose()
     {
-        _auth.AuthenticationStateChanged -= OnAuthStateChanged;
+        if (!disposedValue)
+        {
+            disposedValue = true;
+            _auth.AuthenticationStateChanged -= OnAuthStateChanged;
+        }
     }
 
     private async Task OnSystemPreferenceChanged(bool newValue)

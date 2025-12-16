@@ -24,4 +24,7 @@ public static class DataTestIds
     public const string AuthorTitle = "author-title-text";
 
     public const string PotentialStoriesTable = "potential-stories-table";
+
+    public const string LoginWithProvider = "login-provider-";
+    public const string LoginHref = "login-href";
 }

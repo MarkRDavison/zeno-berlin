@@ -1,0 +1,10 @@
+﻿global using Bogus;
+global using mark.davison.berlin.shared.constants;
+global using mark.davison.berlin.web.tests.playwright.CommonCandidates;
+global using mark.davison.berlin.web.tests.playwright.Configuration;
+global using mark.davison.berlin.web.tests.playwright.Helpers;
+global using mark.davison.berlin.web.tests.playwright.Pages;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Playwright;
+global using System.Diagnostics;
+global using TUnit.Playwright;

@@ -1,9 +1,12 @@
-﻿@attribute [Authorize]
-@attribute [Route(Routes.Dashboard)]
-
+﻿@attribute [Route(Routes.Dashboard)]
 @inherits StateComponent
 
 <AuthorizeView>
+	<NotAuthorized>
+		<span>This is the anonymous landing page version of the dashboard</span>
+		<br />
+		<a data-testid="@DataTestIds.LoginHref" href="@Routes.Login">Login</a>
+	</NotAuthorized>
 	<Authorized>		
 		<MudStack Class="pa-4">
 			<MudStack Row AlignItems="AlignItems.End">

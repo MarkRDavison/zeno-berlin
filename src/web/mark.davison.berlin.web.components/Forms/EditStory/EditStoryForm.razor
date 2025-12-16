@@ -1,0 +1,18 @@
+﻿@inherits Form<EditStoryFormViewModel>
+
+<MudForm>
+    <MudNumericField  
+        id="edit-story-form-consumed-chapters"
+        Label="Consumed chapters"
+        @bind-Value="FormViewModel.ConsumedChapters"
+        For=@(() => FormViewModel.ConsumedChapters)
+        HideSpinButtons
+        Immediate/>
+    <Dropdown 
+        Id="add-story-form-update-type"
+        Label="Update type"
+        Items="@FormViewModel.UpdateTypeItems"
+        @bind-Value="FormViewModel.UpdateTypeId"
+        For=@(() => FormViewModel.UpdateTypeId)
+        Required/>
+</MudForm>
