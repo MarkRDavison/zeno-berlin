@@ -6,84 +6,84 @@ public abstract class FanficBasePage(IPage page, AppSettings appSettings) : Base
     {
         // TODO: ensure nav menu is open
 
-        //if (typeof(TPage) == typeof(AuthorsPage))
-        //{
-        //    var authorsPage = await GoToAuthorsPage();
+        if (typeof(TPage) == typeof(AuthorsPage))
+        {
+            var authorsPage = await GoToAuthorsPage();
 
-        //    return (TPage)(object)authorsPage;
-        //}
-        //else if (typeof(TPage) == typeof(FandomsPage))
-        //{
-        //    var fandomsPage = await GoToFandomsPage();
+            return (TPage)(object)authorsPage;
+        }
+        else if (typeof(TPage) == typeof(FandomsPage))
+        {
+            var fandomsPage = await GoToFandomsPage();
 
-        //    return (TPage)(object)fandomsPage;
-        //}
-        if (typeof(TPage) == typeof(StoriesPage))
+            return (TPage)(object)fandomsPage;
+        }
+        else if (typeof(TPage) == typeof(StoriesPage))
         {
             var storiesPage = await GoToStoriesPage();
 
             return (TPage)(object)storiesPage;
         }
-        //else if (typeof(TPage) == typeof(PotentialStoriesPage))
-        //{
-        //    var settingsPage = await GoToPotentialStoriesPage();
+        else if (typeof(TPage) == typeof(PotentialStoriesPage))
+        {
+            var settingsPage = await GoToPotentialStoriesPage();
 
-        //    return (TPage)(object)settingsPage;
-        //}
-        //else if (typeof(TPage) == typeof(SettingsPage))
-        //{
-        //    var settingsPage = await GoToSettingsPage();
+            return (TPage)(object)settingsPage;
+        }
+        else if (typeof(TPage) == typeof(SettingsPage))
+        {
+            var settingsPage = await GoToSettingsPage();
 
-        //    return (TPage)(object)settingsPage;
-        //}
+            return (TPage)(object)settingsPage;
+        }
 
         return await base.GoToPage<TPage>();
     }
 
-    //private async Task<SettingsPage> GoToSettingsPage()
-    //{
-    //    await Page
-    //        .GetByTestId(DataTestIds.ManageIcon)
-    //        .ClickAsync();
+    private async Task<SettingsPage> GoToSettingsPage()
+    {
+        await Page
+            .GetByTestId(DataTestIds.ManageIcon)
+            .ClickAsync();
 
-    //    await Page
-    //        .GetByText(SettingsMenuName.Settings, new PageGetByTextOptions
-    //        {
-    //            Exact = true
-    //        })
-    //        .ClickAsync();
+        await Page
+            .GetByText(SettingsMenuName.Settings, new PageGetByTextOptions
+            {
+                Exact = true
+            })
+            .ClickAsync();
 
-    //    return new SettingsPage(Page, AppSettings);
-    //}
+        return new SettingsPage(Page, AppSettings);
+    }
 
 
-    //private async Task<AuthorsPage> GoToAuthorsPage()
-    //{
-    //    var link = Page.GetByRole(AriaRole.Link,
+    private async Task<AuthorsPage> GoToAuthorsPage()
+    {
+        var link = Page.GetByRole(AriaRole.Link,
 
-    //        new PageGetByRoleOptions
-    //        {
-    //            Name = NavMenuNames.Authors
-    //        });
+            new PageGetByRoleOptions
+            {
+                Name = NavMenuNames.Authors
+            });
 
-    //    await link.ClickAsync();
+        await link.ClickAsync();
 
-    //    return new AuthorsPage(Page, AppSettings);
-    //}
+        return new AuthorsPage(Page, AppSettings);
+    }
 
-    //private async Task<FandomsPage> GoToFandomsPage()
-    //{
-    //    var link = Page.GetByRole(AriaRole.Link,
+    private async Task<FandomsPage> GoToFandomsPage()
+    {
+        var link = Page.GetByRole(AriaRole.Link,
 
-    //        new PageGetByRoleOptions
-    //        {
-    //            Name = NavMenuNames.Fandoms
-    //        });
+            new PageGetByRoleOptions
+            {
+                Name = NavMenuNames.Fandoms
+            });
 
-    //    await link.ClickAsync();
+        await link.ClickAsync();
 
-    //    return new FandomsPage(Page, AppSettings);
-    //}
+        return new FandomsPage(Page, AppSettings);
+    }
 
     private async Task<StoriesPage> GoToStoriesPage()
     {
@@ -99,17 +99,17 @@ public abstract class FanficBasePage(IPage page, AppSettings appSettings) : Base
         return new StoriesPage(Page, AppSettings);
     }
 
-    //private async Task<PotentialStoriesPage> GoToPotentialStoriesPage()
-    //{
-    //    var link = Page.GetByRole(AriaRole.Link,
+    private async Task<PotentialStoriesPage> GoToPotentialStoriesPage()
+    {
+        var link = Page.GetByRole(AriaRole.Link,
 
-    //        new PageGetByRoleOptions
-    //        {
-    //            Name = NavMenuNames.PotentialStories
-    //        });
+            new PageGetByRoleOptions
+            {
+                Name = NavMenuNames.PotentialStories
+            });
 
-    //    await link.ClickAsync();
+        await link.ClickAsync();
 
-    //    return new PotentialStoriesPage(Page, AppSettings);
-    //}
+        return new PotentialStoriesPage(Page, AppSettings);
+    }
 }

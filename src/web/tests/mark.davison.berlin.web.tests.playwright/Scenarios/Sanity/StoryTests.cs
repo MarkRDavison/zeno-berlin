@@ -8,6 +8,6 @@ public sealed class StoryTests : BerlinBaseTest
         await Dashboard
             .GoToPage<StoriesPage>();
 
-        await Expect(CurrentPage).ToHaveURLAsync(AppSettings.ENVIRONMENT.WEB_ORIGIN + "/stories");
+        await Expect(CurrentPage).ToHaveURLAsync(AppSettings.ENVIRONMENT.WEB_ORIGIN + RoutingHelper.StoriesRouteStart);
     }
 }
