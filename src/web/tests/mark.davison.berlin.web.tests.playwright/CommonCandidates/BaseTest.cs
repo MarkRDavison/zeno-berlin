@@ -84,7 +84,9 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
     [Before(Test)]
     public async Task TestInitialize()
     {
-#if !SKIP_TUNIT_TESTS
+#if SKIP_TUNIT_TESTS
+        Skip.Test("Skipping test because SKIP_TUNIT_TESTS is defined");
+#else
         if (!_skip)
         {
             await OnPreTestInitialise();
