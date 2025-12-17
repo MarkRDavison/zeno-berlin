@@ -10,12 +10,13 @@
     <!-- Only define SKIP_TUNIT_TESTS when building the main solution -->
     <DefineConstants Condition="'$(SolutionName)' == 'zeno-berlin'">$(DefineConstants);SKIP_TUNIT_TESTS</DefineConstants>
   </PropertyGroup>
+	
   <ItemGroup>
     <None Remove="appsettings.Development.json" />
   </ItemGroup>
-
+	
   <ItemGroup>
-    <Content Include="appsettings.Development.json">
+    <Content Include="appsettings.Development.json" Condition="Exists('appsettings.Development.json')">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
