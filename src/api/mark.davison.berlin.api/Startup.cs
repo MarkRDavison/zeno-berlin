@@ -30,7 +30,10 @@ public class Startup(IConfiguration Configuration)
             .AddJwtAuthentication<BerlinDbContext>(AppSettings.AUTHENTICATION)
             .AddCoreDbContext<BerlinDbContext>()
             .AddHealthCheckServices<ApplicationHealthStateHostedService>()
-            .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
+            .UseSharedServerServices(
+                !string.IsNullOrEmpty(AppSettings.REDIS.HOST),
+                AppSettings.NOTIFICATIONS.MATRIX,
+                AppSettings.NOTIFICATIONS.CONSOLE)
             .UseBerlinLogic(AppSettings.PRODUCTION_MODE)
             .AddServerCore()
             .AddCQRSServer();

@@ -60,6 +60,7 @@ public class Startup(IConfiguration Configuration)
                 endpoints
                     .MapInteractiveAuthenticationEndpoints(AppSettings.WEB_ORIGIN)
                     .UseApiProxy(AppSettings.API_ENDPOINT);
+                // TODO: Need health checks / api hosted health service things for non api/non dbcontext
             });
     }
 }

@@ -2,8 +2,10 @@
   <Folder Name="/api/">
     <Project Path="api/mark.davison.berlin.api.commands/mark.davison.berlin.api.commands.csproj" Id="10523ff5-b87c-4e04-8549-5f877566cf49" />
     <Project Path="api/mark.davison.berlin.api.fakesite/mark.davison.berlin.api.fakesite.csproj" Id="6fdfc6b9-1af3-481e-9b2f-61f02424c0e7" />
+    <Project Path="api/mark.davison.berlin.api.jobs/mark.davison.berlin.api.jobs.csproj" Id="21ff2e4c-1245-4dde-b294-b626ea67ae52" />
     <Project Path="api/mark.davison.berlin.api.models.configuration/mark.davison.berlin.api.models.configuration.csproj" Id="0c5855b0-45d9-4ec6-9956-eb183c185c4a" />
     <Project Path="api/mark.davison.berlin.api.models/mark.davison.berlin.api.models.csproj" Id="858d87a2-90d7-49db-b8f0-d6ffeb939458" />
+    <Project Path="api/mark.davison.berlin.api.orchestrator/mark.davison.berlin.api.orchestrator.csproj" Id="f13d0fbf-65d8-4b18-8502-05d2db8751e7" />
     <Project Path="api/mark.davison.berlin.api.persistence/mark.davison.berlin.api.persistence.csproj" Id="7a23e43d-87ab-4854-8a28-63995bdc9ae0" />
     <Project Path="api/mark.davison.berlin.api.queries/mark.davison.berlin.api.queries.csproj" Id="d68fde63-26c6-45a5-ba17-373fd106ab2b" />
     <Project Path="api/mark.davison.berlin.api/mark.davison.berlin.api.csproj" Id="e16453f4-2285-4857-9e78-9d53ae9dbce3" />
@@ -16,6 +18,10 @@
     <Project Path="api/tests/mark.davison.berlin.api.fakesite.test/mark.davison.berlin.api.fakesite.test.csproj" Id="d680ec68-3782-4b81-8e4e-130212962a52" />
     <Project Path="api/tests/mark.davison.berlin.api.queries.tests/mark.davison.berlin.api.queries.tests.csproj" Id="05d2212a-08af-43f5-8d16-bf2df3ddc57c" />
     <Project Path="api/tests/mark.davison.berlin.api.tests/mark.davison.berlin.api.tests.csproj" Id="d19b7b9a-23ca-4f31-8bef-286695afdcf7" />
+  </Folder>
+  <Folder Name="/aspire/">
+    <Project Path="aspire/mark.davison.berlin.aspire/mark.davison.berlin.aspire.AppHost/mark.davison.berlin.aspire.AppHost.csproj" Id="8d1dff24-ca2a-429a-a114-0f30209da01c" />
+    <Project Path="aspire/mark.davison.berlin.aspire/mark.davison.berlin.aspire.ServiceDefaults/mark.davison.berlin.aspire.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/bff/">
     <Project Path="bff/mark.davison.berlin.bff/mark.davison.berlin.bff.csproj" Id="96236b8a-ed1f-4a1c-a74b-4efe9d2f2db4" />

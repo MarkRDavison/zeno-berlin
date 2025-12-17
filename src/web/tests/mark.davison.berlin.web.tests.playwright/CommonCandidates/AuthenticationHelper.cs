@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace mark.davison.berlin.web.tests.playwright.CommonCandidates;
+﻿namespace mark.davison.berlin.web.tests.playwright.CommonCandidates;
 
 public partial class AuthenticationHelper
 {
@@ -23,7 +21,7 @@ public partial class AuthenticationHelper
         {
             username = await page.GetByTestId(DataTestIds.Username).TextContentAsync(new LocatorTextContentOptions
             {
-                Timeout = 2000.0f // TODO: Config
+                Timeout = 10000.0f // TODO: Config
             });
         }
         catch (TimeoutException)
@@ -48,7 +46,7 @@ public partial class AuthenticationHelper
 
             await Assertions.Expect(page).ToHaveTitleAsync(ExpectedTitleRegex(), new PageAssertionsToHaveTitleOptions
             {
-                Timeout = 2000.0f // TODO: Config
+                Timeout = 10_000.0f // TODO: Config
             });
 
             await page.GetByLabel(UsernameLabel).FillAsync(_appSettings.AUTH.USERNAME);

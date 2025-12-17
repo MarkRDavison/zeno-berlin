@@ -7,7 +7,7 @@ public sealed class ImportCommandHandler : ValidateAndProcessJobCommandHandler<I
         ICommandValidator<ImportCommandRequest, ImportCommandResponse> validator,
         IDbContext<BerlinDbContext> dbContext,
         IDistributedPubSub distributedPubSub,
-        IOptions<JobAppSettings> jobOptions
+        IOptions<JobSettings> jobOptions
     ) : base(
         processor,
         validator,

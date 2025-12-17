@@ -6,7 +6,7 @@ public sealed class ExportCommandHandler : ValidateAndProcessJobCommandHandler<E
         ICommandProcessor<ExportCommandRequest, ExportCommandResponse> processor,
         IDbContext<BerlinDbContext> dbContext,
         IDistributedPubSub distributedPubSub,
-        IOptions<JobAppSettings> jobOptions
+        IOptions<JobSettings> jobOptions
     ) : base(
         processor,
         dbContext,

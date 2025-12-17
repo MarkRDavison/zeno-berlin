@@ -18,13 +18,13 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
     private readonly ICommandValidator<TRequest, TResponse>? _validator;
     private readonly IDbContext<BerlinDbContext> _dbContext;
     private readonly IDistributedPubSub _distributedPubSub;
-    private readonly IOptions<JobAppSettings> _jobOptions;
+    private readonly IOptions<JobSettings> _jobOptions;
 
     public ValidateAndProcessJobCommandHandler(
         ICommandProcessor<TRequest, TResponse> processor,
         IDbContext<BerlinDbContext> dbContext,
         IDistributedPubSub distributedPubSub,
-        IOptions<JobAppSettings> jobOptions)
+        IOptions<JobSettings> jobOptions)
     {
         _processor = processor;
         _validator = null;
@@ -38,7 +38,7 @@ public abstract class ValidateAndProcessJobCommandHandler<TRequest, TResponse, T
         ICommandValidator<TRequest, TResponse> validator,
         IDbContext<BerlinDbContext> dbContext,
         IDistributedPubSub distributedPubSub,
-        IOptions<JobAppSettings> jobOptions)
+        IOptions<JobSettings> jobOptions)
     {
         _processor = processor;
         _validator = validator;

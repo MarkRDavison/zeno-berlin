@@ -2,13 +2,44 @@
 
 public static class DependencyInjectionExtensions
 {
-    public static IServiceCollection UseSharedServerServices(this IServiceCollection services, bool redisInUse)
+
+    public static IServiceCollection UseSharedServerServices(
+        this IServiceCollection services,
+        bool redisInUse,
+        MatrixNotificationSettings matrixNotificationSettings,
+        ConsoleNotificationSettings consoleNotificationSettings)
     {
         services
             .AddScoped<IFandomService, FandomService>()
             .AddScoped<IAuthorService, AuthorService>()
             .AddScoped<ISiteService, SiteService>()
             .AddTransient<INotificationCreationService, NotificationCreationService>();
+
+        services.UseLockPubSub(redisInUse);
+
+        services.AddScoped<INotificationHub, NotificationHub>();
+
+        if (matrixNotificationSettings.ENABLED)
+        {
+            services
+                .AddScoped<INotificationService, MatrixNotificationService>()
+                .AddScoped<IMatrixClient, MatrixClient>()
+                .AddHttpClient(MatrixConstants.HttpClientName);
+        }
+
+        if (consoleNotificationSettings.ENABLED)
+        {
+            services
+                .AddScoped<INotificationService, ConsoleNotificationService>();
+        }
+
+        return services;
+    }
+
+    public static IServiceCollection UseLockPubSub(
+        this IServiceCollection services,
+        bool redisInUse)
+    {
 
         if (redisInUse)
         {
@@ -23,14 +54,6 @@ public static class DependencyInjectionExtensions
                 .AddSingleton<IDistributedPubSub, InMemoryDisutributedPubSub>()
                 .AddSingleton<ILockService, InMemoryLockService>();
         }
-
-        // TODO: Only if enabled
-        services
-            .AddScoped<INotificationHub, NotificationHub>()
-            .AddScoped<INotificationService, ConsoleNotificationService>()
-            .AddScoped<INotificationService, MatrixNotificationService>()
-            .AddScoped<IMatrixClient, MatrixClient>()
-            .AddHttpClient(MatrixConstants.HttpClientName);
 
         return services;
     }
