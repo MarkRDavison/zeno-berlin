@@ -1,6 +1,10 @@
 ﻿namespace mark.davison.berlin.web.tests.playwright.CommonCandidates;
 
+#if SKIP_TUNIT_TESTS
+public abstract class BaseTest : IAsyncDisposable
+#else
 public abstract class BaseTest : PageTest, IAsyncDisposable
+#endif
 {
     private static IBrowser? _browser;
     private static IBrowserContext? _context;
@@ -27,6 +31,12 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
         Console.WriteLine("_skip: {0}", _skip);
     }
 
+#if SKIP_TUNIT_TESTS
+    public IPageAssertions Expect(IPage page)
+    {
+        return Assertions.Expect(page);
+    }
+#endif
 
     private static AppSettings CreateAppSettings()
     {
@@ -74,16 +84,10 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
     [Before(Test)]
     public async Task TestInitialize()
     {
+#if !SKIP_TUNIT_TESTS
         if (!_skip)
         {
-            Console.WriteLine("[Before(Test)]");
-#if SKIP_TUNIT_TESTS
-            Console.WriteLine("[Before(Test)] - SKIP_TUNIT_TESTS");
-            Skip.Test("Skipping test because SKIP_TUNIT_TESTS is defined");
-#else
-            Console.WriteLine("[Before(Test)] - NOT SKIP_TUNIT_TESTS");
             await OnPreTestInitialise();
-
             _browser ??= await Playwright.Firefox.LaunchAsync(new()
             {
                 Headless = !Debug,
@@ -100,8 +104,8 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
             await CurrentPage.GotoAsync(AppSettings.ENVIRONMENT.WEB_ORIGIN);
 
             await OnTestInitialise();
-#endif
         }
+#endif
     }
 
     protected virtual Task OnPreTestInitialise() => Task.CompletedTask;
