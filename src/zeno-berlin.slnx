@@ -21,7 +21,6 @@
   </Folder>
   <Folder Name="/aspire/">
     <Project Path="aspire/mark.davison.berlin.aspire/mark.davison.berlin.aspire.AppHost/mark.davison.berlin.aspire.AppHost.csproj" Id="8d1dff24-ca2a-429a-a114-0f30209da01c" />
-    <Project Path="aspire/mark.davison.berlin.aspire/mark.davison.berlin.aspire.ServiceDefaults/mark.davison.berlin.aspire.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/bff/">
     <Project Path="bff/mark.davison.berlin.bff/mark.davison.berlin.bff.csproj" Id="96236b8a-ed1f-4a1c-a74b-4efe9d2f2db4" />

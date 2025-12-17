@@ -11,24 +11,20 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
     private readonly Faker _faker;
     protected readonly HttpClient _client;
     private const string _authStateFilename = ".auth.json";
-    private readonly bool _skip;
 
     protected BaseTest()
     {
         _client = new HttpClient();
 
 #if SKIP_TUNIT_TESTS
-        _skip = true;
         AppSettings = new();
 #else
-        _skip = false;
         AppSettings = CreateAppSettings();
 #endif
         AuthenticationHelper = new AuthenticationHelper(AppSettings);
         StoryUrlHelper = new StoryUrlHelper(AppSettings);
 
         _faker = new Faker();
-        Console.WriteLine("_skip: {0}", _skip);
     }
 
 #if SKIP_TUNIT_TESTS
@@ -36,8 +32,7 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
     {
         return Assertions.Expect(page);
     }
-#endif
-
+#else
     private static AppSettings CreateAppSettings()
     {
         var appSettings = new AppSettings(); // TODO: BaseClass for settings
@@ -50,7 +45,8 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
         appSettings.EnsureValid();
 
         return appSettings;
-    }
+    }    
+#endif
 
     private static string AuthStateFullPath(string? tempDir) => $"{tempDir?.TrimEnd('/')}/{_authStateFilename}";
 
@@ -87,26 +83,23 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
 #if SKIP_TUNIT_TESTS
         Skip.Test("Skipping test because SKIP_TUNIT_TESTS is defined");
 #else
-        if (!_skip)
+        await OnPreTestInitialise();
+        _browser ??= await Playwright.Firefox.LaunchAsync(new()
         {
-            await OnPreTestInitialise();
-            _browser ??= await Playwright.Firefox.LaunchAsync(new()
-            {
-                Headless = !Debug,
-                SlowMo = Debug ? 250 : null
-            });
+            Headless = !Debug,
+            SlowMo = Debug ? 250 : null
+        });
 
-            _context ??= await _browser.NewContextAsync(new()
-            {
+        _context ??= await _browser.NewContextAsync(new()
+        {
 
-                StorageStatePath = File.Exists(AuthStateFullPath(AppSettings.ENVIRONMENT.TEMP_DIR)) ? AuthStateFullPath(AppSettings.ENVIRONMENT.TEMP_DIR) : null
-            });
-            CurrentPage = await _context.NewPageAsync();
+            StorageStatePath = File.Exists(AuthStateFullPath(AppSettings.ENVIRONMENT.TEMP_DIR)) ? AuthStateFullPath(AppSettings.ENVIRONMENT.TEMP_DIR) : null
+        });
+        CurrentPage = await _context.NewPageAsync();
 
-            await CurrentPage.GotoAsync(AppSettings.ENVIRONMENT.WEB_ORIGIN);
+        await CurrentPage.GotoAsync(AppSettings.ENVIRONMENT.WEB_ORIGIN);
 
-            await OnTestInitialise();
-        }
+        await OnTestInitialise();
 #endif
     }
 
