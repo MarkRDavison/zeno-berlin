@@ -1,6 +1,10 @@
 ﻿namespace mark.davison.berlin.web.tests.playwright.CommonCandidates;
 
+#if SKIP_TUNIT_TESTS
+public abstract class BaseTest : IAsyncDisposable
+#else
 public abstract class BaseTest : PageTest, IAsyncDisposable
+#endif
 {
     private static IBrowser? _browser;
     private static IBrowserContext? _context;
@@ -73,8 +77,7 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
 
 #if SKIP_TUNIT_TESTS
         Skip.Test("Skipping test because SKIP_TUNIT_TESTS is defined");
-#endif
-
+#else
         await OnPreTestInitialise();
 
         _browser ??= await Playwright.Firefox.LaunchAsync(new()
@@ -88,12 +91,12 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
 
             StorageStatePath = File.Exists(AuthStateFullPath(AppSettings.ENVIRONMENT.TEMP_DIR)) ? AuthStateFullPath(AppSettings.ENVIRONMENT.TEMP_DIR) : null
         });
-
         CurrentPage = await _context.NewPageAsync();
 
         await CurrentPage.GotoAsync(AppSettings.ENVIRONMENT.WEB_ORIGIN);
 
         await OnTestInitialise();
+#endif
     }
 
     protected virtual Task OnPreTestInitialise() => Task.CompletedTask;
