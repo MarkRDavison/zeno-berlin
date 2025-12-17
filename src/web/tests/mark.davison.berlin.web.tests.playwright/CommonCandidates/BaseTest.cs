@@ -1,10 +1,6 @@
 ﻿namespace mark.davison.berlin.web.tests.playwright.CommonCandidates;
 
-#if SKIP_TUNIT_TESTS
-public abstract class BaseTest : IAsyncDisposable
-#else
 public abstract class BaseTest : PageTest, IAsyncDisposable
-#endif
 {
     private static IBrowser? _browser;
     private static IBrowserContext? _context;
