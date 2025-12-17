@@ -10,6 +10,11 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
 
     protected BaseTest()
     {
+#if SKIP_TUNIT_TESTS
+        Console.WriteLine("SKIP_TUNIT_TESTS IS DEFINED");
+#else
+        Console.WriteLine("SKIP_TUNIT_TESTS IS NOT DEFINED");
+#endif
         _client = new HttpClient();
 
 #if SKIP_TUNIT_TESTS
@@ -28,7 +33,7 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
     {
         var appSettings = new AppSettings(); // TODO: BaseClass for settings
         var config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.Development.json")
+            .AddJsonFile("appsettings.Development.json", true)
             .Build();
 
         config.GetRequiredSection(appSettings.Section).Bind(appSettings);
