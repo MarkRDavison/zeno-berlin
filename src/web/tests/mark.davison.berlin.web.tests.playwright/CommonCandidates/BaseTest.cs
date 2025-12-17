@@ -56,12 +56,12 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
     [After(Assembly)]
     public static async Task AssemblyCleanup()
     {
-        if (_context != null)
+        if (_context is not null)
         {
             await _context.DisposeAsync();
         }
 
-        if (_browser != null)
+        if (_browser is not null)
         {
             await _browser.DisposeAsync();
         }
@@ -70,10 +70,12 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
     [Before(Test)]
     public async Task TestInitialize()
     {
-
+        Console.WriteLine("[Before(Test)]");
 #if SKIP_TUNIT_TESTS
+        Console.WriteLine("[Before(Test)] - SKIP_TUNIT_TESTS");
         Skip.Test("Skipping test because SKIP_TUNIT_TESTS is defined");
 #else
+        Console.WriteLine("[Before(Test)] - NOT SKIP_TUNIT_TESTS");
         await OnPreTestInitialise();
 
         _browser ??= await Playwright.Firefox.LaunchAsync(new()
