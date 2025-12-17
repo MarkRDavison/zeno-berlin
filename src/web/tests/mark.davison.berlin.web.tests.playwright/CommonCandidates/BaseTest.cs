@@ -12,8 +12,11 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
     {
         _client = new HttpClient();
 
+#if SKIP_TUNIT_TESTS
         AppSettings = CreateAppSettings();
-
+#else
+        AppSettings = new();
+#endif
         AuthenticationHelper = new AuthenticationHelper(AppSettings);
         StoryUrlHelper = new StoryUrlHelper(AppSettings);
 

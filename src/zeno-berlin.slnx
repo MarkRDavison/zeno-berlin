@@ -48,6 +48,8 @@
     <File Path="../Docker/web.dockerfile" />
     <File Path=".editorconfig" />
     <File Path="global.json" />
+    <File Path="web/entry.sh" />
+    <File Path="web/nginx.conf" />
   </Folder>
   <Folder Name="/web/">
     <Project Path="web/mark.davison.berlin.web.components/mark.davison.berlin.web.components.csproj" Id="59af7c2f-b77e-4af4-9071-537edcbc71ed" />
