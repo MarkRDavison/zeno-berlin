@@ -41,6 +41,11 @@
   <Folder Name="/Solution Items/">
     <File Path="../.github/workflows/build.yaml" />
     <File Path="../.github/workflows/publish.yaml" />
+    <File Path="../Docker/api-jobs.dockerfile" />
+    <File Path="../Docker/api-orchestrator.dockerfile" />
+    <File Path="../Docker/api.dockerfile" />
+    <File Path="../Docker/bff-web.dockerfile" />
+    <File Path="../Docker/web.dockerfile" />
     <File Path=".editorconfig" />
     <File Path="global.json" />
   </Folder>

@@ -1,12 +1,12 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 as BUILD
+FROM mcr.microsoft.com/dotnet/sdk:10.0 as BUILD
 WORKDIR /app 
 
 COPY / /app/
-RUN dotnet restore ./mark.davison.berlin.sln
-RUN dotnet publish -c Release -o out bff-web/mark.davison.berlin.bff.web/mark.davison.berlin.bff.web.csproj
+RUN dotnet restore ./zeno-berlin.slnx
+RUN dotnet publish -c Release -o out bff/mark.davison.berlin.bff/mark.davison.berlin.bff.csproj
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy-chiseled
+FROM mcr.microsoft.com/dotnet/aspnet:10.0-noble-chiseled
 WORKDIR /app
 COPY --from=BUILD /app/out .
 
-ENTRYPOINT ["dotnet", "mark.davison.berlin.bff.web.dll"]
+ENTRYPOINT ["dotnet", "mark.davison.berlin.bff.dll"]
