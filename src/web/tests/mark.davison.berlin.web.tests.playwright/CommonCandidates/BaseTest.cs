@@ -10,17 +10,12 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
 
     protected BaseTest()
     {
-#if SKIP_TUNIT_TESTS
-        Console.WriteLine("SKIP_TUNIT_TESTS IS DEFINED");
-#else
-        Console.WriteLine("SKIP_TUNIT_TESTS IS NOT DEFINED");
-#endif
         _client = new HttpClient();
 
 #if SKIP_TUNIT_TESTS
-        AppSettings = CreateAppSettings();
-#else
         AppSettings = new();
+#else
+        AppSettings = CreateAppSettings();
 #endif
         AuthenticationHelper = new AuthenticationHelper(AppSettings);
         StoryUrlHelper = new StoryUrlHelper(AppSettings);
@@ -48,7 +43,7 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
     [Before(Assembly)]
     public static void AssemblyInitialize(AssemblyHookContext _)
     {
-#if SKIP_TUNIT_TESTS
+#if !SKIP_TUNIT_TESTS
         var appSettings = CreateAppSettings();
 
         if (File.Exists(AuthStateFullPath(appSettings.ENVIRONMENT.TEMP_DIR)))
