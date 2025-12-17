@@ -65,6 +65,11 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
     [Before(Test)]
     public async Task TestInitialize()
     {
+
+#if SKIP_TUNIT_TESTS
+        Skip.Test("Skipping test because SKIP_TUNIT_TESTS is defined");
+#endif
+
         await OnPreTestInitialise();
 
         _browser ??= await Playwright.Firefox.LaunchAsync(new()

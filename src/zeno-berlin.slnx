@@ -12,6 +12,9 @@
     <Project Path="api/migrations/mark.davison.berlin.api.migrations.sqlite/mark.davison.berlin.api.migrations.sqlite.csproj" Id="21a24879-7679-4184-ae2b-6a39edd528a9" />
   </Folder>
   <Folder Name="/api/tests/">
+    <Project Path="api/tests/mark.davison.berlin.api.commands.tests/mark.davison.berlin.api.commands.tests.csproj" Id="9fbad3eb-8e1c-41fc-862d-e0791bfd0836" />
+    <Project Path="api/tests/mark.davison.berlin.api.fakesite.test/mark.davison.berlin.api.fakesite.test.csproj" Id="d680ec68-3782-4b81-8e4e-130212962a52" />
+    <Project Path="api/tests/mark.davison.berlin.api.queries.tests/mark.davison.berlin.api.queries.tests.csproj" Id="05d2212a-08af-43f5-8d16-bf2df3ddc57c" />
     <Project Path="api/tests/mark.davison.berlin.api.tests/mark.davison.berlin.api.tests.csproj" Id="d19b7b9a-23ca-4f31-8bef-286695afdcf7" />
   </Folder>
   <Folder Name="/bff/">
@@ -24,6 +27,14 @@
     <Project Path="shared/mark.davison.berlin.shared.models.dto/mark.davison.berlin.shared.models.dto.csproj" Id="28f0d961-24c6-4455-93de-bc2f298b359e" />
     <Project Path="shared/mark.davison.berlin.shared.server.services/mark.davison.berlin.shared.server.services.csproj" Id="64e98a28-0cee-443e-b3c5-00390adcbd30" />
     <Project Path="shared/mark.davison.berlin.shared.validation/mark.davison.berlin.shared.validation.csproj" Id="9b6abd0a-8aa0-48f1-9682-30ad1602471d" />
+  </Folder>
+  <Folder Name="/shared/tests/">
+    <Project Path="shared/tests/mark.davison.berlin.shared.logic.tests/mark.davison.berlin.shared.logic.tests.csproj" Id="755a81a6-70ba-4b50-ac9c-18503278da92" />
+    <Project Path="shared/tests/mark.davison.berlin.shared.server.services.tests/mark.davison.berlin.shared.server.services.tests.csproj" Id="8cba17bd-5bec-4be5-b0cf-804a12f406b6" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="global.json" />
   </Folder>
   <Folder Name="/web/">
     <Project Path="web/mark.davison.berlin.web.components/mark.davison.berlin.web.components.csproj" Id="59af7c2f-b77e-4af4-9071-537edcbc71ed" />

@@ -1,0 +1,9 @@
+﻿global using mark.davison.berlin.api.models.Entities;
+global using mark.davison.berlin.api.persistence;
+global using mark.davison.berlin.shared.logic.StoryInfo;
+global using mark.davison.berlin.shared.server.services.Helpers;
+global using mark.davison.berlin.shared.validation;
+global using mark.davison.common.persistence;
+global using mark.davison.common.server.test.Persistence;
+global using Microsoft.Extensions.DependencyInjection;
+global using Moq;

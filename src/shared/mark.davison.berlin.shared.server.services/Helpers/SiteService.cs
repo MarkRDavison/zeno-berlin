@@ -84,12 +84,14 @@ public sealed class SiteService : ISiteService
 
         if (string.IsNullOrEmpty(externalId))
         {
-            return new SiteInfo
+            var response = new SiteInfo
             {
                 Error = ValidationMessages.FormatMessageParameters(
                     ValidationMessages.INVALID_PROPERTY,
                     nameof(Story.Address))
             };
+
+            return response;
         }
 
         return new SiteInfo
