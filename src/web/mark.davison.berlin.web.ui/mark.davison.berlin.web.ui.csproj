@@ -10,7 +10,6 @@
   <ItemGroup>
 	<!-- TODO: Conditionally remove this for Release build-->
     <PackageReference Include="Aspire4Wasm.WebAssembly" Version="6.0.1" />
-    <PackageReference Include="BuildWebCompiler" Version="1.12.405" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.1" PrivateAssets="all" />
   </ItemGroup>
