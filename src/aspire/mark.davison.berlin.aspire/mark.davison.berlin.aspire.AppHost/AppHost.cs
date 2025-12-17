@@ -2,10 +2,7 @@ using mark.davison.berlin.aspire.ServiceDefaults;
 using mark.davison.berlin.shared.constants;
 using Projects;
 
-
 var builder = DistributedApplication.CreateBuilder(args);
-
-
 
 var api = builder
     .AddProject<mark_davison_berlin_api>(AspireConstants.Api)

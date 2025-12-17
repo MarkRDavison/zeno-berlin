@@ -39,6 +39,8 @@
     <Project Path="shared/tests/mark.davison.berlin.shared.server.services.tests/mark.davison.berlin.shared.server.services.tests.csproj" Id="8cba17bd-5bec-4be5-b0cf-804a12f406b6" />
   </Folder>
   <Folder Name="/Solution Items/">
+    <File Path="../.github/workflows/build.yaml" />
+    <File Path="../.github/workflows/publish.yaml" />
     <File Path=".editorconfig" />
     <File Path="global.json" />
   </Folder>
