@@ -40,12 +40,14 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
     [Before(Assembly)]
     public static void AssemblyInitialize(AssemblyHookContext _)
     {
+#if SKIP_TUNIT_TESTS
         var appSettings = CreateAppSettings();
 
         if (File.Exists(AuthStateFullPath(appSettings.ENVIRONMENT.TEMP_DIR)))
         {
             File.Delete(AuthStateFullPath(appSettings.ENVIRONMENT.TEMP_DIR));
         }
+#endif
     }
 
     [After(Assembly)]
