@@ -72,9 +72,10 @@ public sealed class ManageStoryPage : FanficBasePage
     {
         var authorList = Page.GetByTestId(DataTestIds.StoryAuthorList);
 
-        await Page.ReloadAsync(); // TODO: Temp
-
-        await authorList.WaitForAsync();
+        await authorList.WaitForAsync(new LocatorWaitForOptions
+        {
+            Timeout = 5_000.0f
+        });
 
         var info = new List<(string, Guid)>();
 
@@ -102,9 +103,10 @@ public sealed class ManageStoryPage : FanficBasePage
     {
         var fandomList = Page.GetByTestId(DataTestIds.StoryFandomsList);
 
-        await Page.ReloadAsync(); // TODO: Temp
-
-        await fandomList.WaitForAsync();
+        await fandomList.WaitForAsync(new LocatorWaitForOptions
+        {
+            Timeout = 5_000.0f
+        });
 
         var info = new List<(string, Guid)>();
 

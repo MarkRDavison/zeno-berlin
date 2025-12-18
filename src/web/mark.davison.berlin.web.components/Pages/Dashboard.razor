@@ -3,9 +3,7 @@
 
 <AuthorizeView>
 	<NotAuthorized>
-		<span>This is the anonymous landing page version of the dashboard</span>
-		<br />
-		<a data-testid="@DataTestIds.LoginHref" href="@Routes.Login">Login</a>
+		<Redirect Url="@Routes.Login" />
 	</NotAuthorized>
 	<Authorized>		
 		<MudStack Class="pa-4">

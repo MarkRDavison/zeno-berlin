@@ -87,6 +87,11 @@ public class Startup(IConfiguration Configuration)
                     .MapBackendRemoteAuthenticationEndpoints<BerlinDbContext>()
                     .MapCQRSEndpoints()
                     .MapCommonHealthChecks();
+
+                if (!AppSettings.PRODUCTION_MODE)
+                {
+                    endpoints.MapResetEndpoints();
+                }
             });
     }
 }

@@ -3,6 +3,8 @@
 
     public static class AspireConstants
     {
+        public const string Redis = nameof(Redis);
+        public const string Postgres = nameof(Postgres);
         public const string Api = nameof(Api);
         public const string Jobs = nameof(Jobs);
         public const string Orchestrator = nameof(Orchestrator);

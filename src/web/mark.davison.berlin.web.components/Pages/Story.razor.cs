@@ -35,10 +35,10 @@ public partial class Story : StateComponent
     {
         if (Id != default && !ManageStoryState.IsLoading && Data.StoryId != Id)
         {
-            Dispatcher.Dispatch(new FetchManageStoryAction
-            {
-                StoryId = Id
-            });
+            // TODO: Brute force...
+            Dispatcher.Dispatch(new FetchManageStoryAction { StoryId = Id });
+            Dispatcher.Dispatch(new FetchAuthorsListAction());
+            Dispatcher.Dispatch(new FetchFandomsListAction());
         }
     }
 
@@ -164,7 +164,6 @@ public partial class Story : StateComponent
         if (response.Success)
         {
             ClientNavigationManager.NavigateTo(Routes.Dashboard);
-            // TODO: Return to source, you can get here from dashboard or stories page
         }
 
         return response;
@@ -181,6 +180,7 @@ public partial class Story : StateComponent
 
         if (Data.Complete)
         {
+            // Confirmation dialog???
             Console.Error.WriteLine("TODO: If the story is complete prompt with confirmation, user/server setting to configure this check???");
         }
 

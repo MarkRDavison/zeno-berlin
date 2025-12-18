@@ -1,4 +1,5 @@
-﻿using HttpMethod = System.Net.Http.HttpMethod;
+﻿using AngleSharp.Io;
+using HttpMethod = System.Net.Http.HttpMethod;
 
 namespace mark.davison.berlin.shared.logic.StoryInfo;
 
@@ -6,22 +7,22 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
 {
     private const string ChapterNumberTitleSeparator = ". ";
     private readonly HttpClient _client;
-    //private readonly IRateLimitService _rateLimitService;
+    private readonly IRateLimitService _rateLimitService;
     private readonly ILogger<Ao3StoryInfoProcessor> _logger;
 
     public Ao3StoryInfoProcessor(
         HttpClient httpClient,
-        //IRateLimitServiceFactory rateLimitServiceFactory,
+        [FromKeyedServices(SiteConstants.ArchiveOfOurOwn_ShortName)] IRateLimitService rateLimitService,
         IOptions<Ao3Config> ao3ConfigOptions,
         ILogger<Ao3StoryInfoProcessor> logger)
     {
         _client = httpClient;
-        //_rateLimitService = rateLimitServiceFactory.CreateRateLimiter(TimeSpan.FromSeconds(ao3ConfigOptions.Value.RATE_DELAY));
+        _rateLimitService = rateLimitService;
         _logger = logger;
 
         if (!string.IsNullOrEmpty(ao3ConfigOptions.Value.USER_AGENT))
         {
-            _client.DefaultRequestHeaders.Add("User-Agent", ao3ConfigOptions.Value.USER_AGENT);
+            _client.DefaultRequestHeaders.Add(HeaderNames.UserAgent, ao3ConfigOptions.Value.USER_AGENT);
         }
     }
 
@@ -49,6 +50,7 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
 
     public async Task<StoryInfoModel?> ExtractStoryInfo(string storyAddress, string siteAddress, CancellationToken cancellationToken)
     {
+        IAsyncDisposable? lease = null;
         try
         {
             var request = new HttpRequestMessage
@@ -57,7 +59,12 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
                 RequestUri = new Uri(storyAddress + "?view_adult=true")
             };
 
-            // await _rateLimitService.Wait(cancellationToken);
+            lease = await _rateLimitService.WaitToProceedAsync(cancellationToken);
+
+            if (lease is null)
+            {
+                return null;
+            }
 
             var response = await _client.SendAsync(request, cancellationToken);
 
@@ -89,6 +96,13 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
             _logger.LogError(e, "Failed to extract AO3 story info for {0}", storyAddress + "?view_adult=true");
 
             return null;
+        }
+        finally
+        {
+            if (lease is not null)
+            {
+                await lease.DisposeAsync();
+            }
         }
     }
 

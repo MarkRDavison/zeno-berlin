@@ -17,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="markdavison.common.test" Version="10.0.14" />
-    <PackageReference Include="TUnit" Version="1.5.60" />
+    <PackageReference Include="markdavison.common.test" Version="10.0.15" />
+    <PackageReference Include="TUnit" Version="1.5.70" />
   </ItemGroup>
 
   <ItemGroup>

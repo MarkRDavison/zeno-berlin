@@ -3,18 +3,20 @@
 public sealed class Ao3StoryInfoProcessorTests
 {
     private readonly Ao3StoryInfoProcessor _processor;
+    private readonly Mock<IRateLimitService> _rateLimitService;
     private readonly Mock<ILogger<Ao3StoryInfoProcessor>> _logger;
     private readonly TestHttpMessageHandler _handler;
     private readonly Ao3Config _config;
 
     public Ao3StoryInfoProcessorTests()
     {
+        _rateLimitService = new();
         _handler = new();
         _logger = new();
 
         _config = new() { RATE_DELAY = 0 };
 
-        _processor = new(new HttpClient(_handler), Options.Create(_config), _logger.Object);
+        _processor = new(new HttpClient(_handler), _rateLimitService.Object, Options.Create(_config), _logger.Object);
     }
 
     [Arguments("https://archiveofourown.org/works/47216291/chapters/118921742", "47216291")]
@@ -42,6 +44,26 @@ public sealed class Ao3StoryInfoProcessorTests
     }
 
     [Test]
+    public async Task ExtractStoryInfo_WhereRateLimitReturnsNull_ReturnsNull()
+    {
+        _handler.Callback = async (HttpRequestMessage request) =>
+        {
+            return new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                Content = new StringContent(await File.ReadAllTextAsync("TestData/ExampleAo3WorkResponse_1.html"))
+            };
+        };
+
+        var storyUrl = "https://archiveofourown.org/works/123/chapters/47216291";
+        var baseStoryUrl = _processor.GenerateBaseStoryAddress(storyUrl, SiteConstants.ArchiveOfOurOwn_Address);
+
+        var storyInfo = await _processor.ExtractStoryInfo(storyUrl, SiteConstants.ArchiveOfOurOwn_Address, CancellationToken.None);
+
+        await Assert.That(storyInfo).IsNull();
+    }
+
+    [Test]
     public async Task ExtractStoryInfo_ForExample1_Works()
     {
         _handler.Callback = async (HttpRequestMessage request) =>
@@ -52,6 +74,11 @@ public sealed class Ao3StoryInfoProcessorTests
                 Content = new StringContent(await File.ReadAllTextAsync("TestData/ExampleAo3WorkResponse_1.html"))
             };
         };
+
+        _rateLimitService
+            .Setup(_ => _.WaitToProceedAsync(
+                It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(new AsyncDisposableCallback("test", () => Task.CompletedTask));
 
         var storyUrl = "https://archiveofourown.org/works/123/chapters/47216291";
         var baseStoryUrl = _processor.GenerateBaseStoryAddress(storyUrl, SiteConstants.ArchiveOfOurOwn_Address);

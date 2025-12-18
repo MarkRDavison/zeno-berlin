@@ -1,5 +1,6 @@
 ﻿global using mark.davison.berlin.api.Configuration;
 global using mark.davison.berlin.api.migrations.sqlite;
+global using mark.davison.berlin.api.models.Entities;
 global using mark.davison.berlin.api.persistence;
 global using mark.davison.berlin.shared.logic.Ignition;
 global using mark.davison.berlin.shared.logic.Settings;
@@ -20,6 +21,7 @@ global using mark.davison.common.server.Configuration;
 global using mark.davison.common.server.Ignition;
 global using mark.davison.common.server.Middleware;
 global using mark.davison.common.server.Services;
+global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Diagnostics;
 global using Microsoft.Extensions.Options;

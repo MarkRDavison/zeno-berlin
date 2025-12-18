@@ -1,14 +1,20 @@
-using mark.davison.berlin.aspire.ServiceDefaults;
-using mark.davison.berlin.shared.constants;
-using Projects;
-
 var builder = DistributedApplication.CreateBuilder(args);
+
+/*
+var redis = builder
+    .AddRedis(AspireConstants.Redis);
+
+var db = builder
+    .AddPostgres("postgresql")
+    .AddDatabase("berlin", "berlin");
+*/
 
 var api = builder
     .AddProject<mark_davison_berlin_api>(AspireConstants.Api)
     .WithNonProxiedHttpsEndpoint()
     .WithCommonHealthChecks()
     .WithExternalHttpEndpoints();
+//.WithEnvironment("BERLIN__REDIS__HOST", redis.GetEndpoint(AspireConstants.Redis).Host);
 
 var jobs = builder
     .AddProject<mark_davison_berlin_api_jobs>(AspireConstants.Jobs)

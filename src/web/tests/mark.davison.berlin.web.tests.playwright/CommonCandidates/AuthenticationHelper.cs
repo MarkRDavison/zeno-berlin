@@ -21,7 +21,7 @@ public partial class AuthenticationHelper
         {
             username = await page.GetByTestId(DataTestIds.Username).TextContentAsync(new LocatorTextContentOptions
             {
-                Timeout = 10000.0f // TODO: Config
+                Timeout = 5000.0f // TODO: Config
             });
         }
         catch (TimeoutException)
@@ -31,12 +31,6 @@ public partial class AuthenticationHelper
 
         if (string.IsNullOrEmpty(username))
         {
-            var loginLink = page.GetByTestId(DataTestIds.LoginHref);
-
-            await Assertions.Expect(loginLink).ToBeVisibleAsync();
-
-            await loginLink.ClickAsync();
-
             // TODO: Need a way to specify login flow for each provider
             var loginWithProviderLink = page.GetByText($"Login with {_appSettings.AUTH.PROVIDER}");
 
