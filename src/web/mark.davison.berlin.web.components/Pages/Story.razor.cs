@@ -7,6 +7,8 @@
 public partial class Story : StateComponent
 {
     private bool _inProgress;
+    private bool _showActualFandoms;
+    private bool _showActualAuthors;
 
     [Parameter]
     public required Guid Id { get; set; }
@@ -27,9 +29,6 @@ public partial class Story : StateComponent
     public required IStoreHelper StoreHelper { get; set; }
 
     public StoryManageDto Data => ManageStoryState.Data;
-
-    private bool _showActualFandoms;
-    private bool _showActualAuthors;
 
     protected override void OnParametersSet()
     {
@@ -55,8 +54,6 @@ public partial class Story : StateComponent
     {
         if (set)
         {
-            Data.ConsumedChapters = Data.CurrentChapters;
-
             var action = new SetStoryConsumedChaptersAction
             {
                 StoryId = Id,
@@ -66,8 +63,6 @@ public partial class Story : StateComponent
             await StoreHelper.DispatchAndWaitForResponse<SetStoryConsumedChaptersAction, SetStoryConsumedChaptersActionResponse>(action);
         }
     }
-
-    private bool _consumedChapterUpToDate => Data.ConsumedChapters != null && Data.ConsumedChapters == Data.CurrentChapters;
 
     private async Task AddStoryUpdate()
     {
@@ -189,12 +184,18 @@ public partial class Story : StateComponent
         _inProgress = false;
     }
 
+    private string UpdateChapterText(StoryManageUpdatesDto update)
+    {
+        return $"{update.CurrentChapters}/{update.TotalChapters?.ToString() ?? "?"}";
+    }
+
+    private bool _consumedChapterUpToDate => Data.ConsumedChapters != null && Data.ConsumedChapters == Data.CurrentChapters;
     private string _currentChapterAddress => Data.ConsumedChapters != null
         ? Data.Updates.FirstOrDefault(_ => _.CurrentChapters == Data.ConsumedChapters + 1 && !string.IsNullOrEmpty(_.ChapterAddress))?.ChapterAddress ?? Data.Address
         : Data.Address;
-
     private string _lastCheckedText => $"Last checked {Data.LastChecked.Humanize()}";
     private string _lastAuthoredText => $"Last authored {Data.LastAuthored.ToDateTime(TimeOnly.MinValue).Humanize()}";
+    private string _chaptersText => $"Chapters: {Data.CurrentChapters}/{Data.TotalChapters?.ToString() ?? "?"}";
     private string _updateTypeText
     {
         get
@@ -208,8 +209,5 @@ public partial class Story : StateComponent
             return $"Updates {updateType.Description.ToLower()}";
         }
     }
-    private string _chaptersText => $"Chapters: {Data.CurrentChapters}/{Data.TotalChapters?.ToString() ?? "?"}";
-
-    private string UpdateChapterText(StoryManageUpdatesDto update) => $"{update.CurrentChapters}/{update.TotalChapters?.ToString() ?? "?"}";
 
 }

@@ -20,7 +20,7 @@ public sealed class ManageStoryQueryProcessor : IQueryProcessor<ManageStoryQuery
             .Where(_ => _.Id == request.StoryId && _.UserId == currentUserContext.UserId)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (story == null)
+        if (story is null)
         {
             return ValidationMessages.CreateErrorResponse<ManageStoryQueryResponse>(
                 ValidationMessages.FAILED_TO_FIND_ENTITY,
@@ -38,22 +38,21 @@ public sealed class ManageStoryQueryProcessor : IQueryProcessor<ManageStoryQuery
 
         var response = new ManageStoryQueryResponse
         {
-            Value = new StoryManageDto
-            {
-                StoryId = story.Id,
-                Name = story.Name,
-                Address = story.Address,
-                CurrentChapters = story.CurrentChapters,
-                TotalChapters = story.TotalChapters,
-                ConsumedChapters = story.ConsumedChapters,
-                Complete = story.Complete,
-                Favourite = story.Favourite,
-                UpdateTypeId = story.UpdateTypeId,
-                LastChecked = story.LastChecked,
-                LastAuthored = story.LastAuthored,
-                FandomIds = [.. story.StoryFandomLinks.Select(_ => _.FandomId)],
-                AuthorIds = [.. story.StoryAuthorLinks.Select(_ => _.AuthorId)],
-                Updates = [..updates.Select(_ => new StoryManageUpdatesDto {
+            Value = new StoryManageDto(
+                story.Id,
+                story.Name,
+                story.Address,
+                story.CurrentChapters,
+                story.TotalChapters,
+                story.ConsumedChapters,
+                story.Complete,
+                story.Favourite,
+                story.UpdateTypeId,
+                story.LastChecked,
+                story.LastAuthored,
+                [.. story.StoryFandomLinks.Select(_ => _.FandomId)],
+                [.. story.StoryAuthorLinks.Select(_ => _.AuthorId)],
+                [..updates.Select(_ => new StoryManageUpdatesDto {
                     CurrentChapters = _.CurrentChapters,
                     TotalChapters = _.TotalChapters,
                     Complete = _.Complete,
@@ -61,8 +60,7 @@ public sealed class ManageStoryQueryProcessor : IQueryProcessor<ManageStoryQuery
                     ChapterTitle = _.ChapterTitle ?? string.Empty,
                     LastAuthored = _.LastAuthored,
                     LastChecked = _.LastModified
-                }).OrderByDescending(_ => _.LastAuthored)]
-            }
+                }).OrderByDescending(_ => _.LastAuthored)])
         };
 
         return response;

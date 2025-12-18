@@ -29,4 +29,5 @@ global using Microsoft.AspNetCore.Components;
 global using Microsoft.AspNetCore.Components.Authorization;
 global using Microsoft.Extensions.DependencyInjection;
 global using MudBlazor;
+global using System.ComponentModel;
 global using System.Runtime.CompilerServices;

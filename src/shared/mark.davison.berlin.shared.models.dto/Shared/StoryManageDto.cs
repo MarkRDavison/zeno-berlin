@@ -1,24 +1,20 @@
 ﻿namespace mark.davison.berlin.shared.models.dto.Shared;
 
-public sealed class StoryManageDto
-{
-    public Guid StoryId { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public int CurrentChapters { get; set; }
-    public int? TotalChapters { get; set; }
-    public int? ConsumedChapters { get; set; }
-    public bool Complete { get; set; }
-    public bool Favourite { get; set; }
-    public Guid UpdateTypeId { get; set; }
-    public DateTime LastChecked { get; set; }
-    public DateOnly LastAuthored { get; set; }
-    public List<Guid> FandomIds { get; set; } = [];
-    public List<Guid> AuthorIds { get; set; } = [];
-
-    public List<StoryManageUpdatesDto> Updates { get; set; } = [];
-
-}
+public sealed record StoryManageDto(
+    Guid StoryId,
+    string Name,
+    string Address,
+    int CurrentChapters,
+    int? TotalChapters,
+    int? ConsumedChapters,
+    bool Complete,
+    bool Favourite,
+    Guid UpdateTypeId,
+    DateTime LastChecked,
+    DateOnly LastAuthored,
+    List<Guid> FandomIds,
+    List<Guid> AuthorIds,
+    List<StoryManageUpdatesDto> Updates);
 
 public sealed class StoryManageUpdatesDto
 {

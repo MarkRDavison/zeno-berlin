@@ -5,7 +5,9 @@ public static class ManageStoryReducers
     [ReducerMethod]
     public static ManageStoryState FetchManageStoryAction(ManageStoryState state, FetchManageStoryAction action)
     {
-        return new ManageStoryState(action.SetLoading, action.SetLoading ? new() : state.Data);
+        return new ManageStoryState(
+            action.SetLoading,
+            state.Data);
     }
 
     [ReducerMethod]
@@ -16,7 +18,7 @@ public static class ManageStoryReducers
             return new ManageStoryState(false, response.Value);
         }
 
-        return new ManageStoryState(false, new());
+        return state;
     }
 
     [ReducerMethod]
@@ -24,10 +26,13 @@ public static class ManageStoryReducers
     {
         if (state.Data.StoryId == action.StoryId)
         {
-            state.Data.Favourite = action.IsFavourite;
+            return new(state.IsLoading, state.Data with
+            {
+                Favourite = action.IsFavourite
+            });
         }
 
-        return new(state.IsLoading, state.Data);
+        return state;
     }
 
     [ReducerMethod]
@@ -35,10 +40,13 @@ public static class ManageStoryReducers
     {
         if (state.Data.StoryId == response.StoryId)
         {
-            state.Data.Favourite = response.IsFavourite;
+            return new(state.IsLoading, state.Data with
+            {
+                Favourite = response.IsFavourite
+            });
         }
 
-        return new(state.IsLoading, state.Data);
+        return state;
     }
 
     [ReducerMethod]
@@ -46,10 +54,13 @@ public static class ManageStoryReducers
     {
         if (state.Data.StoryId == action.StoryId)
         {
-            state.Data.ConsumedChapters = action.ConsumedChapters;
+            return new(state.IsLoading, state.Data with
+            {
+                ConsumedChapters = action.ConsumedChapters
+            });
         }
 
-        return new(state.IsLoading, state.Data);
+        return state;
     }
 
     [ReducerMethod]
@@ -57,10 +68,13 @@ public static class ManageStoryReducers
     {
         if (state.Data.StoryId == response.StoryId)
         {
-            state.Data.ConsumedChapters = response.ConsumedChapters;
+            return new(state.IsLoading, state.Data with
+            {
+                ConsumedChapters = response.ConsumedChapters
+            });
         }
 
-        return new(state.IsLoading, state.Data);
+        return state;
     }
 
     [ReducerMethod]
@@ -79,6 +93,6 @@ public static class ManageStoryReducers
             });
         }
 
-        return new(state.IsLoading, state.Data);
+        return state;
     }
 }
