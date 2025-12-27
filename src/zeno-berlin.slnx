@@ -57,6 +57,7 @@
     <Project Path="web/mark.davison.berlin.web.ui/mark.davison.berlin.web.ui.csproj" Id="f80f4890-15b0-4377-bde8-19f031b93d9d" />
   </Folder>
   <Folder Name="/web/tests/">
+    <Project Path="web/tests/mark.davison.berlin.web.components.tests/mark.davison.berlin.web.components.tests.csproj" Id="2ccbd186-698c-48e2-91a0-ecfcd83872e9" />
     <Project Path="web/tests/mark.davison.berlin.web.tests.playwright/mark.davison.berlin.web.tests.playwright.csproj" Id="dc671939-66f3-4716-82f0-7a22cfc445fd" />
   </Folder>
 </Solution>

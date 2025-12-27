@@ -1,6 +1,6 @@
-﻿namespace mark.davison.berlin.web.components.Pages.NewStory;
+﻿namespace mark.davison.berlin.web.components.Pages.Story;
 
-public partial class NewStoryView : IDisposable
+public partial class Story : IDisposable
 {
     private bool disposedValue;
 
@@ -8,12 +8,14 @@ public partial class NewStoryView : IDisposable
     public required Guid Id { get; set; }
 
     [Inject]
-    public required NewStoryViewModel ViewModel { get; set; }
+    public required IStoryViewModel ViewModel { get; set; }
 
     protected override void OnParametersSet()
     {
-        ViewModel.PropertyChanged += ViewModel_PropertyChanged;
-        ViewModel.Initialise(Id);
+        if (ViewModel.Initialise(Id))
+        {
+            ViewModel.PropertyChanged += ViewModel_PropertyChanged;
+        }
     }
 
     private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)

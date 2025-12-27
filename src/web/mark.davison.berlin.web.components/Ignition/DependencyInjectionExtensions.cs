@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.web.components.Ignition;
+﻿using mark.davison.berlin.web.components.Pages.Story;
+
+namespace mark.davison.berlin.web.components.Ignition;
 
 public static class DependencyInjectionExtensions
 {
@@ -8,6 +10,9 @@ public static class DependencyInjectionExtensions
         services.UseAuthentication(WebConstants.ApiClientName);
         services.UseClientCQRS(typeof(Routes));
         services.UseCommonClient(typeof(Routes));
+
+        services
+            .AddTransient<IStoryViewModel, StoryViewModel>();
 
         return services;
     }
