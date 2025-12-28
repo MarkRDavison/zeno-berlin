@@ -16,6 +16,7 @@
   <Folder Name="/api/tests/">
     <Project Path="api/tests/mark.davison.berlin.api.commands.tests/mark.davison.berlin.api.commands.tests.csproj" Id="9fbad3eb-8e1c-41fc-862d-e0791bfd0836" />
     <Project Path="api/tests/mark.davison.berlin.api.fakesite.test/mark.davison.berlin.api.fakesite.test.csproj" Id="d680ec68-3782-4b81-8e4e-130212962a52" />
+    <Project Path="api/tests/mark.davison.berlin.api.orchestrator.tests/mark.davison.berlin.api.orchestrator.tests.csproj" Id="38fbfb51-9bf3-4612-9b7f-763210d4e10c" />
     <Project Path="api/tests/mark.davison.berlin.api.queries.tests/mark.davison.berlin.api.queries.tests.csproj" Id="05d2212a-08af-43f5-8d16-bf2df3ddc57c" />
     <Project Path="api/tests/mark.davison.berlin.api.tests/mark.davison.berlin.api.tests.csproj" Id="d19b7b9a-23ca-4f31-8bef-286695afdcf7" />
   </Folder>

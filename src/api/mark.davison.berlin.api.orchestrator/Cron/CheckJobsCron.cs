@@ -30,11 +30,10 @@ public class CheckJobsCron : CronJobService
 
         var jobs = await dbContext
             .Set<Job>()
-            .Where(
-                _ =>
-                    _.Status != JobStatusConstants.Complete &&
-                    _.Status != JobStatusConstants.Running &&
-                    _.Status != JobStatusConstants.Errored)
+            .Where(_ =>
+                _.Status != JobStatusConstants.Complete &&
+                _.Status != JobStatusConstants.Running &&
+                _.Status != JobStatusConstants.Errored)
             .CountAsync(cancellationToken);
 
         if (jobs == 0)
