@@ -1,6 +1,4 @@
-﻿using mark.davison.berlin.web.tests.playwright.Modals;
-
-namespace mark.davison.berlin.web.tests.playwright.Pages;
+﻿namespace mark.davison.berlin.web.tests.playwright.Pages;
 
 public sealed class FandomsPage(IPage page, AppSettings appSettings) : FanficBasePage(page, appSettings)
 {
