@@ -11,6 +11,7 @@
     <Project Path="api/mark.davison.berlin.api/mark.davison.berlin.api.csproj" Id="e16453f4-2285-4857-9e78-9d53ae9dbce3" />
   </Folder>
   <Folder Name="/api/migrations/">
+    <Project Path="api/migrations/mark.davison.berlin.api.migrations.postgres/mark.davison.berlin.api.migrations.postgres.csproj" Id="66893815-a517-4fa1-9063-20627bd9b0dd" />
     <Project Path="api/migrations/mark.davison.berlin.api.migrations.sqlite/mark.davison.berlin.api.migrations.sqlite.csproj" Id="21a24879-7679-4184-ae2b-6a39edd528a9" />
   </Folder>
   <Folder Name="/api/tests/">
