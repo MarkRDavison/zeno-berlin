@@ -8,6 +8,9 @@ public partial class AuthenticationHelper
     private const string Password = "Password";
     private const string ExpectedTitle = "Sign in";
 
+    private int _retryCount = 0;
+    private const int MaxRetries = 1;
+
     public AuthenticationHelper(AppSettings appSettings)
     {
         _appSettings = appSettings;
@@ -34,7 +37,26 @@ public partial class AuthenticationHelper
             // TODO: Need a way to specify login flow for each provider
             var loginWithProviderLink = page.GetByText($"Login with {_appSettings.AUTH.PROVIDER}");
 
-            await Assertions.Expect(loginWithProviderLink).ToBeVisibleAsync();
+            try
+            {
+                await Assertions.Expect(loginWithProviderLink).ToBeVisibleAsync();
+            }
+            catch (Exception)
+            {
+                // TODO: More robust logging in/auth state persistence
+                if (_retryCount < MaxRetries)
+                {
+                    _retryCount++;
+
+                    await page.ReloadAsync();
+
+                    await EnsureLoggedIn(page);
+
+                    return;
+                }
+
+                throw;
+            }
 
             await loginWithProviderLink.ClickAsync();
 

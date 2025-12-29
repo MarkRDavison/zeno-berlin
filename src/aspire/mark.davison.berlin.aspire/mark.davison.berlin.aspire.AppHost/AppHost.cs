@@ -28,7 +28,9 @@ var orchestrator = builder
     .WithNonProxiedHttpsEndpoint()
     .WithCommonHealthChecks()
     .WithExternalHttpEndpoints()
-    .WithReference(api);
+    .WithReference(api)
+    .WithEnvironment("BERLIN__JOB_CHECK_RATE", "*/1 * * * *")
+    ;
 
 var fakesite = builder
     .AddProject<mark_davison_berlin_api_fakesite>(AspireConstants.Fakesite)

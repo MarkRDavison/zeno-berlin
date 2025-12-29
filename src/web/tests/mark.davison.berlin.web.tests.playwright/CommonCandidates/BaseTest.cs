@@ -45,7 +45,7 @@ public abstract class BaseTest : PageTest, IAsyncDisposable
         appSettings.EnsureValid();
 
         return appSettings;
-    }    
+    }
 #endif
 
     private static string AuthStateFullPath(string? tempDir) => $"{tempDir?.TrimEnd('/')}/{_authStateFilename}";

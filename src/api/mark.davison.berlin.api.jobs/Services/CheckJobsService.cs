@@ -49,7 +49,8 @@ public sealed class CheckJobsService : ICheckJobsService
 
             var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext<BerlinDbContext>>();
 
-            var jobs = await dbContext.Set<Job>()
+            var jobs = await dbContext
+                .Set<Job>()
                 .Include(_ => _.ContextUser)
                 .ThenInclude(_ => _.UserRoles)
                 .ThenInclude(_ => _.Role)

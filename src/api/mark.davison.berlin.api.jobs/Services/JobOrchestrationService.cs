@@ -1,9 +1,4 @@
-﻿using mark.davison.common.CQRS;
-using mark.davison.common.server.abstractions.CQRS;
-using System.Reflection;
-using System.Text.Json;
-
-namespace mark.davison.berlin.api.jobs.Services;
+﻿namespace mark.davison.berlin.api.jobs.Services;
 
 public sealed class JobOrchestrationService : IJobOrchestrationService
 {

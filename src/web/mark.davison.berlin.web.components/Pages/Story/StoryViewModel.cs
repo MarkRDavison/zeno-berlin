@@ -132,7 +132,6 @@ public partial class StoryViewModel : IStoryViewModel
         _authorState.OnStateChange += OnStateChanged;
         _startupState.OnStateChange += OnStateChanged;
 
-
         if (Id != default && !_manageStoryState.Value.IsLoading && Data?.StoryId != Id)
         {
             // TODO: Brute force...
@@ -141,7 +140,7 @@ public partial class StoryViewModel : IStoryViewModel
             _dispatcher.Dispatch(new FetchFandomsListAction());
         }
 
-        return false;
+        return true;
     }
 
 
