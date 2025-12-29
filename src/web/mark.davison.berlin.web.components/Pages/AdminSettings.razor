@@ -3,18 +3,20 @@
 
 @inject AuthenticationStateProvider _authStateProvider
 
-<h1>Admin Settings</h1>
+<MudStack Class="pa-4">
+    <MudStack Row AlignItems="AlignItems.End">
+        <h1>Admin Settings</h1>
+        <MudSpacer />
+        <ProgressButton InProgress="@_inProgress"
+                        Color="Color.Primary"
+                        Disabled="@_inProgress"
+                        Label="Update stories"
+                        OnClick="TriggerUpdateStories" />
+    </MudStack>
+    @if (_authState is not null)
+    {
+        <span>@($"{_authState.User?.FindFirst(ClaimTypes.Name)?.Value}"), you are an authorized admin :)</span>
+    }
+</MudStack>
 
-@if (_authState is not null)
-{
-	<span>@($"{_authState.User?.FindFirst(ClaimTypes.Name)?.Value}"), you are an authorized admin :)</span>
-}
 
-@code {
-	private AuthenticationState? _authState;
-
-	protected override async Task OnInitializedAsync()
-	{
-		_authState = await _authStateProvider.GetAuthenticationStateAsync();
-	}
-}

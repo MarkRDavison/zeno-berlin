@@ -2,7 +2,7 @@
 
 public sealed class StartupState : IClientState
 {
-    public StartupState() : this(false, false, new())
+    public StartupState() : this(true, false, new())
     {
 
     }
