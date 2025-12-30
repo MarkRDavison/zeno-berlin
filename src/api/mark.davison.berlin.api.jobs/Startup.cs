@@ -29,7 +29,7 @@ public class Startup
             })
             .AddLogging()
             // TODO: Does this need to know about the migration assemblies?
-            .AddDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory))
+            .AddDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
             .AddCoreDbContext<BerlinDbContext>()
             .AddScoped<ICurrentUserContext, JobCurrentUserContext>()
             .AddHealthCheckServices<ApplicationHealthStateHostedService>()
@@ -50,14 +50,6 @@ public class Startup
         app
             .UseHttpsRedirection()
             .UseRouting()
-            /*.Use(async (HttpContext ctx, RequestDelegate next) =>
-            {
-                ctx.User = await ctx.RequestServices
-                    .GetRequiredService<ICurrentUserContext>()
-                    .PopulateFromPrincipal(ctx.User, string.Empty);
-
-                await next(ctx);
-            })*/
             .UseEndpoints(_ =>
             {
                 _.MapCommonHealthChecks();

@@ -1,6 +1,8 @@
 ﻿global using mark.davison.berlin.api.models.Entities;
 global using mark.davison.berlin.api.persistence;
 global using mark.davison.berlin.shared.constants;
+global using mark.davison.berlin.shared.logic.Models;
+global using mark.davison.berlin.shared.logic.Settings;
 global using mark.davison.berlin.shared.logic.StoryInfo;
 global using mark.davison.berlin.shared.models.dto.Scenarios.Commands.AddFandom;
 global using mark.davison.berlin.shared.models.dto.Scenarios.Commands.AddPotentialStory;
@@ -15,6 +17,7 @@ global using mark.davison.berlin.shared.models.dto.Scenarios.Commands.GrabPotent
 global using mark.davison.berlin.shared.models.dto.Scenarios.Commands.Import;
 global using mark.davison.berlin.shared.models.dto.Scenarios.Commands.MonthlyNotifications;
 global using mark.davison.berlin.shared.models.dto.Scenarios.Commands.SendNotification;
+global using mark.davison.berlin.shared.models.dto.Scenarios.Commands.UpdateStories;
 global using mark.davison.berlin.shared.models.dto.Shared;
 global using mark.davison.berlin.shared.server.services.Helpers;
 global using mark.davison.berlin.shared.server.services.Jobs;

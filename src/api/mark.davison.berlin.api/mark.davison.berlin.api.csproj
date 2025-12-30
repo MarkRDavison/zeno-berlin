@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\mark.davison.berlin.api.commands\mark.davison.berlin.api.commands.csproj" />
     <ProjectReference Include="..\mark.davison.berlin.api.queries\mark.davison.berlin.api.queries.csproj" />
+    <ProjectReference Include="..\migrations\mark.davison.berlin.api.migrations.postgres\mark.davison.berlin.api.migrations.postgres.csproj" />
     <ProjectReference Include="..\migrations\mark.davison.berlin.api.migrations.sqlite\mark.davison.berlin.api.migrations.sqlite.csproj" />
   </ItemGroup>
 

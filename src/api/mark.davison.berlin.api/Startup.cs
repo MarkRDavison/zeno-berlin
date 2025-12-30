@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.api;
+﻿using mark.davison.berlin.api.migrations.postgres;
+
+namespace mark.davison.berlin.api;
 
 [UseCQRSServer]
 public class Startup(IConfiguration Configuration)
@@ -68,7 +70,8 @@ public class Startup(IConfiguration Configuration)
                 .AddDatabase<BerlinDbContext>(
                     AppSettings.PRODUCTION_MODE,
                     AppSettings.DATABASE,
-                    typeof(SqliteContextFactory));
+                    typeof(SqliteContextFactory),
+                    typeof(PostgresContextFactory));
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿global using mark.davison.berlin.api.jobs.Configuration;
 global using mark.davison.berlin.api.jobs.Services;
+global using mark.davison.berlin.api.migrations.postgres;
 global using mark.davison.berlin.api.migrations.sqlite;
 global using mark.davison.berlin.api.models.Entities;
 global using mark.davison.berlin.api.persistence;
