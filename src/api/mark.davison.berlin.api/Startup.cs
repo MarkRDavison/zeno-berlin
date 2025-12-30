@@ -1,4 +1,5 @@
 ﻿using mark.davison.berlin.api.migrations.postgres;
+using System.Text.Json;
 
 namespace mark.davison.berlin.api;
 
@@ -10,6 +11,8 @@ public class Startup(IConfiguration Configuration)
     public void ConfigureServices(IServiceCollection services)
     {
         AppSettings = services.BindAppSettings(Configuration);
+
+        Console.WriteLine(JsonSerializer.Serialize(AppSettings));
 
         services
             .AddCors(o =>
