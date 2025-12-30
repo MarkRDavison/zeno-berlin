@@ -15,6 +15,12 @@ public class ApplicationHealthStateHostedService(
 {
     protected override async Task InitDatabaseProduction(BerlinDbContext dbContext, CancellationToken cancellationToken)
     {
+        if (PendingModelChangesChecker.HasPendingModelChanges(dbContext))
+        {
+            var details = PendingModelChangesChecker.GetPendingModelChanges(dbContext);
+            Console.Error.WriteLine(details);
+        }
+
         await dbContext.Database.MigrateAsync(cancellationToken);
     }
 

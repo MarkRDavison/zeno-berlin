@@ -28,13 +28,13 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<bool>("IsUserSpecified")
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -66,7 +66,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("ExternalName")
                         .IsRequired()
@@ -79,7 +79,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -109,10 +109,10 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("FinishedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("JobRequest")
                         .IsRequired()
@@ -127,24 +127,24 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("PerformerId")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("SelectedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("StartedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -155,7 +155,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Job");
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("mark.davison.berlin.api.models.Entities.PotentialStory", b =>
@@ -168,10 +168,10 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -188,7 +188,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PotentialStory");
+                    b.ToTable("PotentialStories");
                 });
 
             modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Site", b =>
@@ -201,10 +201,10 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("LongName")
                         .IsRequired()
@@ -240,7 +240,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<int>("CurrentChapters")
                         .HasColumnType("integer");
@@ -256,10 +256,10 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("date");
 
                     b.Property<DateTime>("LastChecked")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -297,10 +297,10 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("StoryId")
                         .HasColumnType("uuid");
@@ -325,13 +325,13 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("FandomId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("StoryId")
                         .HasColumnType("uuid");
@@ -365,7 +365,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<int>("CurrentChapters")
                         .HasColumnType("integer");
@@ -374,7 +374,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("date");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("StoryId")
                         .HasColumnType("uuid");
@@ -400,14 +400,14 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -425,10 +425,10 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Provider")
                         .IsRequired()
@@ -457,13 +457,13 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -485,10 +485,10 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -505,7 +505,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("DisplayName")
                         .HasColumnType("text");
@@ -518,7 +518,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("uuid");
@@ -536,10 +536,10 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid");

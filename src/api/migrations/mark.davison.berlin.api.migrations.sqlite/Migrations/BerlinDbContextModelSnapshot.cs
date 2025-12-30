@@ -23,13 +23,13 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<bool>("IsUserSpecified")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -61,7 +61,7 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("ExternalName")
                         .IsRequired()
@@ -74,7 +74,7 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -104,10 +104,10 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("FinishedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("JobRequest")
                         .IsRequired()
@@ -122,24 +122,24 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("PerformerId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("SelectedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("StartedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
@@ -150,7 +150,7 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Job");
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("mark.davison.berlin.api.models.Entities.PotentialStory", b =>
@@ -163,10 +163,10 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -183,7 +183,7 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PotentialStory");
+                    b.ToTable("PotentialStories");
                 });
 
             modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Site", b =>
@@ -196,10 +196,10 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("LongName")
                         .IsRequired()
@@ -235,7 +235,7 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<int>("CurrentChapters")
                         .HasColumnType("INTEGER");
@@ -248,13 +248,13 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateOnly>("LastAuthored")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("date");
 
                     b.Property<DateTime>("LastChecked")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -292,10 +292,10 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("StoryId")
                         .HasColumnType("TEXT");
@@ -320,13 +320,13 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("FandomId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("StoryId")
                         .HasColumnType("TEXT");
@@ -360,16 +360,16 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<int>("CurrentChapters")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateOnly>("LastAuthored")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("date");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("StoryId")
                         .HasColumnType("TEXT");
@@ -395,14 +395,14 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
@@ -420,10 +420,10 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Provider")
                         .IsRequired()
@@ -452,13 +452,13 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -480,10 +480,10 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -500,7 +500,7 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<string>("DisplayName")
                         .HasColumnType("TEXT");
@@ -513,7 +513,7 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("TenantId")
                         .HasColumnType("TEXT");
@@ -531,10 +531,10 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp(0) without time zone");
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("TEXT");
