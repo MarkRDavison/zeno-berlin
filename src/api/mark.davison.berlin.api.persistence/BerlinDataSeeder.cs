@@ -18,19 +18,28 @@ public sealed class BerlinDataSeeder : IDataSeeder
     }
     public async Task SeedDataAsync(CancellationToken cancellationToken)
     {
-        using var scope = _serviceScopeFactory.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext<BerlinDbContext>>();
+        try
+        {
+            using var scope = _serviceScopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext<BerlinDbContext>>();
 
-        var user = await EnsureUserSeeded(dbContext, cancellationToken);
-        await EnsureTenantSeeded(dbContext, cancellationToken);
-        await EnsureRolesSeeded(dbContext, cancellationToken);
+            var user = await EnsureUserSeeded(dbContext, cancellationToken);
+            await EnsureTenantSeeded(dbContext, cancellationToken);
+            await EnsureRolesSeeded(dbContext, cancellationToken);
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
-        await EnsureSitesSeeded(dbContext, user, cancellationToken);
-        await EnsureUpdateTypesSeeded(dbContext, user, cancellationToken);
+            await EnsureSitesSeeded(dbContext, user, cancellationToken);
+            await EnsureUpdateTypesSeeded(dbContext, user, cancellationToken);
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.StackTrace);
+            throw;
+        }
     }
 
     internal async Task EnsureSeeded<T>(IDbContext<BerlinDbContext> dbContext, List<T> entities, CancellationToken cancellationToken)
