@@ -1,36 +1,57 @@
 ﻿@inherits LayoutComponentBase
-@inject IAuthenticationConfig authConfig
-@inject IAuthenticationContext authContext
+
+@implements IDisposable
+
+@inject AuthenticationStateProvider _auth
+@inject IStoreHelper _storeHelper
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
 <MudDialogProvider />
 <MudSnackbarProvider />
+<MudPopoverProvider />
 
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Outlined.QuestionMark" Color="Color.Inherit" />
         <MudText Typo="Typo.h4" Class="app-title">Fanfic</MudText>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudSpacer />   
-        <span data-testid="@DataTestIds.Username">@authContext.User?.preferred_username</span>
-        <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Size="Size.Large">
-            <ActivatorContent>
-                <MudIconButton data-testid="@DataTestIds.ManageIcon" Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" Edge="Edge.End" />
-            </ActivatorContent>
-            <ChildContent>
-                <MudMenuItem Href="@Routes.UserSettings">Settings</MudMenuItem>
-                <MudMenuItem Href="@authConfig.LogoutEndpoint">Logout</MudMenuItem>
-            </ChildContent>
-        </MudMenu>
+        <AuthorizeView>
+            <Authorized>
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+                <MudSpacer />
+                @if (context.User.IsInRole("Admin"))
+                {
+                    <MudTooltip Text="Admin User">
+                        <MudIcon data-testid="@DataTestIds.AdminIcon" Class="mr-2" Icon="@Icons.Material.Filled.Shield" />
+                    </MudTooltip>
+                }
+                <span data-testid="@DataTestIds.Username">@context.User.Identity?.Name</span>
+                <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" Size="Size.Large">
+                    <ActivatorContent>
+                        <MudIconButton data-testid="@DataTestIds.ManageIcon" Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Inherit" Edge="Edge.End" />
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem Href="@Routes.UserSettings">Settings</MudMenuItem>
+                        @if (context.User.IsInRole("Admin"))
+                        {
+                            <MudDivider />
+                            <MudMenuItem Href="@Routes.AdminSettings">Admin Settings</MudMenuItem>
+                        }
+                        <MudDivider />
+                        <MudMenuItem Href="https://localhost:40000/account/logout">Logout</MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
+            </Authorized>
+        </AuthorizeView>
     </MudAppBar>
-    <MudDrawer Elevation="2" @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always">
-        <NavMenu />
-    </MudDrawer>
+    <AuthorizeView>
+        <Authorized>
+            <MudDrawer Elevation="2" @bind-Open="@_drawerOpen" ClipMode="DrawerClipMode.Always">
+                <NavMenu />
+            </MudDrawer>
+        </Authorized>
+    </AuthorizeView>
     <MudMainContent>
         <MudContainer>
-            <AppBody>
-                @Body
-            </AppBody>
+            @Body
         </MudContainer>
     </MudMainContent>
 </MudLayout>
@@ -39,19 +60,52 @@
     bool _drawerOpen = true;
     private bool _isDarkMode;
     private MudThemeProvider? _mudThemeProvider;
+    private bool disposedValue;
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
     }
 
+    protected override void OnInitialized()
+    {
+        _auth.AuthenticationStateChanged += OnAuthStateChanged;
+
+        base.OnInitialized();
+    }
+
+    private void OnAuthStateChanged(Task<AuthenticationState> authState)
+    {
+        _ = HandleAuthStateChanged(authState);
+    }
+
+    private async Task HandleAuthStateChanged(Task<AuthenticationState> authState)
+    {
+        var newState = await authState;
+
+        if (newState.User.Identity?.IsAuthenticated ?? false)
+        {
+            _storeHelper.Dispatch(new FetchFandomsListAction());
+            _storeHelper.Dispatch(new FetchAuthorsListAction());
+        }
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && _mudThemeProvider != null)
         {
-            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
-            await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
+            _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+            await _mudThemeProvider.WatchSystemDarkModeAsync(OnSystemPreferenceChanged);
             await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public void Dispose()
+    {
+        if (!disposedValue)
+        {
+            disposedValue = true;
+            _auth.AuthenticationStateChanged -= OnAuthStateChanged;
         }
     }
 
@@ -61,4 +115,3 @@
         await InvokeAsync(StateHasChanged);
     }
 }
-

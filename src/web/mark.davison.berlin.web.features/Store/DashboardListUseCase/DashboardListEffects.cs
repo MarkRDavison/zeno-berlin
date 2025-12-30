@@ -1,5 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.DashboardListUseCase;
 
+[Effect]
 public sealed class DashboardListEffects
 {
     private readonly IClientHttpRepository _repository;
@@ -9,12 +10,11 @@ public sealed class DashboardListEffects
         _repository = repository;
     }
 
-    [EffectMethod]
     public async Task HandleFetchDashboardListActionAsync(FetchDashboardListAction action, IDispatcher dispatcher)
     {
         var queryRequest = new DashboardListQueryRequest { Maximum = action.Maximum };
 
-        var queryResponse = await _repository.Get<DashboardListQueryResponse, DashboardListQueryRequest>(queryRequest, CancellationToken.None);
+        var queryResponse = await _repository.Get<DashboardListQueryRequest, DashboardListQueryResponse>(queryRequest, CancellationToken.None);
 
         var actionResponse = new FetchDashboardListActionResponse
         {
@@ -23,8 +23,6 @@ public sealed class DashboardListEffects
             Warnings = [.. queryResponse.Warnings],
             Value = queryResponse.Value
         };
-
-        // TODO: Framework to dispatch general ***something went wrong***
 
         dispatcher.Dispatch(actionResponse);
     }

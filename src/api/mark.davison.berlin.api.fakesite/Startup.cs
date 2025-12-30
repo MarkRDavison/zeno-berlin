@@ -1,6 +1,4 @@
-﻿using Microsoft.Net.Http.Headers;
-
-namespace mark.davison.berlin.api.fakesite;
+﻿namespace mark.davison.berlin.api.fakesite;
 
 public class Startup
 {

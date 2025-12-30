@@ -2,10 +2,8 @@
 
 public class Startup
 {
+    public OrchestratorAppSettings AppSettings { get; set; } = default!;
     public IConfiguration Configuration { get; }
-
-    public AppSettings AppSettings { get; set; } = null!;
-
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
@@ -13,19 +11,28 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        AppSettings = services.ConfigureSettingsServices<AppSettings>(Configuration);
-        if (AppSettings == null) { throw new InvalidOperationException(); }
-
-        Console.WriteLine(AppSettings.DumpAppSettings(AppSettings.PRODUCTION_MODE));
+        AppSettings = services.BindAppSettings(Configuration);
 
         services
+            .AddCors(o =>
+            {
+                o.AddDefaultPolicy(builder =>
+                {
+                    builder
+                        .SetIsOriginAllowed(_ => true)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            })
             .AddLogging()
-            .AddDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
+            // TODO: Does this need to know about the migration assemblies?
+            .AddDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory))
             .AddCoreDbContext<BerlinDbContext>()
-            .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc))
-            .AddRedis(AppSettings.REDIS, "BERLIN_JOBS", AppSettings.PRODUCTION_MODE)
-            .AddHostedService<HostedService>()
-            .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST));
+            .AddServerCore()
+            .AddRedis(AppSettings.REDIS, AppSettings.REDIS.INSTANCE_NAME + (AppSettings.PRODUCTION_MODE ? "_prod_" : "_dev_"))
+            .UseLockPubSub(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
+            .AddHealthCheckServices<ApplicationHealthStateHostedService>();
 
         services.AddCronJob<CheckJobsCron>(_ =>
         {
@@ -44,7 +51,16 @@ public class Startup
             _.CronExpression = AppSettings.STORY_UPDATE_RATE;
             _.TimeZoneInfo = AppSettings.CRON_TIMEZONE == "LOCAL" ? TimeZoneInfo.Local : TimeZoneInfo.Utc;
         });
+    }
 
-        // TODO: Admin dashboard to fire these manually?
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        app
+            .UseHttpsRedirection()
+            .UseRouting()
+            .UseEndpoints(_ =>
+            {
+                _.MapCommonHealthChecks();
+            });
     }
 }

@@ -3,13 +3,13 @@
 public static class StartupReducers
 {
     [ReducerMethod]
-    public static StartupState FetchStartupActionResponse(StartupState state, FetchStartupActionResponse response)
+    public static StartupState HandleUpdateStartupActionResponse(StartupState state, UpdateStartupActionResponse response)
     {
         if (response.SuccessWithValue)
         {
-            return new StartupState(response.Value.UpdateTypes);
+            return new StartupState(false, true, response.Value);
         }
 
-        return state;
+        return new StartupState(false, false, state.Data);
     }
 }

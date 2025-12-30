@@ -17,12 +17,12 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.5")
+                .HasAnnotation("ProductVersion", "10.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Author", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Author", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -60,7 +60,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Fandom", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Fandom", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -100,7 +100,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.ToTable("Fandoms");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Job", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Job", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -158,7 +158,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.ToTable("Job");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.PotentialStory", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.PotentialStory", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -191,7 +191,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.ToTable("PotentialStory");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Site", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Site", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -224,7 +224,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.ToTable("Sites");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Story", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Story", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -288,7 +288,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.ToTable("Stories");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.StoryAuthorLink", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.StoryAuthorLink", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -319,7 +319,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.ToTable("StoryAuthorLinks");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.StoryFandomLink", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.StoryFandomLink", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -350,7 +350,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.ToTable("StoryFandomLinks");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.StoryUpdate", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.StoryUpdate", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -394,7 +394,7 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.ToTable("StoryUpdates");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.UpdateType", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.UpdateType", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
@@ -419,59 +419,155 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.ToTable("UpdateTypes");
                 });
 
-            modelBuilder.Entity("mark.davison.common.server.abstractions.Identification.User", b =>
+            modelBuilder.Entity("mark.davison.common.server.Models.ExternalLogin", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<bool>("Admin")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("First")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)");
-
-                    b.Property<string>("Last")
-                        .IsRequired()
-                        .HasMaxLength(62554)
-                        .HasColumnType("character varying(62554)");
 
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("Sub")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Username")
+                    b.Property<string>("Provider")
                         .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
+                        .HasColumnType("text");
+
+                    b.Property<string>("ProviderSubject")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("Provider", "ProviderSubject")
+                        .IsUnique();
+
+                    b.ToTable("ExternalLogins");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Author", b =>
+            modelBuilder.Entity("mark.davison.common.server.Models.Role", b =>
                 {
-                    b.HasOne("mark.davison.berlin.shared.models.Entities.Author", "ParentAuthor")
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("mark.davison.common.server.Models.Tenant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenants");
+                });
+
+            modelBuilder.Entity("mark.davison.common.server.Models.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("mark.davison.common.server.Models.UserRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId", "RoleId")
+                        .IsUnique();
+
+                    b.ToTable("UserRoles");
+                });
+
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Author", b =>
+                {
+                    b.HasOne("mark.davison.berlin.api.models.Entities.Author", "ParentAuthor")
                         .WithMany()
                         .HasForeignKey("ParentAuthorId");
 
-                    b.HasOne("mark.davison.berlin.shared.models.Entities.Site", "Site")
+                    b.HasOne("mark.davison.berlin.api.models.Entities.Site", "Site")
                         .WithMany()
                         .HasForeignKey("SiteId");
 
-                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -484,13 +580,13 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Fandom", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Fandom", b =>
                 {
-                    b.HasOne("mark.davison.berlin.shared.models.Entities.Fandom", "ParentFandom")
+                    b.HasOne("mark.davison.berlin.api.models.Entities.Fandom", "ParentFandom")
                         .WithMany()
                         .HasForeignKey("ParentFandomId");
 
-                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -501,15 +597,15 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Job", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Job", b =>
                 {
-                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "ContextUser")
+                    b.HasOne("mark.davison.common.server.Models.User", "ContextUser")
                         .WithMany()
                         .HasForeignKey("ContextUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -520,9 +616,9 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.PotentialStory", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.PotentialStory", b =>
                 {
-                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -531,9 +627,9 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Site", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Site", b =>
                 {
-                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -542,21 +638,21 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Story", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Story", b =>
                 {
-                    b.HasOne("mark.davison.berlin.shared.models.Entities.Site", "Site")
+                    b.HasOne("mark.davison.berlin.api.models.Entities.Site", "Site")
                         .WithMany()
                         .HasForeignKey("SiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("mark.davison.berlin.shared.models.Entities.UpdateType", "UpdateType")
+                    b.HasOne("mark.davison.berlin.api.models.Entities.UpdateType", "UpdateType")
                         .WithMany()
                         .HasForeignKey("UpdateTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -569,21 +665,21 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.StoryAuthorLink", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.StoryAuthorLink", b =>
                 {
-                    b.HasOne("mark.davison.berlin.shared.models.Entities.Author", "Author")
+                    b.HasOne("mark.davison.berlin.api.models.Entities.Author", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("mark.davison.berlin.shared.models.Entities.Story", "Story")
+                    b.HasOne("mark.davison.berlin.api.models.Entities.Story", "Story")
                         .WithMany("StoryAuthorLinks")
                         .HasForeignKey("StoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -596,21 +692,21 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.StoryFandomLink", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.StoryFandomLink", b =>
                 {
-                    b.HasOne("mark.davison.berlin.shared.models.Entities.Fandom", "Fandom")
+                    b.HasOne("mark.davison.berlin.api.models.Entities.Fandom", "Fandom")
                         .WithMany()
                         .HasForeignKey("FandomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("mark.davison.berlin.shared.models.Entities.Story", "Story")
+                    b.HasOne("mark.davison.berlin.api.models.Entities.Story", "Story")
                         .WithMany("StoryFandomLinks")
                         .HasForeignKey("StoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -623,15 +719,15 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.StoryUpdate", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.StoryUpdate", b =>
                 {
-                    b.HasOne("mark.davison.berlin.shared.models.Entities.Story", "Story")
+                    b.HasOne("mark.davison.berlin.api.models.Entities.Story", "Story")
                         .WithMany()
                         .HasForeignKey("StoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -642,9 +738,9 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.UpdateType", b =>
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.UpdateType", b =>
                 {
-                    b.HasOne("mark.davison.common.server.abstractions.Identification.User", "User")
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -653,11 +749,75 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("mark.davison.berlin.shared.models.Entities.Story", b =>
+            modelBuilder.Entity("mark.davison.common.server.Models.ExternalLogin", b =>
+                {
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
+                        .WithMany("ExternalLogins")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("mark.davison.common.server.Models.Role", b =>
+                {
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("mark.davison.common.server.Models.User", b =>
+                {
+                    b.HasOne("mark.davison.common.server.Models.Tenant", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("mark.davison.common.server.Models.UserRole", b =>
+                {
+                    b.HasOne("mark.davison.common.server.Models.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("mark.davison.common.server.Models.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("mark.davison.berlin.api.models.Entities.Story", b =>
                 {
                     b.Navigation("StoryAuthorLinks");
 
                     b.Navigation("StoryFandomLinks");
+                });
+
+            modelBuilder.Entity("mark.davison.common.server.Models.Role", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("mark.davison.common.server.Models.User", b =>
+                {
+                    b.Navigation("ExternalLogins");
+
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,10 +1,10 @@
-﻿namespace mark.davison.berlin.web.components.Pages;
+﻿using mark.davison.berlin.web.components.Forms.AddFandom;
 
-public partial class FandomsPage
+namespace mark.davison.berlin.web.components.Pages;
+
+[StateProperty<FandomListState>]
+public partial class FandomsPage : StateComponent
 {
-    [Inject]
-    public required IState<FandomListState> FandomListState { get; set; }
-
     [Inject]
     public required IDialogService DialogService { get; set; }
 
@@ -14,7 +14,7 @@ public partial class FandomsPage
     [Inject]
     public required IClientNavigationManager ClientNavigationManager { get; set; }
 
-    private IEnumerable<FandomDto> _fandoms => FandomListState.Value.Entities.OrderBy(_ => _.Name);
+    private IEnumerable<FandomDto> _fandoms => FandomListState.Entities.OrderBy(_ => _.Name);
 
     protected override async Task OnInitializedAsync()
     {
@@ -37,13 +37,13 @@ public partial class FandomsPage
             { _ => _.Instance, null }
         };
 
-        var dialog = DialogService.Show<FormModal<ModalViewModel<AddFandomFormViewModel, AddFandomForm>, AddFandomFormViewModel, AddFandomForm>>("Add Fandom", param, options);
+        var dialog = await DialogService.ShowAsync<FormModal<ModalViewModel<AddFandomFormViewModel, AddFandomForm>, AddFandomFormViewModel, AddFandomForm>>("Add Fandom", param, options);
 
         await dialog.Result;
     }
 
     private string? GetFandomName(Guid fandomId)
     {
-        return FandomListState.Value.Entities.FirstOrDefault(_ => _.FandomId == fandomId)?.Name;
+        return FandomListState.Entities.FirstOrDefault(_ => _.FandomId == fandomId)?.Name;
     }
 }

@@ -1,5 +1,6 @@
-﻿@attribute [Route(Routes.Fandoms)]
-@inherits FluxorComponent
+﻿@attribute [Authorize(Roles = "User")]
+@attribute [Route(Routes.Fandoms)]
+@inherits StateComponent
 
 <MudStack>
     <MudStack Row AlignItems="AlignItems.End" Class="d-flex align-center">
@@ -7,7 +8,7 @@
         <span>TODO: TreeGrid with parent child fandoms???</span>
         @*https://mudblazor.com/components/table#grouping-(multi-levels)*@
         <MudSpacer />
-        @if (!FandomListState.Value.IsLoading)
+        @if (!FandomListState.IsLoading)
         {
             <MudButton 
                 ButtonType="ButtonType.Submit"
@@ -20,7 +21,7 @@
                 OnClick="@OpenAddFandomModal">Add</MudButton>
         }
     </MudStack>
-    <MudTable data-testid="@DataTestIds.FandomsTable" Items="@_fandoms" Hover Breakpoint="Breakpoint.Sm" Loading="@FandomListState.Value.IsLoading">
+    <MudTable data-testid="@DataTestIds.FandomsTable" Items="@_fandoms" Hover Breakpoint="Breakpoint.Sm" Loading="@FandomListState.IsLoading">
         <HeaderContent>
             <MudTh>Name</MudTh>
             <MudTh>External name</MudTh>

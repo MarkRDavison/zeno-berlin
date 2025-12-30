@@ -1,21 +1,17 @@
 ﻿namespace mark.davison.berlin.web.components.Pages;
 
-public partial class Fandom
+[StateProperty<FandomListState>]
+[StateProperty<StoryListState>]
+public partial class Fandom : StateComponent
 {
     [Parameter]
     public required Guid Id { get; set; }
 
-    public FandomDto Data => FandomListState.Value.Entities.FirstOrDefault(_ => _.FandomId == Id) ?? new();
+    public FandomDto Data => FandomListState.Entities.FirstOrDefault(_ => _.FandomId == Id) ?? new();
 
-    public FandomDto? Parent => FandomListState.Value.Entities.FirstOrDefault(_ => _.FandomId == Data.ParentFandomId);
+    public FandomDto? Parent => FandomListState.Entities.FirstOrDefault(_ => _.FandomId == Data.ParentFandomId);
 
-    public IEnumerable<FandomDto> Children => FandomListState.Value.Entities.Where(_ => _.ParentFandomId == Id);
-
-    [Inject]
-    public required IState<FandomListState> FandomListState { get; set; }
-
-    [Inject]
-    public required IState<StoryListState> StoryListState { get; set; }
+    public IEnumerable<FandomDto> Children => FandomListState.Entities.Where(_ => _.ParentFandomId == Id);
 
     [Inject]
     public required IDispatcher Dispatcher { get; set; }
@@ -23,7 +19,7 @@ public partial class Fandom
     [Inject]
     public required IDialogService _dialogService { get; set; }
 
-    private IEnumerable<StoryRowDto> _fandomStories => StoryListState.Value.Stories.Where(_ => _.Fandoms.Any(f => f == Id));
+    private IEnumerable<StoryRowDto> _fandomStories => StoryListState.Stories.Where(_ => _.Fandoms.Any(f => f == Id));
 
 
     protected override void OnParametersSet()
@@ -51,13 +47,13 @@ public partial class Fandom
                     Name = Data.Name,
                     IsHidden = Data.IsHidden,
                     FandomId = Id,
-                    Fandoms = FandomListState.Value.Entities.Where(_ => _.FandomId != Id && _.ParentFandomId != Id).ToList(),
+                    Fandoms = FandomListState.Entities.Where(_ => _.FandomId != Id && _.ParentFandomId != Id).ToList(),
                     ParentFandomId = Data.ParentFandomId
                 }
             }
         };
 
-        var dialog = _dialogService.Show<FormModal<ModalViewModel<EditFandomFormViewModel, EditFandomForm>, EditFandomFormViewModel, EditFandomForm>>("Edit fandom", param, options);
+        var dialog = await _dialogService.ShowAsync<FormModal<ModalViewModel<EditFandomFormViewModel, EditFandomForm>, EditFandomFormViewModel, EditFandomForm>>("Edit fandom", param, options);
 
         await dialog.Result;
     }

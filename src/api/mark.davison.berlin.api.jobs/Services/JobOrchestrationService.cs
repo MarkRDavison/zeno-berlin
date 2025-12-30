@@ -6,7 +6,7 @@ public sealed class JobOrchestrationService : IJobOrchestrationService
     private readonly ICheckJobsService _checkJobsService;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly IDateService _dateService;
-    private readonly AppSettings _appSettings;
+    private readonly JobsAppSettings _appSettings;
     private readonly ILogger<JobOrchestrationService> _logger;
 
     private bool _inProgress;
@@ -17,7 +17,7 @@ public sealed class JobOrchestrationService : IJobOrchestrationService
         ICheckJobsService checkJobsService,
         IServiceScopeFactory serviceScopeFactory,
         IDateService dateService,
-        IOptions<AppSettings> options,
+        IOptions<JobsAppSettings> options,
         ILogger<JobOrchestrationService> logger)
     {
         _distributedPubSubService = distributedPubSubService;
@@ -218,9 +218,19 @@ public sealed class JobOrchestrationService : IJobOrchestrationService
         var handler = scope.ServiceProvider.GetRequiredService(handlerType);
 
         var currentUserContext = scope.ServiceProvider.GetRequiredService<ICurrentUserContext>();
-        if (job.ContextUser != null)
+        if (job.ContextUser is not null)
         {
-            currentUserContext.CurrentUser = job.ContextUser;
+            var identity = new ClaimsIdentity("Job");
+
+            identity.AddClaim(new Claim(AuthConstants.InternalUserId, Guid.Empty.ToString()));
+            identity.AddClaim(new Claim(AuthConstants.TenantId, TenantIds.SystemTenantId.ToString()));
+
+            foreach (var userRole in job.ContextUser.UserRoles)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Role, userRole.Role!.Name));
+            }
+
+            await currentUserContext.PopulateFromPrincipal(new ClaimsPrincipal(identity), "JOBS");
         }
 
         var methodInfo = typeof(JobOrchestrationService).GetMethod(nameof(PerformCommand), BindingFlags.Static | BindingFlags.NonPublic)!;

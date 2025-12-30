@@ -1,5 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.FandomListUseCase;
 
+[Effect]
 public sealed class FandomListEffects
 {
     private readonly IClientHttpRepository _repository;
@@ -9,12 +10,11 @@ public sealed class FandomListEffects
         _repository = repository;
     }
 
-    [EffectMethod]
     public async Task HandleFetchFandomListActionAsync(FetchFandomsListAction action, IDispatcher dispatcher)
     {
         var queryRequest = new FandomListQueryRequest();
 
-        var queryResponse = await _repository.Get<FandomListQueryResponse, FandomListQueryRequest>(queryRequest, CancellationToken.None);
+        var queryResponse = await _repository.Get<FandomListQueryRequest, FandomListQueryResponse>(queryRequest, CancellationToken.None);
 
         var actionResponse = new FetchFandomsListActionResponse
         {
@@ -24,12 +24,9 @@ public sealed class FandomListEffects
             Value = queryResponse.Value
         };
 
-        // TODO: Framework to dispatch general ***something went wrong***
-
         dispatcher.Dispatch(actionResponse);
     }
 
-    [EffectMethod]
     public async Task HandleEditFandomListActionAsync(EditFandomListAction action, IDispatcher dispatcher)
     {
         var commandRequest = new EditFandomCommandRequest
@@ -58,7 +55,7 @@ public sealed class FandomListEffects
             ]
         };
 
-        var commandResponse = await _repository.Post<EditFandomCommandResponse, EditFandomCommandRequest>(commandRequest, CancellationToken.None);
+        var commandResponse = await _repository.Post<EditFandomCommandRequest, EditFandomCommandResponse>(commandRequest, CancellationToken.None);
 
         if (!commandResponse.SuccessWithValue)
         {
@@ -75,12 +72,9 @@ public sealed class FandomListEffects
             Value = commandResponse.Value
         };
 
-        // TODO: Framework to dispatch general ***something went wrong***
-
         dispatcher.Dispatch(actionResponse);
     }
 
-    [EffectMethod]
     public async Task HandleAddFandomListActionAsync(AddFandomListAction action, IDispatcher dispatcher)
     {
         var commandRequest = new AddFandomCommandRequest
@@ -92,7 +86,7 @@ public sealed class FandomListEffects
             ParentFandomId = action.ParentFandomId
         };
 
-        var commandResponse = await _repository.Post<AddFandomCommandResponse, AddFandomCommandRequest>(commandRequest, CancellationToken.None);
+        var commandResponse = await _repository.Post<AddFandomCommandRequest, AddFandomCommandResponse>(commandRequest, CancellationToken.None);
 
         // TODO: Create response from response, copies Errors/Warnings in common
         var actionResponse = new AddFandomListActionResponse
@@ -102,8 +96,6 @@ public sealed class FandomListEffects
             Warnings = [.. commandResponse.Warnings],
             Value = commandResponse.Value
         };
-
-        // TODO: Framework to dispatch general ***something went wrong***
 
         dispatcher.Dispatch(actionResponse);
     }

@@ -1,17 +1,18 @@
-﻿@attribute [Route(Routes.Stories)]
-@inherits FluxorComponent
+﻿@attribute [Authorize(Roles = "User")]
+@attribute [Route(Routes.Stories)]
+@inherits StateComponent
 
 <MudStack>
     <MudStack Row AlignItems="AlignItems.End" Class="d-flex align-center">
         <MudText Typo="Typo.h5">Stories</MudText>
         <MudSpacer />
     </MudStack>
-    <MudTable Items="@_stories" Hover Breakpoint="Breakpoint.Sm" Loading="@StoryListState.Value.IsLoading">
+    <MudTable Items="@_stories" Hover Breakpoint="Breakpoint.Sm" Loading="@StoryListState.IsLoading">
         <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="@((StoryRowDto _)=> _.Name)">Title</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="@((StoryRowDto _) => _.Name)">Title</MudTableSortLabel></MudTh>
             <MudTh>Fandoms</MudTh>
             <MudTh>Author(s)</MudTh>
-            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="@((StoryRowDto _)=> _.LastAuthored)">Last authored</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="@((StoryRowDto _) => _.LastAuthored)">Last authored</MudTableSortLabel></MudTh>
             <MudTh></MudTh>
         </HeaderContent>
         <RowTemplate>
@@ -19,10 +20,10 @@
                 <MudLink Href="@RouteHelpers.Story(context.StoryId)" Typo="Typo.body1">@context.Name</MudLink>
             </MudTd>
             <MudTd DataLabel="Fandoms">
-                @LinkDisplayHelpers.FandomIdsToSummaryString(context.Fandoms, FandomListState.Value.Entities)
+                @LinkDisplayHelpers.FandomIdsToSummaryString(context.Fandoms, FandomListState.Entities)
             </MudTd>
             <MudTd DataLabel="Authors">
-                @LinkDisplayHelpers.AuthorIdsToSummaryString(context.Authors, AuthorListState.Value.Entities)
+                @LinkDisplayHelpers.AuthorIdsToSummaryString(context.Authors, AuthorListState.Entities)
             </MudTd>
             <MudTd DataLabel="Last authored">
                 @context.LastAuthored.Humanize()
@@ -34,13 +35,13 @@
                         @if (context.ConsumedChapters == context.CurrentChapters)
                         {
                             <MudTooltip Text="You've read everything this story has!" Placement="Placement.Top">
-                            <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Style="fill: lightgreen;" />
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircle" Style="fill: lightgreen;" />
                             </MudTooltip>
                         }
                         else
                         {
                             <MudTooltip Text="You've got more to read!" Placement="Placement.Top">
-                            <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline" Style="fill: lightgrey;" />
+                                <MudIcon Icon="@Icons.Material.Filled.CheckCircleOutline" Style="fill: lightgrey;" />
                             </MudTooltip>
                         }
                     }

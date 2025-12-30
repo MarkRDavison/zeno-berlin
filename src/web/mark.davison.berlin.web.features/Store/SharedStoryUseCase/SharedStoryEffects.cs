@@ -1,5 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.SharedStoryUseCase;
 
+[Effect]
 public sealed class SharedStoryEffects
 {
     private readonly IClientHttpRepository _repository;
@@ -9,7 +10,6 @@ public sealed class SharedStoryEffects
         _repository = repository;
     }
 
-    [EffectMethod]
     public async Task HandleSetStoryFavouriteActionAsync(SetStoryFavouriteAction action, IDispatcher dispatcher)
     {
         var manageStoryAction = new SetFavouriteManageStoryAction
@@ -49,8 +49,7 @@ public sealed class SharedStoryEffects
             ]
         };
 
-        var commandResponse = await _repository.Post<EditStoryCommandResponse, EditStoryCommandRequest>(commandRequest, CancellationToken.None);
-
+        var commandResponse = await _repository.Post<EditStoryCommandRequest, EditStoryCommandResponse>(commandRequest, CancellationToken.None);
 
         // TODO: Create response from response, copies Errors/Warnings in common
         var actionResponse = new SetStoryFavouriteActionResponse
@@ -68,12 +67,9 @@ public sealed class SharedStoryEffects
             actionResponse.IsFavourite = !action.IsFavourite;
         }
 
-        // TODO: Framework to dispatch general ***something went wrong***
-
         dispatcher.Dispatch(actionResponse);
     }
 
-    [EffectMethod]
     public Task HandleSetStoryFavouriteActionResponseAsync(SetStoryFavouriteActionResponse response, IDispatcher dispatcher)
     {
         var manageStoryResponse = new SetFavouriteManageStoryActionResponse
@@ -102,7 +98,6 @@ public sealed class SharedStoryEffects
         return Task.CompletedTask;
     }
 
-    [EffectMethod]
     public async Task HandleSetStoryConsumedChaptersActionAsync(SetStoryConsumedChaptersAction action, IDispatcher dispatcher)
     {
         // TODO: Can only change this from Story page, so no need to trigger other pages if they will just load data on init??
@@ -129,7 +124,7 @@ public sealed class SharedStoryEffects
             ]
         };
 
-        var commandResponse = await _repository.Post<EditStoryCommandResponse, EditStoryCommandRequest>(commandRequest, CancellationToken.None);
+        var commandResponse = await _repository.Post<EditStoryCommandRequest, EditStoryCommandResponse>(commandRequest, CancellationToken.None);
 
         // TODO: Create response from response, copies Errors/Warnings in common
         var actionResponse = new SetStoryConsumedChaptersActionResponse
@@ -149,7 +144,6 @@ public sealed class SharedStoryEffects
         dispatcher.Dispatch(actionResponse);
     }
 
-    [EffectMethod]
     public Task HandleSetStoryConsumedChaptersActionResponse(SetStoryConsumedChaptersActionResponse response, IDispatcher dispatcher)
     {
         // TODO: Can only change this from Story page, so no need to trigger other pages if they will just load data on init??
@@ -168,7 +162,6 @@ public sealed class SharedStoryEffects
         return Task.CompletedTask;
     }
 
-    [EffectMethod]
     public async Task HandleDeleteStoryActionAsync(DeleteStoryAction action, IDispatcher dispatcher)
     {
         var storyListAction = new DeleteStoryListAction
@@ -184,7 +177,7 @@ public sealed class SharedStoryEffects
             StoryId = action.StoryId
         };
 
-        var commandResponse = await _repository.Post<DeleteStoryCommandResponse, DeleteStoryCommandRequest>(commandRequest, CancellationToken.None);
+        var commandResponse = await _repository.Post<DeleteStoryCommandRequest, DeleteStoryCommandResponse>(commandRequest, CancellationToken.None);
 
         var actionResponse = new DeleteStoryActionResponse
         {
@@ -194,12 +187,9 @@ public sealed class SharedStoryEffects
             StoryId = action.StoryId // TODO: Maybe action response holds a copy of the action???
         };
 
-        // TODO: Framework to dispatch general ***something went wrong***
-
         dispatcher.Dispatch(actionResponse);
     }
 
-    [EffectMethod]
     public Task HandleDeleteStoryActionResponseAsync(DeleteStoryActionResponse response, IDispatcher dispatcher)
     {
         var storyListAction = new DeleteStoryListActionResponse
@@ -215,7 +205,6 @@ public sealed class SharedStoryEffects
         return Task.CompletedTask;
     }
 
-    [EffectMethod]
     public async Task HandleUpdateStoryActionAsync(UpdateStoryAction action, IDispatcher dispatcher)
     {
         // TODO: Naming -> UpdateStoriesCommandRequest
@@ -224,7 +213,7 @@ public sealed class SharedStoryEffects
             StoryIds = [action.StoryId]
         };
 
-        var commandResponse = await _repository.Post<UpdateStoriesResponse, UpdateStoriesRequest>(commandRequest, CancellationToken.None);
+        var commandResponse = await _repository.Post<UpdateStoriesRequest, UpdateStoriesResponse>(commandRequest, CancellationToken.None);
 
         var actionResponse = new UpdateStoryActionResponse
         {
@@ -235,12 +224,9 @@ public sealed class SharedStoryEffects
             Value = commandResponse.Value?.FirstOrDefault()
         };
 
-        // TODO: Framework to dispatch general ***something went wrong***
-
         dispatcher.Dispatch(actionResponse);
     }
 
-    [EffectMethod]
     public Task HandleUpdateStoryActionResponseAsync(UpdateStoryActionResponse response, IDispatcher dispatcher)
     {
         var manageStoryResponse = new UpdateManageStoryActionResponse
@@ -257,7 +243,6 @@ public sealed class SharedStoryEffects
         return Task.CompletedTask;
     }
 
-    [EffectMethod]
     public async Task HandleAddStoryListActionAsync(AddStoryAction action, IDispatcher dispatcher)
     {
         var commandRequest = new AddStoryCommandRequest
@@ -266,7 +251,7 @@ public sealed class SharedStoryEffects
             UpdateTypeId = action.UpdateTypeId
         };
 
-        var commandResponse = await _repository.Post<AddStoryCommandResponse, AddStoryCommandRequest>(commandRequest, CancellationToken.None);
+        var commandResponse = await _repository.Post<AddStoryCommandRequest, AddStoryCommandResponse>(commandRequest, CancellationToken.None);
 
         // TODO: Create response from response, copies Errors/Warnings in common
         var actionResponse = new AddStoryActionResponse
@@ -276,8 +261,6 @@ public sealed class SharedStoryEffects
             Warnings = [.. commandResponse.Warnings],
             Value = commandResponse.Value
         };
-
-        // TODO: Framework to dispatch general ***something went wrong***
 
         dispatcher.Dispatch(actionResponse);
     }

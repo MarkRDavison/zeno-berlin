@@ -1,5 +1,4 @@
-﻿global using mark.davison.berlin.shared.models;
-global using mark.davison.berlin.shared.models.Entities;
-global using mark.davison.common.server.abstractions.Identification;
+﻿global using mark.davison.berlin.api.models.Entities;
+global using mark.davison.common.persistence.Helpers;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;

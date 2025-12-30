@@ -1,7 +1,8 @@
-﻿@attribute [Route(Routes.PotentialStory)]
-@inherits FluxorComponent
+﻿@attribute [Authorize(Roles = "User")]
+@attribute [Route(Routes.PotentialStory)]
+@inherits StateComponent
 
-@if (PotentialStoryState.Value.IsLoading)
+@if (PotentialStoryState.IsLoading)
 {
     @*TODO: Framework activity monitor loading thingy*@
     <MudProgressCircular Indeterminate Class="ma-auto" />
@@ -17,29 +18,26 @@ else
         <MudStack Row AlignItems="AlignItems.End" Class="d-flex align-center">
             <MudText data-testid="@DataTestIds.StoryTitle" Typo="Typo.h5">@Data.Name</MudText>
             <MudSpacer />
-            <MudIconButton 
-                Icon="@Icons.Material.Filled.ArrowOutward" 
-                Href="@Data.Address" 
-                Target="_blank" />
-            <ProgressButton 
-                Disabled="@_inProgress"
-                InProgress="@_inProgress"
-                Color="Color.Primary" 
-                Label="Grab" 
-                StartIcon="@Icons.Material.Filled.Sync"
-                OnClick="@GrabPotentialStory" />
-            <MudButton 
-                Disabled="@_inProgress"
-                ButtonType="ButtonType.Submit"
-                Color="Color.Error"
-                StartIcon="@Icons.Material.Filled.Delete"
-                Variant="Variant.Filled"
-                Size="Size.Large"
-                IconSize="Size.Large"
-                OnClick="@OpenDeleteConfirmationDialog">Remove</MudButton>
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowOutward"
+                           Href="@Data.Address"
+                           Target="_blank" />
+            <ProgressButton Disabled="@_inProgress"
+                            InProgress="@_inProgress"
+                            Color="Color.Primary"
+                            Label="Grab"
+                            StartIcon="@Icons.Material.Filled.Sync"
+                            OnClick="@GrabPotentialStory" />
+            <MudButton Disabled="@_inProgress"
+                       ButtonType="ButtonType.Submit"
+                       Color="Color.Error"
+                       StartIcon="@Icons.Material.Filled.Delete"
+                       Variant="Variant.Filled"
+                       Size="Size.Large"
+                       IconSize="Size.Large"
+                       OnClick="@OpenDeleteConfirmationDialog">Remove</MudButton>
         </MudStack>
         <div data-testid="@DataTestIds.StorySummaryContainer">
-        @((MarkupString)Data.Summary.Replace("\r\n", "<br />"))
+            @((MarkupString)Data.Summary.Replace("\r\n", "<br />"))
         </div>
     </MudStack>
 }

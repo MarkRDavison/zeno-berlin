@@ -1,33 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="markdavison.common.authentication.server" Version="10.0.17" />
+    <PackageReference Include="markdavison.common.source.generators" Version="10.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.commands\mark.davison.berlin.shared.commands.csproj" />
-    <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.queries\mark.davison.berlin.shared.queries.csproj" />
-    <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.validation\mark.davison.berlin.shared.validation.csproj" />
-    <ProjectReference Include="..\..\shared\mark.davison.shared.server.services\mark.davison.shared.server.services.csproj" />
-    <ProjectReference Include="..\mark.davison.berlin.api.persistence\mark.davison.berlin.api.persistence.csproj" />
-    <ProjectReference Include="..\migrations\mark.davison.berlin.api.migrations.postgres\mark.davison.berlin.api.migrations.postgres.csproj" />
+    <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.logic\mark.davison.berlin.shared.logic.csproj" />
+    <ProjectReference Include="..\..\shared\mark.davison.berlin.shared.server.services\mark.davison.berlin.shared.server.services.csproj" />
     <ProjectReference Include="..\migrations\mark.davison.berlin.api.migrations.sqlite\mark.davison.berlin.api.migrations.sqlite.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="appsettings.Development.json" Condition="Exists('appsettings.Development.json')">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

@@ -8,7 +8,7 @@ public abstract class BaseCQRSCron<TRequest, TResponse, TCron> : CronJobService
     private readonly IDistributedPubSub _distributedPubSubService;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     protected readonly ILogger _logger;
-    protected readonly AppSettings _appSettings;
+    protected readonly OrchestratorAppSettings _appSettings;
 
     protected BaseCQRSCron(
         IScheduleConfig<TCron> scheduleConfig,
@@ -16,7 +16,7 @@ public abstract class BaseCQRSCron<TRequest, TResponse, TCron> : CronJobService
         IDistributedPubSub distributedPubSubService,
         IServiceScopeFactory serviceScopeFactory,
         ILogger logger,
-        IOptions<AppSettings> appSettings
+        IOptions<OrchestratorAppSettings> appSettings
     ) : base(
         scheduleConfig.CronExpression,
         scheduleConfig.TimeZoneInfo)

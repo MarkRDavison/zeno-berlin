@@ -1,19 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-	<TargetFramework>net8.0</TargetFramework>
-	<Nullable>enable</Nullable>
-	<ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.6" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.6" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+	<!-- TODO: Conditionally remove this for Release build-->
+    <PackageReference Include="Aspire4Wasm.WebAssembly" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.1" PrivateAssets="all" />
   </ItemGroup>
-
+	
   <ItemGroup Condition="'$(CI_BUILD)' != 'true'">
-	<PackageReference Include="BuildWebCompiler2022" Version="1.14.10" />
+	<PackageReference Include="BuildWebCompiler" Version="1.12.405" />
   </ItemGroup>
 
   <ItemGroup>

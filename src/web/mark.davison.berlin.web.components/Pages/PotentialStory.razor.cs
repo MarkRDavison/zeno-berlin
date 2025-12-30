@@ -1,6 +1,7 @@
 ﻿namespace mark.davison.berlin.web.components.Pages;
 
-public partial class PotentialStory
+[StateProperty<PotentialStoryState>]
+public partial class PotentialStory : StateComponent
 {
     private bool _inProgress;
 
@@ -19,21 +20,15 @@ public partial class PotentialStory
     [Inject]
     public required IClientNavigationManager ClientNavigationManager { get; set; }
 
-    [Inject]
-    public required IState<PotentialStoryState> PotentialStoryState { get; set; }
-
-    public PotentialStoryDto? Data => PotentialStoryState.Value.Entities.FirstOrDefault(_ => _.Id == Id);
+    public PotentialStoryDto? Data => PotentialStoryState.Entities.FirstOrDefault(_ => _.Id == Id);
 
     protected override async Task OnInitializedAsync()
     {
-        using (StoreHelper.Force())
-        {
-            var action = new FetchPotentialStoriesAction();
+        var action = new FetchPotentialStoriesAction();
 
-            await StoreHelper.DispatchAndWaitForResponse<
-                FetchPotentialStoriesAction,
-                FetchPotentialStoriesActionResponse>(action);
-        }
+        await StoreHelper.DispatchAndWaitForResponse<
+            FetchPotentialStoriesAction,
+            FetchPotentialStoriesActionResponse>(action);
     }
 
     private async Task OpenDeleteConfirmationDialog()
@@ -53,7 +48,7 @@ public partial class PotentialStory
             { _ => _.PrimaryCallback, DeletePotentialStory }
         };
 
-        var dialog = DialogService.Show<ConfirmationDialog>("Delete story", param, options);
+        var dialog = await DialogService.ShowAsync<ConfirmationDialog>("Delete story", param, options);
 
         await dialog.Result;
     }

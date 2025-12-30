@@ -1,27 +1,22 @@
 ﻿namespace mark.davison.berlin.web.components.Pages;
 
-public partial class PotentialStories
+[StateProperty<PotentialStoryState>]
+public partial class PotentialStories : StateComponent
 {
 
     [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
     [Inject]
-    public required IState<PotentialStoryState> PotentialStoryState { get; set; }
-
-    [Inject]
     public required IDialogService DialogService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        using (StoreHelper.Force())
-        {
-            var action = new FetchPotentialStoriesAction();
+        var action = new FetchPotentialStoriesAction();
 
-            await StoreHelper.DispatchAndWaitForResponse<
-                FetchPotentialStoriesAction,
-                FetchPotentialStoriesActionResponse>(action);
-        }
+        await StoreHelper.DispatchAndWaitForResponse<
+            FetchPotentialStoriesAction,
+            FetchPotentialStoriesActionResponse>(action);
     }
 
     private async Task OpenAddPotentialStoryModal()
@@ -39,7 +34,7 @@ public partial class PotentialStories
             { _ => _.Instance, null }
         };
 
-        var dialog = DialogService.Show<FormModal<ModalViewModel<AddPotentialStoryFormViewModel, AddPotentialStoryForm>, AddPotentialStoryFormViewModel, AddPotentialStoryForm>>("Add Potential Story", param, options);
+        var dialog = await DialogService.ShowAsync<FormModal<ModalViewModel<AddPotentialStoryFormViewModel, AddPotentialStoryForm>, AddPotentialStoryFormViewModel, AddPotentialStoryForm>>("Add Potential Story", param, options);
 
         await dialog.Result;
     }

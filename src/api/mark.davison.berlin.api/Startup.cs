@@ -1,89 +1,100 @@
-﻿namespace mark.davison.berlin.api;
+﻿using mark.davison.berlin.api.migrations.postgres;
 
-[UseCQRSServer(typeof(DtosRootType), typeof(CommandsRootType), typeof(QueriesRootType))]
-public sealed class Startup
+namespace mark.davison.berlin.api;
+
+[UseCQRSServer]
+public class Startup(IConfiguration Configuration)
 {
-    public IConfiguration Configuration { get; }
-
-    public AppSettings AppSettings { get; set; } = null!;
-
-    public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
+    public ApiAppSettings AppSettings { get; set; } = new();
 
     public void ConfigureServices(IServiceCollection services)
     {
-        AppSettings = services.ConfigureSettingsServices<AppSettings>(Configuration);
-        if (AppSettings == null) { throw new InvalidOperationException(); }
-
-        Console.WriteLine(AppSettings.DumpAppSettings(AppSettings.PRODUCTION_MODE));
+        AppSettings = services.BindAppSettings(Configuration);
 
         services
-        .AddCors()
+            .AddCors(o =>
+            {
+                o.AddDefaultPolicy(builder =>
+                {
+                    builder
+                        .SetIsOriginAllowed(_ => true)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            })
             .AddLogging()
-            .AddJwtAuth(AppSettings.AUTH)
-            .AddEndpointsApiExplorer()
-            .AddSwaggerGen()
-            .AddHttpContextAccessor()
-            .AddHealthCheckServices<InitializationHostedService>()
-            .AddScoped<ICurrentUserContext, CurrentUserContext>()
-            .AddDatabase<BerlinDbContext>(AppSettings.PRODUCTION_MODE, AppSettings.DATABASE, typeof(SqliteContextFactory), typeof(PostgresContextFactory))
+            .AddSingleton<IDataSeeder>(_ => new BerlinDataSeeder(
+                _.GetRequiredService<IDateService>(),
+                _.GetRequiredService<IServiceScopeFactory>(),
+                AppSettings.PRODUCTION_MODE))
+            .AddAuthorization()
+            .AddJwtAuthentication<BerlinDbContext>(AppSettings.AUTHENTICATION)
             .AddCoreDbContext<BerlinDbContext>()
-            .AddSingleton<IDateService>(new DateService(DateService.DateMode.Utc))
-            .AddCQRSServer()
-            .AddHttpClient()
-            .AddHttpContextAccessor()
-            .UseDataSeeders()
+            .AddHealthCheckServices<ApplicationHealthStateHostedService>()
+            .UseSharedServerServices(
+                !string.IsNullOrEmpty(AppSettings.REDIS.HOST),
+                AppSettings.NOTIFICATIONS.MATRIX,
+                AppSettings.NOTIFICATIONS.CONSOLE)
             .UseBerlinLogic(AppSettings.PRODUCTION_MODE)
-            .UseSharedServices()
-            .UseSharedServerServices(!string.IsNullOrEmpty(AppSettings.REDIS.HOST))
-            .UseRateLimiter()
-            .UseNotificationHub()
-            .UseMatrixClient()
-            .UseMatrixNotifications()
-            .UseConsoleNotifications()
-            .AddRedis(AppSettings.REDIS, AppSettings.SECTION, AppSettings.PRODUCTION_MODE);
+            .AddServerCore()
+            .AddCQRSServer();
+
+        // TODO: Remove when common updated
+        if (string.IsNullOrEmpty(AppSettings.REDIS.HOST))
+        {
+            services.AddDistributedMemoryCache();
+        }
+        else
+        {
+            services.AddRedis(AppSettings.REDIS, AppSettings.REDIS.INSTANCE_NAME + (AppSettings.PRODUCTION_MODE ? "_prod_" : "_dev_")); // TODO: Add this to common
+        }
+
+        // TODO: Add to common, so we have RANDOM, MEMORY etc
+        // Rethink how we activate this mode....
+        if (AppSettings.DATABASE.CONNECTION_STRING == "MEMORY")
+        {
+            services.AddDbContextFactory<BerlinDbContext>(options =>
+            {
+                options
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors()
+                    .UseInMemoryDatabase("BERLIN_IN_MEMORY_DB_CONTEXT_" + Guid.NewGuid().ToString())
+                    .ConfigureWarnings((WarningsConfigurationBuilder _) => _.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+            });
+            services.AddScoped<IDbContext<BerlinDbContext>>(_ => _.GetRequiredService<BerlinDbContext>());
+        }
+        else
+        {
+            services
+                .AddDatabase<BerlinDbContext>(
+                    AppSettings.PRODUCTION_MODE,
+                    AppSettings.DATABASE,
+                    typeof(SqliteContextFactory),
+                    typeof(PostgresContextFactory));
+        }
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        app.UseCors(builder =>
-            builder
-                .SetIsOriginAllowedToAllowWildcardSubdomains()
-                .SetIsOriginAllowed(_ => true) // TODO: Config driven
-                .AllowAnyMethod()
-                .AllowCredentials()
-                .AllowAnyHeader());
-
-        app.UseHttpsRedirection();
-
-        if (env.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
         app
-            .UseMiddleware<RequestResponseLoggingMiddleware>()
+            .UseHttpsRedirection()
             .UseRouting()
+            .UseCors()
+            .UseMiddleware<RequestResponseLoggingMiddleware>()
             .UseAuthentication()
             .UseAuthorization()
-            .UseMiddleware<PopulateUserContextMiddleware>()
-            .UseMiddleware<ValidateUserExistsInDbMiddleware>() // TODO: To common
             .UseEndpoints(endpoints =>
-        {
-            endpoints
-                .MapHealthChecks()
-                .MapGet<User>()
-                .MapGetById<User>()
-                .MapPost<User>()
-                .MapCQRSEndpoints();
-
-            if (!AppSettings.PRODUCTION_MODE)
             {
-                endpoints.MapResetEndpoints();
-            }
-        });
+                endpoints
+                    .MapBackendRemoteAuthenticationEndpoints<BerlinDbContext>()
+                    .MapCQRSEndpoints()
+                    .MapCommonHealthChecks();
+
+                if (!AppSettings.PRODUCTION_MODE)
+                {
+                    endpoints.MapResetEndpoints();
+                }
+            });
     }
 }

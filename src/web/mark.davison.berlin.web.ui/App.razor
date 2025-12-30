@@ -1,16 +1,35 @@
-﻿@inject IAuthenticationConfig _authConfig;
+﻿@inject IStoreHelper _storeHelper;
 
-<Fluxor.Blazor.Web.StoreInitializer />
-<AuthProvider AuthenticationConfig="_authConfig">
-    <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[]{ typeof(Routes).Assembly }">
-        <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        </Found>
-        <NotFound>
-            <PageTitle>Not found</PageTitle>
-            <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
-            </LayoutView>
-        </NotFound>
-    </Router>
-</AuthProvider>
+<Router AppAssembly="@typeof(App).Assembly" 
+        AdditionalAssemblies="new[]{ typeof(Routes).Assembly }" 
+        NotFoundPage="typeof(NotFound)">
+    <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <NotAuthorized>
+                    @if (!context.User.Identity?.IsAuthenticated ?? true)
+                    {
+                        @*TODO: Add redirect_url*@
+                       <Redirect Url="@Routes.Login" />
+                    }
+                    else
+                    {
+                        <p>You do not have permission to view this page.</p>
+                        <a href="@Routes.Root">Return to home</a>
+                    }
+                </NotAuthorized>
+                <Authorizing>
+                    <div class="p-4">Checking authorization...</div>
+                </Authorizing>
+            </AuthorizeRouteView>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+</Router>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+       await _storeHelper.DispatchAndWaitForResponse<FetchStartupAction, UpdateStartupActionResponse>(new FetchStartupAction());
+    }
+
+}

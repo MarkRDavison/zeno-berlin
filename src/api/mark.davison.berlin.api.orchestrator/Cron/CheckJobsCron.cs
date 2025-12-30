@@ -5,14 +5,14 @@ public class CheckJobsCron : CronJobService
     private readonly IDistributedPubSub _distributedPubSubService;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private readonly ILogger<CheckJobsCron> _logger;
-    private readonly AppSettings _appSettings;
+    private readonly OrchestratorAppSettings _appSettings;
 
     public CheckJobsCron(
         IScheduleConfig<CheckJobsCron> scheduleConfig,
         IDistributedPubSub distributedPubSubService,
         IServiceScopeFactory serviceScopeFactory,
         ILogger<CheckJobsCron> logger,
-        IOptions<AppSettings> appSettings) : base(
+        IOptions<OrchestratorAppSettings> appSettings) : base(
         scheduleConfig.CronExpression,
         scheduleConfig.TimeZoneInfo)
     {
@@ -30,11 +30,10 @@ public class CheckJobsCron : CronJobService
 
         var jobs = await dbContext
             .Set<Job>()
-            .Where(
-                _ =>
-                    _.Status != JobStatusConstants.Complete &&
-                    _.Status != JobStatusConstants.Running &&
-                    _.Status != JobStatusConstants.Errored)
+            .Where(_ =>
+                _.Status != JobStatusConstants.Complete &&
+                _.Status != JobStatusConstants.Running &&
+                _.Status != JobStatusConstants.Errored)
             .CountAsync(cancellationToken);
 
         if (jobs == 0)

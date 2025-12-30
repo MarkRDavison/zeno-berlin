@@ -1,0 +1,121 @@
+﻿@attribute [Authorize(Roles = "User")]
+@attribute [Route(Routes.Story)]
+
+@if (ViewModel.ManageStoryLoading)
+{
+    @*TODO: Framework activity monitor loading thingy*@
+    <MudProgressCircular Indeterminate Class="ma-auto" />
+}
+else
+{
+    <MudStack>
+        <MudStack Row AlignItems="AlignItems.End" Class="d-flex align-center">
+            <MudText data-testid="@DataTestIds.StoryTitle" Typo="Typo.h5">@ViewModel.Data.Name</MudText>
+            <div data-testid="@DataTestIds.StoryFavouriteIcon" class="float-right favourite-container-visible">
+                @if (ViewModel.Data.Favourite)
+                {
+                    <MudIcon Class="favourite-icon" Icon="@Icons.Material.Filled.Star" onclick="@(() => ViewModel.FavouriteClick(false))" />
+                }
+                else
+                {
+                    <MudIcon Class="non-favourite-icon" Icon="@Icons.Material.Filled.StarOutline" onclick="@(() => ViewModel.FavouriteClick(true))" />
+                }
+            </div>
+            @*TODO: data-testid*@
+            <ClickableIcon Value="@ViewModel.ConsumedChapterUpToDate"
+                           ActiveIcon="@Icons.Material.Filled.CheckCircle"
+                           InactiveIcon="@Icons.Material.Filled.CheckCircleOutline"
+                           ActiveColour="lightgreen"
+                           InactiveColour="lightgrey"
+                           ActiveTooltip="You've read everything this story has!"
+                           InactiveTooltip="You've got more to read!"
+                           OnClick="@(async _ => await ViewModel.OnConsumedChapterIconClick(_))" />
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowOutward"
+                           Href="@ViewModel.CurrentChapterAddress"
+                           Target="_blank" />
+            <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                           OnClick="@ViewModel.OpenEditStoryDialog" />
+            <MudText Class="muted-text"
+                     Typo="Typo.body2">
+                @ViewModel.LastCheckedText
+            </MudText>
+            <MudSpacer />
+            <ProgressButton InProgress="@ViewModel.InProgress"
+                            Color="Color.Primary"
+                            Disabled="@ViewModel.InProgress"
+                            Label="Check"
+                            StartIcon="@Icons.Material.Filled.Sync"
+                            OnClick="@ViewModel.CheckStory" />
+            <MudButton ButtonType="ButtonType.Submit"
+                       Color="Color.Error"
+                       StartIcon="@Icons.Material.Filled.Delete"
+                       Variant="Variant.Filled"
+                       Size="Size.Large"
+                       Disabled="ViewModel.InProgress"
+                       IconSize="Size.Large"
+                       OnClick="ViewModel.OpenDeleteConfirmationDialog">Delete</MudButton>
+        </MudStack>
+        <MudText data-testid="@DataTestIds.StoryChapterText" Typo="Typo.body1">@ViewModel.ChaptersText</MudText>
+        <MudText Typo="Typo.body1">@ViewModel.LastAuthoredText</MudText>
+        <MudText Typo="Typo.body1">@ViewModel.UpdateTypeText</MudText>
+        <MudDivider />
+
+        @if (!ViewModel.FandomsLoading)
+        {
+            <MudStack>
+                <MudSwitch @bind-Value="ViewModel.ShowActualFandoms" Label="Show actual fandoms" />
+                <ul data-testid="@DataTestIds.StoryFandomsList">
+                    @foreach (var fandom in ViewModel.DisplayFandoms)
+                    {
+                        <li><MudLink id="@fandom.FandomId" Href="@RouteHelpers.Fandom(fandom.FandomId)" Typo="Typo.body1">@fandom.Name</MudLink></li>
+                    }
+                </ul>
+            </MudStack>
+            <MudDivider />
+        }
+
+        @if (!ViewModel.AuthorsLoading)
+        {
+            <MudStack>
+                <MudSwitch @bind-Value="ViewModel.ShowActualAuthors" Label="Show actual authors" />
+                <ul data-testid="@DataTestIds.StoryAuthorList">
+                    @foreach (var author in ViewModel.DisplayAuthors)
+                    {
+                        <li><MudLink id="@author.AuthorId" Href="@RouteHelpers.Author(author.AuthorId)" Typo="Typo.body1">@author.Name</MudLink></li>
+                    }
+                </ul>
+            </MudStack>
+            <MudDivider />
+        }
+        <MudStack>
+            <MudStack Row>
+                <MudText Typo="Typo.subtitle1">Updates</MudText>
+                <MudSpacer />
+                <MudButton ButtonType="ButtonType.Submit"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Add"
+                           Variant="Variant.Filled"
+                           Size="Size.Large"
+                           Disabled="ViewModel.FandomsLoading"
+                           IconSize="Size.Large"
+                           OnClick="@ViewModel.AddStoryUpdate">Add</MudButton>
+            </MudStack>
+            <MudTable data-testid="@DataTestIds.StoryUpdateTable"
+                      Items="@ViewModel.Data.Updates.OrderByDescending(_ => _.CurrentChapters)"
+                      Hover
+                      Breakpoint="Breakpoint.Sm"
+                      Loading="@ViewModel.FandomsLoading">
+                <HeaderContent>
+                    <MudTh>Chapters</MudTh>
+                    <MudTh>Last authored</MudTh>
+                    <MudTh>Checked</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Chapters">@ViewModel.UpdateChapterText(context)</MudTd>
+                    <MudTd DataLabel="Last authored">@context.LastAuthored.ToDateTime(TimeOnly.MinValue).Humanize()</MudTd>
+                    <MudTd DataLabel="Checked">@context.LastChecked.Humanize()</MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudStack>
+    </MudStack>
+}

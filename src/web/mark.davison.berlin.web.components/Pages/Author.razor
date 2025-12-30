@@ -1,25 +1,26 @@
-﻿@attribute [Route(Routes.Author)]
-@inherits FluxorComponent
+﻿@attribute [Authorize(Roles = "User")]
+@attribute [Route(Routes.Author)]
+@inherits StateComponent
 
-@if (AuthorListState.Value.IsLoading)
+@if (AuthorListState.IsLoading)
 {
     @*TODO: Framework activity monitor loading thingy*@
     <MudProgressCircular Indeterminate Class="ma-auto" />
 }
-else 
+else
 {
     <MudStack>
         <MudText Typo="Typo.h5" data-testid="@DataTestIds.AuthorTitle">@Data?.Name</MudText>
         <MudDivider />
         <MudText Typo="Typo.subtitle1">Stories</MudText>
-        @if (!StoryListState.Value.IsLoading)
+        @if (!StoryListState.IsLoading)
         {
-        <ul>
-            @foreach (var story in _authorStories)
-            {
-                <li><MudLink Href="@RouteHelpers.Story(story.StoryId)" Typo="Typo.body1">@story.Name</MudLink></li>
-            }
-        </ul>
+            <ul>
+                @foreach (var story in _authorStories)
+                {
+                    <li><MudLink Href="@RouteHelpers.Story(story.StoryId)" Typo="Typo.body1">@story.Name</MudLink></li>
+                }
+            </ul>
         }
     </MudStack>
 }

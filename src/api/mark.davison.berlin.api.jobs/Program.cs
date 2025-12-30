@@ -1,3 +1,5 @@
+namespace mark.davison.berlin.api.jobs;
+
 public sealed class Program
 {
     public static void Main(string[] args)

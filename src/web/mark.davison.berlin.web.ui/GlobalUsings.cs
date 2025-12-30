@@ -1,10 +1,6 @@
 ﻿global using mark.davison.berlin.web.components.Ignition;
-global using mark.davison.berlin.web.features;
+global using mark.davison.berlin.web.features.Ignition;
+global using mark.davison.berlin.web.services.Ignition;
 global using mark.davison.berlin.web.ui;
-global using mark.davison.berlin.web.ui.Ignition;
-global using mark.davison.common.client.abstractions.Authentication;
-global using mark.davison.common.client.Authentication;
-global using mark.davison.common.client.Ignition;
-global using mark.davison.common.client.Repository;
 global using Microsoft.AspNetCore.Components.Web;
 global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

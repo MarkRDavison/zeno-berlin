@@ -10,9 +10,16 @@ public sealed class BerlinDbContext : DbContextBase<BerlinDbContext>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserEntityConfiguration).Assembly);
+        modelBuilder
+            .ApplyConfigurationsFromAssembly(typeof(UserEntityConfiguration).Assembly)
+            .ApplyConfigurationsFromAssembly(typeof(AuthorEntityConfiguration).Assembly);
     }
 
+    public DbSet<User> Users => Set<User>();
+    public DbSet<ExternalLogin> ExternalLogins => Set<ExternalLogin>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
+    public DbSet<Tenant> Tenants => Set<Tenant>();
     public DbSet<Story> Stories => Set<Story>();
     public DbSet<StoryUpdate> StoryUpdates => Set<StoryUpdate>();
     public DbSet<Site> Sites => Set<Site>();

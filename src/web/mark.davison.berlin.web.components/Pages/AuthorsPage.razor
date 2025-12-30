@@ -1,5 +1,6 @@
-﻿@attribute [Route(Routes.Authors)]
-@inherits FluxorComponent
+﻿@attribute [Authorize(Roles = "User")]
+@attribute [Route(Routes.Authors)]
+@inherits StateComponent
 
 <MudStack>
     <MudStack Row AlignItems="AlignItems.End" Class="d-flex align-center">
@@ -7,7 +8,7 @@
         <span>TODO: TreeGrid with parent child authors???</span>
         @*https://mudblazor.com/components/table#grouping-(multi-levels)*@
         <MudSpacer />
-        @if (!AuthorListState.Value.IsLoading)
+        @if (!AuthorListState.IsLoading)
         {
             <MudButton 
                 ButtonType="ButtonType.Submit"
@@ -19,7 +20,7 @@
                 IconSize="Size.Large">Add</MudButton>
         }
     </MudStack>
-    <MudTable data-testid="@DataTestIds.AuthorsTable" Items="@_authors" Hover Breakpoint="Breakpoint.Sm" Loading="@AuthorListState.Value.IsLoading">
+    <MudTable data-testid="@DataTestIds.AuthorsTable" Items="@_authors" Hover Breakpoint="Breakpoint.Sm" Loading="@AuthorListState.IsLoading">
         <HeaderContent>
             <MudTh>Name</MudTh>
             <MudTh>Parent</MudTh>

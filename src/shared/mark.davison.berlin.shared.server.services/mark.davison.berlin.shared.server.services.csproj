@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\api\mark.davison.berlin.api.persistence\mark.davison.berlin.api.persistence.csproj" />
+    <ProjectReference Include="..\mark.davison.berlin.shared.logic\mark.davison.berlin.shared.logic.csproj" />
+    <ProjectReference Include="..\mark.davison.berlin.shared.validation\mark.davison.berlin.shared.validation.csproj" />
+  </ItemGroup>
+
+</Project>

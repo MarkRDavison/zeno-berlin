@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="shared/mark.davison.berlin.shared.constants/mark.davison.berlin.shared.constants.csproj" />
+  <Project Path="web/tests/mark.davison.berlin.web.tests.playwright/mark.davison.berlin.web.tests.playwright.csproj" />
+</Solution>

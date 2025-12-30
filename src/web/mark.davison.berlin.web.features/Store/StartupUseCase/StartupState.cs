@@ -1,17 +1,20 @@
 ﻿namespace mark.davison.berlin.web.features.Store.StartupUseCase;
 
-[FeatureState]
-public sealed class StartupState
+public sealed class StartupState : IClientState
 {
-    public ReadOnlyCollection<UpdateTypeDto> UpdateTypes { get; }
-
-    public StartupState() : this(Enumerable.Empty<UpdateTypeDto>())
+    public StartupState() : this(true, false, new())
     {
 
     }
 
-    public StartupState(IEnumerable<UpdateTypeDto> updateTypes)
+    public StartupState(bool loading, bool loaded, StartupDataDto data)
     {
-        UpdateTypes = new([.. updateTypes]);
+        Loading = loading;
+        Loaded = loaded;
+        Data = data;
     }
+
+    public bool Loading { get; }
+    public bool Loaded { get; }
+    public StartupDataDto Data { get; }
 }

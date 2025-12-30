@@ -8,9 +8,17 @@ public sealed class AddFandomFormViewModel : IFormViewModel
     public List<FandomDto> Fandoms { get; set; } = [];
 
     // TODO: Duplicate
-    public Task<IEnumerable<Guid?>> Search(string text)
+    public Task<IEnumerable<Guid?>> Search(string? text, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrEmpty(text))
+        {
+            return Task.FromResult(Fandoms
+                .OrderBy(_ => _.Name)
+                .Select(_ => (Guid?)_.FandomId));
+        }
+
         var upperText = text.ToUpper();
+
         return Task.FromResult(Fandoms
             .Where(_ => _.Name.ToUpper().Contains(upperText))
             .OrderBy(_ => _.Name)

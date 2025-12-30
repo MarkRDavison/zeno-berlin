@@ -1,5 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.StoryListUseCase;
 
+[Effect]
 public sealed class StoryListEffects
 {
     private readonly IClientHttpRepository _repository;
@@ -9,12 +10,11 @@ public sealed class StoryListEffects
         _repository = repository;
     }
 
-    [EffectMethod]
     public async Task HandleFetchStoryListActionAsync(FetchStoryListAction action, IDispatcher dispatcher)
     {
         var queryRequest = new StoryListQueryRequest { }; // TODO: Rename/ restructure
 
-        var queryResponse = await _repository.Get<StoryListQueryResponse, StoryListQueryRequest>(queryRequest, CancellationToken.None);
+        var queryResponse = await _repository.Get<StoryListQueryRequest, StoryListQueryResponse>(queryRequest, CancellationToken.None);
 
         var actionResponse = new FetchStoryListActionResponse
         {

@@ -1,5 +1,6 @@
 ﻿namespace mark.davison.berlin.web.features.Store.ManageStoryUseCase;
 
+[Effect]
 public sealed class ManageStoryEffects
 {
     private readonly IClientHttpRepository _repository;
@@ -9,12 +10,11 @@ public sealed class ManageStoryEffects
         _repository = repository;
     }
 
-    [EffectMethod]
     public async Task HandleFetchManageStoryActionAsync(FetchManageStoryAction action, IDispatcher dispatcher)
     {
         var queryRequest = new ManageStoryQueryRequest { StoryId = action.StoryId };
 
-        var queryResponse = await _repository.Get<ManageStoryQueryResponse, ManageStoryQueryRequest>(queryRequest, CancellationToken.None);
+        var queryResponse = await _repository.Get<ManageStoryQueryRequest, ManageStoryQueryResponse>(queryRequest, CancellationToken.None);
 
         var actionResponse = new FetchManageStoryActionResponse
         {
@@ -24,12 +24,9 @@ public sealed class ManageStoryEffects
             Value = queryResponse.Value
         };
 
-        // TODO: Framework to dispatch general ***something went wrong***
-
         dispatcher.Dispatch(actionResponse);
     }
 
-    [EffectMethod]
     public Task HandleUpdateManageStoryActionResponseAsync(UpdateManageStoryActionResponse response, IDispatcher dispatcher)
     {
         var action = new FetchManageStoryAction
@@ -44,7 +41,6 @@ public sealed class ManageStoryEffects
         return Task.CompletedTask;
     }
 
-    [EffectMethod]
     public async Task HandleAddManageStoryUpdateActionAsync(AddManageStoryUpdateAction action, IDispatcher dispatcher)
     {
         var commandRequest = new AddStoryUpdateCommandRequest
@@ -56,9 +52,7 @@ public sealed class ManageStoryEffects
             UpdateDate = action.UpdateDate
         };
 
-        var commandResponse = await _repository.Post<AddStoryUpdateCommandResponse, AddStoryUpdateCommandRequest>(commandRequest, CancellationToken.None);
-
-        // TODO: Framework to dispatch general ***something went wrong***
+        var commandResponse = await _repository.Post<AddStoryUpdateCommandRequest, AddStoryUpdateCommandResponse>(commandRequest, CancellationToken.None);
 
         var response = new AddManageStoryUpdateActionResponse
         {

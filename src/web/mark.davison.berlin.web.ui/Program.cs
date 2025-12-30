@@ -1,7 +1,5 @@
-var authConfig = new AuthenticationConfig();
-authConfig.SetBffBase(WebConstants.LocalBffRoot);
-
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
@@ -10,6 +8,8 @@ builder.Services
     {
         BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
     })
-    .UseBerlinWeb(authConfig);
+    .UseBerlinComponents()
+    .UseBerlinFeatures()
+    .UseBerlinServices();
 
 await builder.Build().RunAsync();

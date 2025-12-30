@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.web.features.Store.DashboardListUseCase;
+﻿using mark.davison.berlin.web.features.Store.SharedStoryUseCase;
+
+namespace mark.davison.berlin.web.features.Store.DashboardListUseCase;
 
 public static class DashboardListReducers
 {

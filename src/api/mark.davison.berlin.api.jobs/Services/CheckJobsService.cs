@@ -4,13 +4,13 @@ public sealed class CheckJobsService : ICheckJobsService
 {
     private readonly ILockService _lockService;
     private readonly IDateService _dateService;
-    private readonly AppSettings _appSettings;
+    private readonly JobsAppSettings _appSettings;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
     public CheckJobsService(
         ILockService lockService,
         IDateService dateService,
-        IOptions<AppSettings> options,
+        IOptions<JobsAppSettings> options,
         IServiceScopeFactory serviceScopeFactory)
     {
         _lockService = lockService;
@@ -49,8 +49,11 @@ public sealed class CheckJobsService : ICheckJobsService
 
             var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext<BerlinDbContext>>();
 
-            var jobs = await dbContext.Set<Job>()
+            var jobs = await dbContext
+                .Set<Job>()
                 .Include(_ => _.ContextUser)
+                .ThenInclude(_ => _.UserRoles)
+                .ThenInclude(_ => _.Role)
                 .Where(_ =>
                     !idsToIgnore.Contains(_.Id) &&
                     (_.Status == JobStatusConstants.Submitted && _.PerformerId == string.Empty))

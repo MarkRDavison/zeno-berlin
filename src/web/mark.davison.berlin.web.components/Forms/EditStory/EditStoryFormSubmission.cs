@@ -31,6 +31,6 @@ public sealed class EditStoryFormSubmission : IFormSubmission<EditStoryFormViewM
             ]
         };
 
-        return await _repository.Post<EditStoryCommandResponse, EditStoryCommandRequest>(commandRequest, CancellationToken.None);
+        return await _repository.Post<EditStoryCommandRequest, EditStoryCommandResponse>(commandRequest, CancellationToken.None);
     }
 }

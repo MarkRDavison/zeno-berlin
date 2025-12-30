@@ -26,7 +26,7 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.x
+          dotnet-version: 10.x
           
       - name: install web compiler
         run: dotnet tool install Excubo.WebCompiler --global
@@ -37,11 +37,11 @@ jobs:
 
       - name: build
         working-directory: ./src
-        run: dotnet build ./mark.davison.berlin.sln
+        run: dotnet build zeno-berlin.slnx
 
       - name: test
         working-directory: ./src
-        run: dotnet test ./mark.davison.berlin.sln --filter "TestCategory!=UI"
+        run: dotnet test --no-build --solution zeno-berlin.slnx
     
   build-image-api:
     runs-on: ubuntu-latest

@@ -1,17 +1,13 @@
-﻿namespace mark.davison.berlin.web.components.Pages;
+﻿using mark.davison.berlin.web.components.Forms.AddStory;
+using mark.davison.common.client.web.Components.Form;
 
-public partial class Dashboard
+namespace mark.davison.berlin.web.components.Pages;
+
+[StateProperty<StartupState>]
+[StateProperty<DashboardListState>]
+[StateProperty<FandomListState>]
+public partial class Dashboard : StateComponent
 {
-    [Inject]
-    public required IState<DashboardListState> DashboardListState { get; set; }
-    [Inject]
-    public required IState<FandomListState> FandomListState { get; set; }
-    [Inject]
-    public required IState<StartupState> StartupState { get; set; }
-
-    [Inject]
-    public required IDialogService DialogService { get; set; }
-
     [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
@@ -21,11 +17,18 @@ public partial class Dashboard
     [Inject]
     public required IDateService DateService { get; set; }
 
-    private readonly List<Guid> _storyIds = new();
+    [Inject]
+    public required IDialogService DialogService { get; set; }
+
+    [Inject]
+    public required AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    private readonly List<Guid> _storyIds = [];
     private bool _loaded;
+    private bool _propagationStopper = false;
 
     private IEnumerable<DashboardTileDto> _tiles => _storyIds
-        .Select(_ => DashboardListState.Value.Entities.FirstOrDefault(s => s.StoryId == _))
+        .Select(_ => DashboardListState.Entities.FirstOrDefault(s => s.StoryId == _))
         .OfType<DashboardTileDto>();
 
     protected override async Task OnInitializedAsync()
@@ -40,11 +43,11 @@ public partial class Dashboard
 
     protected override void OnAfterRender(bool firstRender)
     {
-        if (!_loaded && !DashboardListState.Value.IsLoading)
+        if (!_loaded && !DashboardListState.IsLoading)
         {
             _loaded = true;
 
-            var orderedStories = DashboardListState.Value.Entities
+            var orderedStories = DashboardListState.Entities
                 .OrderByDescending(_ => _.Favourite)
                 .ThenByDescending(_ => _.LastAuthored)
                 .ThenByDescending(_ => _.LastChecked)
@@ -58,17 +61,14 @@ public partial class Dashboard
 
     private async Task EnsureStateLoaded(bool force)
     {
-        var action = new FetchDashboardListAction();
-
-        using (StoreHelper.ConditionalForce(force))
+        if (await AuthenticationStateProvider.GetAuthenticationStateAsync() is { } state &&
+            (state.User.Identity?.IsAuthenticated ?? false))
         {
-            await StoreHelper.DispatchWithThrottleAndWaitForResponse<
-                FetchDashboardListAction,
-                FetchDashboardListActionResponse>(DashboardListState.Value.LastLoaded, action);
+            await StoreHelper.DispatchAndWaitForResponse<FetchDashboardListAction, FetchDashboardListActionResponse>(new FetchDashboardListAction());
         }
     }
 
-    internal async Task OpenAddStoryModal()
+    private async Task OpenAddStoryModal()
     {
         var options = new DialogOptions
         {
@@ -79,7 +79,7 @@ public partial class Dashboard
 
         var instance = new AddStoryFormViewModel
         {
-            UpdateTypes = [.. StartupState.Value.UpdateTypes]
+            UpdateTypes = [.. StartupState.Data.UpdateTypes]
         };
 
         var param = new DialogParameters<FormModal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>
@@ -88,18 +88,18 @@ public partial class Dashboard
             { _ => _.Instance, instance }
         };
 
-        var dialog = DialogService.Show<FormModal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>("Add Story", param, options);
+        var dialog = await DialogService.ShowAsync<FormModal<ModalViewModel<AddStoryFormViewModel, AddStoryForm>, AddStoryFormViewModel, AddStoryForm>>("Add Story", param, options);
 
         var result = await dialog.Result;
 
-        if (!result.Canceled)
+        if (result is not null &&
+            !result.Canceled)
         {
             _loaded = false;
             //TODO: Navigate to newly created story???
         }
     }
 
-    private bool _propagationStopper = false;
     private void MudIconClick(Guid storyId, bool set)
     {
         _propagationStopper = true;

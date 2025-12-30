@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 as BUILD
+FROM mcr.microsoft.com/dotnet/sdk:10.0 as BUILD
 WORKDIR /app 
 
 ENV CI_BUILD=true

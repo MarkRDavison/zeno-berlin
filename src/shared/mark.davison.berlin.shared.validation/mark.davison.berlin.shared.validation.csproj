@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\mark.davison.berlin.shared.models\mark.davison.berlin.shared.models.csproj" />
+    <ProjectReference Include="..\mark.davison.berlin.shared.models.dto\mark.davison.berlin.shared.models.dto.csproj" />
   </ItemGroup>
 
 </Project>

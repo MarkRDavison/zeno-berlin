@@ -1,23 +1,23 @@
-﻿namespace mark.davison.berlin.api.orchestrator;
+namespace mark.davison.berlin.api.orchestrator;
 
-internal class Program
+public sealed class Program
 {
-    static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
-        await CreateHostBuilder(args).Build().RunAsync();
+        CreateHostBuilder(args).Build().Run();
     }
+
     public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host
-            .CreateDefaultBuilder(args)
-            .UseStartup<Startup>()
-            .ConfigureLogging(_ =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
             {
-                _.AddConsole();
+                webBuilder.UseStartup<Startup>();
+                webBuilder.UseUrls(urls: Environment.GetEnvironmentVariable("BERLIN__ORCHESTRATOR_URL") ?? "https://0.0.0.0:50003");
             })
-            .ConfigureAppConfiguration(_ =>
+            .ConfigureAppConfiguration((hostingContext, configurationBuilder) =>
             {
-                _.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                _.AddJsonFile("appsettings.development.json", optional: true, reloadOnChange: true);
-                _.AddEnvironmentVariables();
+                configurationBuilder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                configurationBuilder.AddJsonFile("appsettings.development.json", optional: true, reloadOnChange: true);
+                configurationBuilder.AddEnvironmentVariables();
             });
 }

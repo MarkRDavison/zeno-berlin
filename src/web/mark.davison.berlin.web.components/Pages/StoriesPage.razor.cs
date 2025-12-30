@@ -1,30 +1,20 @@
 ﻿namespace mark.davison.berlin.web.components.Pages;
 
-public partial class StoriesPage
+[StateProperty<StoryListState>]
+[StateProperty<FandomListState>]
+[StateProperty<AuthorListState>]
+public partial class StoriesPage : StateComponent
 {
-    [Inject]
-    public required IState<StoryListState> StoryListState { get; set; }
-
-    [Inject]
-    public required IState<FandomListState> FandomListState { get; set; }
-
-    [Inject]
-    public required IState<AuthorListState> AuthorListState { get; set; }
-
     [Inject]
     public required IStoreHelper StoreHelper { get; set; }
 
-    private IEnumerable<StoryRowDto> _stories => StoryListState.Value.Stories.OrderBy(_ => _.Name);
+    private IEnumerable<StoryRowDto> _stories => StoryListState.Stories.OrderBy(_ => _.Name);
 
     protected override async Task OnInitializedAsync()
     {
-        using (StoreHelper.Force())
-        {
-            var action = new FetchStoryListAction();
-            await StoreHelper.DispatchWithThrottleAndWaitForResponse<
-                FetchStoryListAction,
-                FetchStoryListActionResponse>(StoryListState.Value.LastLoaded, action);
-        }
+        await StoreHelper.DispatchAndWaitForResponse<
+            FetchStoryListAction, FetchStoryListActionResponse>(
+            new FetchStoryListAction());
     }
 
     private void FavouriteClick(Guid storyId, bool set)

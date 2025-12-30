@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("mark.davison.berlin.web.ui.test")]
+﻿[assembly: InternalsVisibleTo("mark.davison.berlin.web.ui.test")]
 
 namespace mark.davison.berlin.web.components;
 
@@ -9,6 +7,7 @@ public sealed class Routes
     public const string Root = "/";
     public const string Dashboard = Root;
     public const string UserSettings = "/settings/user";
+    public const string AdminSettings = "/settings/admin";
     public const string Stories = "/stories";
     public const string PotentialStories = "/potential";
     public const string PotentialStory = "/potential/{id:guid}";
@@ -17,6 +16,8 @@ public sealed class Routes
     public const string Fandom = "/fandoms/{id:guid}";
     public const string Authors = "/authors";
     public const string Author = "/authors/{id:guid}";
+    public const string Login = "/login";
+    public const string NotFound = "/not-found";
 }
 
 public sealed class RouteHelpers

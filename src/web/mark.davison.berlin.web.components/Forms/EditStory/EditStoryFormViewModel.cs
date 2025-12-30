@@ -10,6 +10,5 @@ public sealed class EditStoryFormViewModel : IFormViewModel
 
     public IEnumerable<DropdownItem> UpdateTypeItems => UpdateTypes.Select(_ => new DropdownItem { Id = _.Id, Name = _.Description });
 
-
     public bool Valid => UpdateTypeId != null && UpdateTypeId != default;
 }
