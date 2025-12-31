@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using mark.davison.berlin.api.persistence;
@@ -11,9 +12,11 @@ using mark.davison.berlin.api.persistence;
 namespace mark.davison.berlin.api.migrations.postgres.Migrations
 {
     [DbContext(typeof(BerlinDbContext))]
-    partial class BerlinDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251231001528_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
