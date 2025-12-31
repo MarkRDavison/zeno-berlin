@@ -10,7 +10,7 @@ public class Story : BerlinEntity
     public int? ConsumedChapters { get; set; }
     public bool Complete { get; set; }
     public bool Favourite { get; set; }
-    public DateTime LastChecked { get; set; }
+    public DateTimeOffset LastChecked { get; set; }
     public DateOnly LastAuthored { get; set; }
 
     public Guid SiteId { get; set; }

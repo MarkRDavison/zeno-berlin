@@ -16,8 +16,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -34,8 +34,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     Email = table.Column<string>(type: "text", nullable: false),
                     DisplayName = table.Column<string>(type: "text", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,8 +55,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Provider = table.Column<string>(type: "text", nullable: false),
                     ProviderSubject = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -80,8 +80,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     ExternalName = table.Column<string>(type: "text", nullable: false),
                     ParentFandomId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -109,14 +109,14 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     Status = table.Column<string>(type: "text", nullable: false),
                     JobRequest = table.Column<string>(type: "text", nullable: false),
                     JobResponse = table.Column<string>(type: "text", nullable: false),
-                    SubmittedAt = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    SelectedAt = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    StartedAt = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    FinishedAt = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    SubmittedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    SelectedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    StartedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    FinishedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     PerformerId = table.Column<string>(type: "text", nullable: false),
                     ContextUserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -144,8 +144,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     Address = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Summary = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -166,8 +166,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -189,8 +189,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     ShortName = table.Column<string>(type: "text", nullable: false),
                     LongName = table.Column<string>(type: "text", nullable: false),
                     Address = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -210,8 +210,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -231,8 +231,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     RoleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -261,8 +261,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     IsUserSpecified = table.Column<bool>(type: "boolean", nullable: false),
                     SiteId = table.Column<Guid>(type: "uuid", nullable: true),
                     ParentAuthorId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -299,12 +299,12 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     ConsumedChapters = table.Column<int>(type: "integer", nullable: true),
                     Complete = table.Column<bool>(type: "boolean", nullable: false),
                     Favourite = table.Column<bool>(type: "boolean", nullable: false),
-                    LastChecked = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastAuthored = table.Column<DateOnly>(type: "date", nullable: false),
+                    LastChecked = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastAuthored = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     SiteId = table.Column<Guid>(type: "uuid", nullable: false),
                     UpdateTypeId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -337,8 +337,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     StoryId = table.Column<Guid>(type: "uuid", nullable: false),
                     AuthorId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -371,8 +371,8 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     StoryId = table.Column<Guid>(type: "uuid", nullable: false),
                     FandomId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -408,10 +408,10 @@ namespace mark.davison.berlin.api.migrations.postgres.Migrations
                     Complete = table.Column<bool>(type: "boolean", nullable: false),
                     ChapterAddress = table.Column<string>(type: "text", nullable: true),
                     ChapterTitle = table.Column<string>(type: "text", nullable: true),
-                    LastAuthored = table.Column<DateOnly>(type: "date", nullable: false),
+                    LastAuthored = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     StoryId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "timestamp(0) without time zone", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>

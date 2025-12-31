@@ -10,7 +10,7 @@ public sealed record StoryManageDto(
     bool Complete,
     bool Favourite,
     Guid UpdateTypeId,
-    DateTime LastChecked,
+    DateTimeOffset LastChecked,
     DateOnly LastAuthored,
     List<Guid> FandomIds,
     List<Guid> AuthorIds,
@@ -24,5 +24,5 @@ public sealed class StoryManageUpdatesDto
     public string ChapterAddress { get; set; } = string.Empty;
     public string ChapterTitle { get; set; } = string.Empty;
     public DateOnly LastAuthored { get; set; }
-    public DateTime LastChecked { get; set; }
+    public DateTimeOffset LastChecked { get; set; }
 }

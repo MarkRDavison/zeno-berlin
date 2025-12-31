@@ -14,7 +14,7 @@ public sealed class StoryDto
     public List<Guid> Fandoms { get; set; } = [];
     public List<Guid> Authors { get; set; } = [];
 
-    public DateTime LastChecked { get; set; }
+    public DateTimeOffset LastChecked { get; set; }
     public DateOnly LastAuthored { get; set; }
 
     public bool Favourite { get; set; }

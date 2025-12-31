@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.api.persistence;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+namespace mark.davison.berlin.api.persistence;
 
 [ExcludeFromCodeCoverage]
 public sealed class BerlinDbContext : DbContextBase<BerlinDbContext>
@@ -16,17 +18,47 @@ public sealed class BerlinDbContext : DbContextBase<BerlinDbContext>
             {
                 var type = property.ClrType;
 
-                if (type == typeof(DateTime) || type == typeof(DateTime?))
+                if (type == typeof(DateTime))
                 {
-                    property.SetColumnType("timestamp(0) without time zone");
+                    property.SetValueConverter(new ValueConverter<DateTime, DateTime>(
+                        v => v,
+                        v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
+                    ));
                 }
-                else if (type == typeof(TimeOnly) || type == typeof(TimeOnly?))
+                else if (type == typeof(DateTime?))
                 {
-                    property.SetColumnType("time(0) without time zone");
+                    property.SetValueConverter(new ValueConverter<DateTime?, DateTime?>(
+                        v => v,
+                        v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : null
+                    ));
                 }
-                else if (type == typeof(DateOnly) || type == typeof(DateOnly?))
+                else if (type == typeof(DateOnly))
                 {
-                    property.SetColumnType("date");
+                    property.SetValueConverter(new ValueConverter<DateOnly, DateTime>(
+                        v => v.ToDateTime(TimeOnly.MinValue),
+                        v => DateOnly.FromDateTime(v)
+                    ));
+                }
+                else if (type == typeof(DateOnly?))
+                {
+                    property.SetValueConverter(new ValueConverter<DateOnly?, DateTime?>(
+                        v => v.HasValue ? v.Value.ToDateTime(TimeOnly.MinValue) : (DateTime?)null,
+                        v => v.HasValue ? DateOnly.FromDateTime(v.Value) : null
+                    ));
+                }
+                else if (type == typeof(TimeOnly))
+                {
+                    property.SetValueConverter(new ValueConverter<TimeOnly, TimeSpan>(
+                        v => v.ToTimeSpan(),
+                        v => TimeOnly.FromTimeSpan(v)
+                    ));
+                }
+                else if (type == typeof(TimeOnly?))
+                {
+                    property.SetValueConverter(new ValueConverter<TimeOnly?, TimeSpan?>(
+                        v => v.HasValue ? v.Value.ToTimeSpan() : (TimeSpan?)null,
+                        v => v.HasValue ? TimeOnly.FromTimeSpan(v.Value) : null
+                    ));
                 }
             }
         }

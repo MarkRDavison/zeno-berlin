@@ -7,10 +7,10 @@ public class Job : BerlinEntity
     public string JobRequest { get; set; } = string.Empty;
     public string JobResponse { get; set; } = string.Empty;
 
-    public DateTime SubmittedAt { get; set; }
-    public DateTime SelectedAt { get; set; }
-    public DateTime StartedAt { get; set; }
-    public DateTime FinishedAt { get; set; }
+    public DateTimeOffset SubmittedAt { get; set; }
+    public DateTimeOffset SelectedAt { get; set; }
+    public DateTimeOffset StartedAt { get; set; }
+    public DateTimeOffset FinishedAt { get; set; }
 
     public string PerformerId { get; set; } = string.Empty;
     public Guid ContextUserId { get; set; }

@@ -10,7 +10,7 @@ public sealed class DashboardTileDto
     public bool Complete { get; set; }
     public bool Favourite { get; set; }
     public Guid UpdateTypeId { get; set; }
-    public DateTime LastChecked { get; set; }
+    public DateTimeOffset LastChecked { get; set; }
     public DateOnly LastAuthored { get; set; }
     public List<Guid> Fandoms { get; set; } = [];
 
