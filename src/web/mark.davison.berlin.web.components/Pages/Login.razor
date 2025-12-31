@@ -2,6 +2,8 @@
 
 @inherits StateComponent
 
+@inject IAuthenticationService _authenticationService
+
 <h1>Login</h1>
 
 @if (StartupState.Loading)
@@ -14,7 +16,7 @@ else if (StartupState.Loaded)
 		@foreach (var provider in StartupState.Data.EnabledAuthProviders)
 		{
 			@*TODO: Icons/images etc*@
-			<li><a data-testid="@($"{DataTestIds.LoginWithProvider}{provider}")" href="@($"https://localhost:40000/account/login/{provider}")">Login with @provider</a></li> 
+			<li><a data-testid="@($"{DataTestIds.LoginWithProvider}{provider}")" href="@($"{_authenticationService.BffRoot}/account/login/{provider}")">Login with @provider</a></li>
 		}
 	</ul>
 }

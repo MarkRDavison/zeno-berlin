@@ -3,6 +3,7 @@
 @implements IDisposable
 
 @inject AuthenticationStateProvider _auth
+@inject IAuthenticationService _authenticationService
 @inject IStoreHelper _storeHelper
 
 <MudThemeProvider @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
@@ -36,7 +37,7 @@
                             <MudMenuItem Href="@Routes.AdminSettings">Admin Settings</MudMenuItem>
                         }
                         <MudDivider />
-                        <MudMenuItem Href="https://localhost:40000/account/logout">Logout</MudMenuItem>
+                        <MudMenuItem Href="@($"{_authenticationService.BffRoot}/account/logout")">Logout</MudMenuItem>
                     </ChildContent>
                 </MudMenu>
             </Authorized>

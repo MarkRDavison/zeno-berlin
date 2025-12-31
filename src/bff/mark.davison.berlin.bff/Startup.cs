@@ -35,7 +35,7 @@ public class Startup(IConfiguration Configuration)
             .AddServerCore()
             .AddScoped<IUserAuthenticationService, RemoteUserAuthenticationService>()
             .AddRedis(AppSettings.REDIS, AppSettings.REDIS.INSTANCE_NAME + (AppSettings.PRODUCTION_MODE ? "_prod_" : "_dev_"))
-            .AddRemoteForwarderAuthentication(AppSettings.API_ENDPOINT)
+            .AddRemoteForwarderAuthentication(AppSettings.API_ORIGIN)
             .AddOidcCookieAuthentication(
                 AppSettings.AUTHENTICATION,
                 (s, email, name) =>
@@ -59,7 +59,7 @@ public class Startup(IConfiguration Configuration)
             {
                 endpoints
                     .MapInteractiveAuthenticationEndpoints(AppSettings.WEB_ORIGIN)
-                    .UseApiProxy(AppSettings.API_ENDPOINT);
+                    .UseApiProxy(AppSettings.API_ORIGIN);
                 // TODO: Need health checks / api hosted health service things for non api/non dbcontext
             });
     }
