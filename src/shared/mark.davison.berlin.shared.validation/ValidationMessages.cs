@@ -13,6 +13,8 @@ public static class ValidationMessages
     public const string FAILED_TO_IMPORT = nameof(FAILED_TO_IMPORT);
     public const string OWNERSHIP_MISMATCH = nameof(OWNERSHIP_MISMATCH);
     public const string FAILED_RETRIEVE = nameof(FAILED_RETRIEVE);
+    public const string AUTHENTICATION_REQUIRED = nameof(AUTHENTICATION_REQUIRED);
+    public const string RATE_LIMITED = nameof(RATE_LIMITED);
 
 
     public static string FormatMessageParameters(string message, params string[] parameters)

@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestData\AO3_AccountRequiredResponse.html" />
     <None Remove="TestData\ExampleAo3WorkResponse_1.html" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="TestData\AO3_AccountRequiredResponse.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="TestData\ExampleAo3WorkResponse_1.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -23,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\mark.davison.berlin.shared.logic\mark.davison.berlin.shared.logic.csproj" />
+    <ProjectReference Include="..\..\mark.davison.berlin.shared.validation\mark.davison.berlin.shared.validation.csproj" />
   </ItemGroup>
 
 </Project>

@@ -37,13 +37,18 @@ public sealed class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommand
 
         var info = await infoProcessor.ExtractStoryInfo(request.StoryAddress, site.Address, cancellationToken);
 
-        if (info is null)
+        if (!info.SuccessWithValue)
         {
+            if (info.Errors is { Count: > 0 })
+            {
+                return ValidationMessages.CreateErrorResponse<AddStoryCommandResponse>(info.Errors.First());
+            }
+
             return ValidationMessages.CreateErrorResponse<AddStoryCommandResponse>(ValidationMessages.FAILED_RETRIEVE);
         }
 
-        var fandoms = await _fandomService.GetOrCreateFandomsByExternalNames(info.Fandoms, cancellationToken);
-        var authors = await _authorService.GetOrCreateAuthorsByName(info.Authors, site.Id, cancellationToken);
+        var fandoms = await _fandomService.GetOrCreateFandomsByExternalNames(info.Value.Fandoms, cancellationToken);
+        var authors = await _authorService.GetOrCreateAuthorsByName(info.Value.Authors, site.Id, cancellationToken);
 
         var storyId = Guid.NewGuid();
         var story = new Story
@@ -53,32 +58,32 @@ public sealed class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommand
             ExternalId = externalId,
             SiteId = site.Id,
             UserId = currentUserContext.UserId,
-            Complete = info.IsCompleted,
-            CurrentChapters = info.CurrentChapters,
-            Name = info.Name,
-            TotalChapters = info.TotalChapters,
+            Complete = info.Value.IsCompleted,
+            CurrentChapters = info.Value.CurrentChapters,
+            Name = info.Value.Name,
+            TotalChapters = info.Value.TotalChapters,
             UpdateTypeId = request.UpdateTypeId ?? UpdateTypeConstants.EachChapterId,
             LastChecked = _dateService.Now,
             LastModified = _dateService.Now,
-            LastAuthored = info.Updated,
+            LastAuthored = info.Value.Updated,
             Favourite = request.Favourite,
             StoryFandomLinks = [.. fandoms.Select(_ => CreateStoryFandomLink(storyId, _.Id, currentUserContext.UserId))],
             StoryAuthorLinks = [.. authors.Select(_ => CreateStoryAuthorLink(storyId, _.Id, currentUserContext.UserId))], // TODO: Some helper methods/entities/framework for linking entities
             Created = _dateService.Now
         };
 
-        info.ChapterInfo.TryGetValue(story.CurrentChapters, out var chapterInfo);
+        info.Value.ChapterInfo.TryGetValue(story.CurrentChapters, out var chapterInfo);
         var storyUpdate = new StoryUpdate
         {
             Id = Guid.NewGuid(),
             StoryId = story.Id,
             UserId = currentUserContext.UserId,
-            Complete = info.IsCompleted,
+            Complete = info.Value.IsCompleted,
             ChapterTitle = chapterInfo?.Title,
             ChapterAddress = chapterInfo?.Address,
-            CurrentChapters = info.CurrentChapters,
-            TotalChapters = info.TotalChapters,
-            LastAuthored = info.Updated,
+            CurrentChapters = info.Value.CurrentChapters,
+            TotalChapters = info.Value.TotalChapters,
+            LastAuthored = info.Value.Updated,
             LastModified = _dateService.Now,
             Created = _dateService.Now
         };

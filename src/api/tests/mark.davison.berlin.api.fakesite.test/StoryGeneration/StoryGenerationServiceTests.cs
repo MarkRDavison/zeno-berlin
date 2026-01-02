@@ -55,6 +55,7 @@ public sealed class StoryGenerationServiceTests
             response,
             CancellationToken.None);
 
-        await Assert.That(info.Name).IsNotNullOrEmpty();
+        await Assert.That(info.SuccessWithValue).IsTrue();
+        await Assert.That(info.Value!.Name).IsNotNullOrEmpty();
     }
 }

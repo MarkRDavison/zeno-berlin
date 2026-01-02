@@ -165,8 +165,8 @@ public sealed class UpdateStoriesCommandProcessorTests
 
         _dbContext.AddSync(stories);
 
-        _site1StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new StoryInfoModel());
-        _site2StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new StoryInfoModel());
+        _site1StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Response<StoryInfoModel> { Value = new StoryInfoModel() });
+        _site2StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Response<StoryInfoModel> { Value = new StoryInfoModel() });
 
         var response = await _processor.ProcessAsync(request, _currentUserContext.Object, CancellationToken.None);
 
@@ -181,7 +181,7 @@ public sealed class UpdateStoriesCommandProcessorTests
 
         var info = new StoryInfoModel { };
 
-        _site1StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(info);
+        _site1StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Response<StoryInfoModel> { Value = info });
 
         var response = await _processor.ProcessAsync(request, _currentUserContext.Object, CancellationToken.None);
 
@@ -205,7 +205,7 @@ public sealed class UpdateStoriesCommandProcessorTests
         _dbContext.AddSync(_story1Site1);
 
         var info = new StoryInfoModel { Name = "A new name" };
-        _site1StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(info);
+        _site1StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Response<StoryInfoModel> { Value = info });
 
         _notificationHub.Setup(_ => _.SendNotification(It.IsAny<NotificationMessage>())).ReturnsAsync(new Response());
 
@@ -235,7 +235,7 @@ public sealed class UpdateStoriesCommandProcessorTests
         _dbContext.AddSync(existingUpdate);
 
         _notificationHub.Setup(_ => _.SendNotification(It.IsAny<NotificationMessage>())).ReturnsAsync(new Response());
-        _site1StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(info);
+        _site1StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Response<StoryInfoModel> { Value = info });
 
         var response = await _processor.ProcessAsync(request, _currentUserContext.Object, CancellationToken.None);
         await Assert.That(response.Success).IsTrue();
@@ -270,7 +270,7 @@ public sealed class UpdateStoriesCommandProcessorTests
         _dbContext.AddSync(existingUpdate);
 
         _notificationHub.Setup(_ => _.SendNotification(It.IsAny<NotificationMessage>())).ReturnsAsync(new Response());
-        _site1StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(info);
+        _site1StoryInfoProcessor.Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Response<StoryInfoModel> { Value = info });
 
         var response = await _processor.ProcessAsync(request, _currentUserContext.Object, CancellationToken.None);
         await Assert.That(response.Success).IsTrue();

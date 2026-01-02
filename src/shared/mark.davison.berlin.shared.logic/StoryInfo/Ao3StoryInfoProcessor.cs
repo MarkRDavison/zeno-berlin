@@ -1,4 +1,5 @@
-﻿using AngleSharp.Io;
+﻿using AngleSharp.Dom;
+using AngleSharp.Io;
 using HttpMethod = System.Net.Http.HttpMethod;
 
 namespace mark.davison.berlin.shared.logic.StoryInfo;
@@ -48,7 +49,7 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
         return tokens[1];
     }
 
-    public async Task<StoryInfoModel?> ExtractStoryInfo(string storyAddress, string siteAddress, CancellationToken cancellationToken)
+    public async Task<Response<StoryInfoModel>> ExtractStoryInfo(string storyAddress, string siteAddress, CancellationToken cancellationToken)
     {
         IAsyncDisposable? lease = null;
         try
@@ -63,7 +64,7 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
 
             if (lease is null)
             {
-                return null;
+                return new Response<StoryInfoModel> { Errors = [ValidationMessages.RATE_LIMITED] };
             }
 
             var response = await _client.SendAsync(request, cancellationToken);
@@ -106,7 +107,40 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
         }
     }
 
-    public static async Task<StoryInfoModel> ParseStoryInfoFromContent(string address, string content, CancellationToken cancellationToken)
+    public static Task<bool> RequiresAuthentication(IDocument document, CancellationToken cancellationToken)
+    {
+        var title = document
+            .GetElementsByClassName("title heading")?
+            .FirstOrDefault()?
+            .TextContent?
+            .Trim();
+
+        var summary = document
+            .GetElementsByClassName("summary module")?
+            .SelectMany(_ => _.GetElementsByTagName("blockquote"))?
+            .FirstOrDefault()?
+            .InnerHtml?
+            .Trim();
+
+        var chapterInfo = document
+            .GetElementsByClassName("chapters")?
+            .Select(_ => _.TextContent?.Trim());
+
+        var loginForm = document
+            .GetElementById("loginform");
+
+        if (loginForm is not null &&
+            string.IsNullOrEmpty(title) &&
+            string.IsNullOrEmpty(summary) &&
+            chapterInfo?.Count() is null or 0)
+        {
+            return Task.FromResult(true);
+        }
+
+        return Task.FromResult(false);
+    }
+
+    public static async Task<Response<StoryInfoModel>> ParseStoryInfoFromContent(string address, string content, CancellationToken cancellationToken)
     {
         var context = BrowsingContext.New(Configuration.Default);
 
@@ -136,6 +170,14 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
 
         if (chapterInfo == null || chapterInfo.Length != 2)
         {
+            if (await RequiresAuthentication(document, cancellationToken))
+            {
+                return new Response<StoryInfoModel>
+                {
+                    Errors = [ValidationMessages.AUTHENTICATION_REQUIRED]
+                };
+            }
+
             throw new InvalidDataException();
         }
 
@@ -231,18 +273,21 @@ public sealed class Ao3StoryInfoProcessor : IStoryInfoProcessor
             chapterNumber++;
         }
 
-        return new StoryInfoModel
+        return new Response<StoryInfoModel>
         {
-            Name = title,
-            Summary = summary ?? string.Empty,
-            Authors = authors,
-            IsCompleted = currentChapters == totalChapters,
-            CurrentChapters = currentChapters,
-            TotalChapters = totalChapters,
-            Published = published,
-            ChapterInfo = chapterInfos,
-            Updated = updated,
-            Fandoms = fandoms
+            Value = new StoryInfoModel
+            {
+                Name = title,
+                Summary = summary ?? string.Empty,
+                Authors = authors,
+                IsCompleted = currentChapters == totalChapters,
+                CurrentChapters = currentChapters,
+                TotalChapters = totalChapters,
+                Published = published,
+                ChapterInfo = chapterInfos,
+                Updated = updated,
+                Fandoms = fandoms
+            }
         };
     }
 

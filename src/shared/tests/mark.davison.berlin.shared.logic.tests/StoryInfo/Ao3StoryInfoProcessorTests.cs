@@ -44,7 +44,7 @@ public sealed class Ao3StoryInfoProcessorTests
     }
 
     [Test]
-    public async Task ExtractStoryInfo_WhereRateLimitReturnsNull_ReturnsNull()
+    public async Task ExtractStoryInfo_WhereRateLimitReturnsNull_ReturnsExpectedError()
     {
         _handler.Callback = async (HttpRequestMessage request) =>
         {
@@ -60,7 +60,33 @@ public sealed class Ao3StoryInfoProcessorTests
 
         var storyInfo = await _processor.ExtractStoryInfo(storyUrl, SiteConstants.ArchiveOfOurOwn_Address, CancellationToken.None);
 
-        await Assert.That(storyInfo).IsNull();
+        await Assert.That(storyInfo.SuccessWithValue).IsFalse();
+        await Assert.That(storyInfo.Errors).Contains(ValidationMessages.RATE_LIMITED);
+    }
+
+    [Test]
+    public async Task ExtractStoryInfo_ForAccountRequiredExample_HandledCorrectly()
+    {
+        _handler.Callback = async (HttpRequestMessage request) =>
+        {
+            return new HttpResponseMessage
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                Content = new StringContent(await File.ReadAllTextAsync("TestData/AO3_AccountRequiredResponse.html"))
+            };
+        };
+
+        _rateLimitService
+            .Setup(_ => _.WaitToProceedAsync(
+                It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(new AsyncDisposableCallback("test", () => Task.CompletedTask));
+
+        var storyUrl = "https://archiveofourown.org/works/123/chapters/47216291";
+
+        var storyInfo = await _processor.ExtractStoryInfo(storyUrl, SiteConstants.ArchiveOfOurOwn_Address, CancellationToken.None);
+
+        await Assert.That(storyInfo.SuccessWithValue).IsFalse();
+        await Assert.That(storyInfo.Errors).Contains(ValidationMessages.AUTHENTICATION_REQUIRED);
     }
 
     [Test]
@@ -85,25 +111,25 @@ public sealed class Ao3StoryInfoProcessorTests
 
         var storyInfo = await _processor.ExtractStoryInfo(storyUrl, SiteConstants.ArchiveOfOurOwn_Address, CancellationToken.None);
 
-        await Assert.That(storyInfo).IsNotNull();
-        await Assert.That(storyInfo!.Name).IsEqualTo("All She Never Wanted");
-        await Assert.That(storyInfo.Summary).Contains("As Minister for Magic, Kingsley Shacklebolt knew he was capable of a great many things.");
-        await Assert.That(storyInfo.Authors.Count).IsEqualTo(2);
-        await Assert.That(storyInfo.Authors).Contains("Ragana62");
-        await Assert.That(storyInfo.Authors).Contains("Ragana612");
-        await Assert.That(storyInfo.IsCompleted).IsFalse();
-        await Assert.That(storyInfo.CurrentChapters).IsEqualTo(57);
-        await Assert.That(storyInfo.Published).IsEqualTo(new DateOnly(2023, 5, 16));
-        await Assert.That(storyInfo.Updated).IsEqualTo(new DateOnly(2024, 2, 11));
-        await Assert.That(storyInfo.TotalChapters).IsNull();
-        await Assert.That(storyInfo.Fandoms.Count).IsEqualTo(3);
-        await Assert.That(storyInfo.Fandoms).Contains("Harry Potter - J. K. Rowling");
-        await Assert.That(storyInfo.Fandoms).Contains("Star Wars Legends: New Jedi Order Series - Various Authors");
-        await Assert.That(storyInfo.Fandoms).Contains("Star Wars - All Media Types");
-        await Assert.That(storyInfo.ChapterInfo.Count).IsEqualTo(57);
-        await Assert.That(storyInfo.ChapterInfo[1].Address).IsEqualTo($"{baseStoryUrl}/chapters/118941742");
-        await Assert.That(storyInfo.ChapterInfo[2].Address).IsEqualTo($"{baseStoryUrl}/chapters/118953049");
-        await Assert.That(storyInfo.ChapterInfo[10].Address).IsEqualTo($"{baseStoryUrl}/chapters/120110161");
-        await Assert.That(storyInfo.ChapterInfo[18].Address).IsEqualTo($"{baseStoryUrl}/chapters/121778461");
+        await Assert.That(storyInfo.SuccessWithValue).IsTrue();
+        await Assert.That(storyInfo.Value!.Name).IsEqualTo("All She Never Wanted");
+        await Assert.That(storyInfo.Value.Summary).Contains("As Minister for Magic, Kingsley Shacklebolt knew he was capable of a great many things.");
+        await Assert.That(storyInfo.Value.Authors.Count).IsEqualTo(2);
+        await Assert.That(storyInfo.Value.Authors).Contains("Ragana62");
+        await Assert.That(storyInfo.Value.Authors).Contains("Ragana612");
+        await Assert.That(storyInfo.Value.IsCompleted).IsFalse();
+        await Assert.That(storyInfo.Value.CurrentChapters).IsEqualTo(57);
+        await Assert.That(storyInfo.Value.Published).IsEqualTo(new DateOnly(2023, 5, 16));
+        await Assert.That(storyInfo.Value.Updated).IsEqualTo(new DateOnly(2024, 2, 11));
+        await Assert.That(storyInfo.Value.TotalChapters).IsNull();
+        await Assert.That(storyInfo.Value.Fandoms.Count).IsEqualTo(3);
+        await Assert.That(storyInfo.Value.Fandoms).Contains("Harry Potter - J. K. Rowling");
+        await Assert.That(storyInfo.Value.Fandoms).Contains("Star Wars Legends: New Jedi Order Series - Various Authors");
+        await Assert.That(storyInfo.Value.Fandoms).Contains("Star Wars - All Media Types");
+        await Assert.That(storyInfo.Value.ChapterInfo.Count).IsEqualTo(57);
+        await Assert.That(storyInfo.Value.ChapterInfo[1].Address).IsEqualTo($"{baseStoryUrl}/chapters/118941742");
+        await Assert.That(storyInfo.Value.ChapterInfo[2].Address).IsEqualTo($"{baseStoryUrl}/chapters/118953049");
+        await Assert.That(storyInfo.Value.ChapterInfo[10].Address).IsEqualTo($"{baseStoryUrl}/chapters/120110161");
+        await Assert.That(storyInfo.Value.ChapterInfo[18].Address).IsEqualTo($"{baseStoryUrl}/chapters/121778461");
     }
 }

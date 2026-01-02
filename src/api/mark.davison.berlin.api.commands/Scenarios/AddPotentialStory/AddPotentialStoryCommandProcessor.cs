@@ -28,16 +28,21 @@ public sealed class AddPotentialStoryCommandProcessor : ICommandProcessor<AddPot
 
         var info = await infoProcessor.ExtractStoryInfo(request.StoryAddress, site.Address, cancellationToken);
 
-        if (info is null)
+        if (!info.SuccessWithValue)
         {
+            if (info.Errors is { Count: > 0 })
+            {
+                return ValidationMessages.CreateErrorResponse<AddPotentialStoryCommandResponse>(info.Errors.First());
+            }
+
             return ValidationMessages.CreateErrorResponse<AddPotentialStoryCommandResponse>(ValidationMessages.FAILED_RETRIEVE);
         }
 
         var entity = new PotentialStory
         {
             Id = Guid.NewGuid(),
-            Name = info.Name,
-            Summary = info.Summary,
+            Name = info.Value.Name,
+            Summary = info.Value.Summary,
             Address = request.StoryAddress,
             UserId = currentUserContext.UserId,
             Created = _dateService.Now,

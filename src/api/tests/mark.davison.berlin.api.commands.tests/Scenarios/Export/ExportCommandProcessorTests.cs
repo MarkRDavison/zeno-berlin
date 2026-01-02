@@ -81,7 +81,7 @@ public sealed class ExportCommandProcessorTests
 
         await Assert.That(response.SuccessWithValue).IsTrue();
 
-        var storyCount = response.Value.Stories.Count;
+        var storyCount = response.Value!.Stories.Count;
         var storyUpdateCount = response.Value.Stories.SelectMany(_ => _.Updates).Count();
 
         await Assert.That(storyCount).IsEqualTo(currentUserStories.Count);

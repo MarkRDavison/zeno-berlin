@@ -110,12 +110,12 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
         List<StoryUpdate> updates = [];
         var info = await storyInfoProcessor.ExtractStoryInfo(story.Address, site.Address, cancellationToken);
 
-        if (info is null)
+        if (!info.SuccessWithValue)
         {
             return updates;
         }
 
-        foreach (var fandomExternalName in info.Fandoms)
+        foreach (var fandomExternalName in info.Value.Fandoms)
         {
             if (story.StoryFandomLinks.All(_ => _.Fandom?.ExternalName != fandomExternalName))
             {
@@ -131,7 +131,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
                 }
             }
         }
-        foreach (var authorName in info.Authors)
+        foreach (var authorName in info.Value.Authors)
         {
             if (story.StoryAuthorLinks.All(_ => _.Author?.Name != authorName))
             {
@@ -148,23 +148,23 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
             }
         }
 
-        if (story.TotalChapters != info.TotalChapters ||
-            story.CurrentChapters != info.CurrentChapters ||
-            story.Complete != info.IsCompleted ||
-            story.Name != info.Name)
+        if (story.TotalChapters != info.Value.TotalChapters ||
+            story.CurrentChapters != info.Value.CurrentChapters ||
+            story.Complete != info.Value.IsCompleted ||
+            story.Name != info.Value.Name)
         {
-            info.ChapterInfo.TryGetValue(info.CurrentChapters, out var chapterInfo);
+            info.Value.ChapterInfo.TryGetValue(info.Value.CurrentChapters, out var chapterInfo);
             var update = new StoryUpdate
             {
                 Id = Guid.NewGuid(),
                 StoryId = story.Id,
                 UserId = story.UserId,
-                Complete = info.IsCompleted,
-                CurrentChapters = info.CurrentChapters,
+                Complete = info.Value.IsCompleted,
+                CurrentChapters = info.Value.CurrentChapters,
                 ChapterAddress = chapterInfo?.Address,
                 ChapterTitle = chapterInfo?.Title,
-                TotalChapters = info.TotalChapters,
-                LastAuthored = info.Updated,
+                TotalChapters = info.Value.TotalChapters,
+                LastAuthored = info.Value.Updated,
                 LastModified = _dateService.Now,
                 Created = _dateService.Now
             };
@@ -181,32 +181,32 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
             {
                 for (var chapter = lastUpdate.CurrentChapters + 1; chapter < update.CurrentChapters; ++chapter)
                 {
-                    info.ChapterInfo.TryGetValue(chapter, out chapterInfo);
+                    info.Value.ChapterInfo.TryGetValue(chapter, out chapterInfo);
                     updates.Add(new StoryUpdate
                     {
                         Id = Guid.NewGuid(),
                         StoryId = story.Id,
                         UserId = story.UserId,
-                        Complete = info.IsCompleted,
+                        Complete = info.Value.IsCompleted,
                         CurrentChapters = chapter,
                         ChapterAddress = chapterInfo?.Address,
                         ChapterTitle = chapterInfo?.Title,
-                        TotalChapters = info.TotalChapters,
-                        LastAuthored = info.Updated,
+                        TotalChapters = info.Value.TotalChapters,
+                        LastAuthored = info.Value.Updated,
                         LastModified = update.LastModified,
                         Created = _dateService.Now
                     });
                 }
             }
 
-            await ProcessNotification(site, story, info, cancellationToken);
+            await ProcessNotification(site, story, info.Value, cancellationToken);
         }
 
-        story.TotalChapters = info.TotalChapters;
-        story.CurrentChapters = info.CurrentChapters;
-        story.Complete = info.IsCompleted;
-        story.Name = info.Name;
-        story.LastAuthored = info.Updated;
+        story.TotalChapters = info.Value.TotalChapters;
+        story.CurrentChapters = info.Value.CurrentChapters;
+        story.Complete = info.Value.IsCompleted;
+        story.Name = info.Value.Name;
+        story.LastAuthored = info.Value.Updated;
         story.LastModified = _dateService.Now;
         story.LastChecked = _dateService.Now;
 

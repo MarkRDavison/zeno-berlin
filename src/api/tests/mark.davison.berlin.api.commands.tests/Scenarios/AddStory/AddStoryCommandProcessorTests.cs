@@ -106,7 +106,7 @@ public sealed class AddStoryCommandProcessorTests
                 request.StoryAddress,
                 _site.Address,
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(storyInfo);
+            .ReturnsAsync(new Response<StoryInfoModel> { Value = storyInfo });
 
         _fandomService
             .Setup(_ => _.GetOrCreateFandomsByExternalNames(

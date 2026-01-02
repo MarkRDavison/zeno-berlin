@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\mark.davison.berlin.shared.constants\mark.davison.berlin.shared.constants.csproj" />
+    <ProjectReference Include="..\mark.davison.berlin.shared.validation\mark.davison.berlin.shared.validation.csproj" />
   </ItemGroup>
 
 </Project>
