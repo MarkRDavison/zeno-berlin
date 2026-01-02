@@ -22,14 +22,14 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsUserSpecified")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -60,8 +60,8 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ExternalName")
                         .IsRequired()
@@ -73,8 +73,8 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<bool>("IsUserSpecified")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -103,11 +103,11 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<Guid>("ContextUserId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("FinishedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("FinishedAt")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("JobRequest")
                         .IsRequired()
@@ -121,25 +121,25 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("PerformerId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("SelectedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("SelectedAt")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("StartedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("StartedAt")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("SubmittedAt")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("SubmittedAt")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
@@ -162,11 +162,11 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -195,11 +195,11 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("LongName")
                         .IsRequired()
@@ -234,8 +234,8 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<int?>("ConsumedChapters")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("CurrentChapters")
                         .HasColumnType("INTEGER");
@@ -250,15 +250,18 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<DateOnly>("LastAuthored")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("LastChecked")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastChecked")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("RequiresAuthentication")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("SiteId")
                         .HasColumnType("TEXT");
@@ -291,11 +294,11 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<Guid>("AuthorId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("StoryId")
                         .HasColumnType("TEXT");
@@ -319,14 +322,14 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("FandomId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("StoryId")
                         .HasColumnType("TEXT");
@@ -359,8 +362,8 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<bool>("Complete")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("CurrentChapters")
                         .HasColumnType("INTEGER");
@@ -368,8 +371,8 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<DateOnly>("LastAuthored")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("StoryId")
                         .HasColumnType("TEXT");
@@ -394,15 +397,15 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
@@ -419,11 +422,11 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Provider")
                         .IsRequired()
@@ -451,14 +454,14 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -530,11 +533,11 @@ namespace mark.davison.berlin.api.migrations.sqlite.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Created")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("LastModified")
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("TEXT");

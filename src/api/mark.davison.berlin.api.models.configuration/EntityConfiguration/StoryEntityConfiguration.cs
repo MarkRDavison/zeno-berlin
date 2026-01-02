@@ -12,6 +12,7 @@ public sealed class StoryEntityConfiguration : BerlinEntityConfiguration<Story>
         builder.Property(_ => _.ConsumedChapters);
         builder.Property(_ => _.Complete);
         builder.Property(_ => _.Favourite);
+        builder.Property(_ => _.RequiresAuthentication);
         builder.Property(_ => _.LastChecked);
         builder.Property(_ => _.LastAuthored);
 
