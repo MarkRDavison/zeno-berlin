@@ -81,6 +81,7 @@ public partial class StoryViewModel : IStoryViewModel
 
     // Observable properties?
     public bool InProgress { get; set; }
+    public bool IsCheckStoryDisabled => InProgress || Data.RequiresAuthorization is true;
 
     private bool _showActualFandoms;
     public bool ShowActualFandoms

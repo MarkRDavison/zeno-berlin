@@ -59,6 +59,7 @@ public sealed class StoryViewModelTests
             null,
             false,
             false,
+            false,
             UpdateTypeConstants.EachChapterId,
             DateTime.UtcNow,
             DateOnly.FromDateTime(DateTime.Today),

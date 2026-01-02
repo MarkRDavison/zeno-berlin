@@ -18,5 +18,6 @@ public sealed class StoryDto
     public DateOnly LastAuthored { get; set; }
 
     public bool Favourite { get; set; }
+    public bool RequiresAuthentication { get; set; }
 
 }

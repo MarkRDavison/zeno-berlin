@@ -292,4 +292,44 @@ public sealed class UpdateStoriesCommandProcessorTests
             }
         }
     }
+
+    [Test]
+    public async Task GetStoriesToUpdate_WhereStoryRequiresAuthentication_DoesNotUpdateStory()
+    {
+        _story1Site1.RequiresAuthentication = true;
+        _story1Site1.LastModified.AddDays(-3);
+
+        _dbContext.AddSync([_story1Site1]);
+
+        var request = new UpdateStoriesRequest();
+
+        var queried = await _processor.GetStoriesToUpdate(request, CancellationToken.None);
+
+        await Assert.That(queried.Count).IsEqualTo(0);
+    }
+
+    [Test]
+    public async Task ProcessAsync_WhereStoryWillRequireAuthentication_MutatesStory()
+    {
+        _story1Site1.LastModified.AddDays(-3);
+
+        _dbContext.AddSync([_story1Site1]);
+
+        _site1StoryInfoProcessor
+            .Setup(_ => _.ExtractStoryInfo(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Response<StoryInfoModel>
+            {
+                Errors = [ValidationMessages.AUTHENTICATION_REQUIRED]
+            });
+
+        var request = new UpdateStoriesRequest();
+
+        await _processor.ProcessAsync(request, _currentUserContext.Object, CancellationToken.None);
+
+        var persistedStory = await _dbContext
+            .Set<Story>()
+            .FirstAsync(_ => _.Id == _story1Site1.Id);
+
+        await Assert.That(persistedStory.RequiresAuthentication).IsTrue();
+    }
 }

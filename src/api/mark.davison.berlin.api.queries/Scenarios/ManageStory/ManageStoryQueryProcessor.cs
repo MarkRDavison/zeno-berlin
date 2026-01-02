@@ -47,6 +47,7 @@ public sealed class ManageStoryQueryProcessor : IQueryProcessor<ManageStoryQuery
                 story.ConsumedChapters,
                 story.Complete,
                 story.Favourite,
+                story.RequiresAuthentication,
                 story.UpdateTypeId,
                 story.LastChecked,
                 story.LastAuthored,

@@ -42,7 +42,7 @@ else
             <MudSpacer />
             <ProgressButton InProgress="@ViewModel.InProgress"
                             Color="Color.Primary"
-                            Disabled="@ViewModel.InProgress"
+                            Disabled="@ViewModel.IsCheckStoryDisabled"
                             Label="Check"
                             StartIcon="@Icons.Material.Filled.Sync"
                             OnClick="@ViewModel.CheckStory" />

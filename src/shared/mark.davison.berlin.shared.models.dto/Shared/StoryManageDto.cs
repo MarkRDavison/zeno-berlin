@@ -9,6 +9,7 @@ public sealed record StoryManageDto(
     int? ConsumedChapters,
     bool Complete,
     bool Favourite,
+    bool RequiresAuthorization,
     Guid UpdateTypeId,
     DateTimeOffset LastChecked,
     DateOnly LastAuthored,

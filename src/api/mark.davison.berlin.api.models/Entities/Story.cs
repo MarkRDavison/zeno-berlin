@@ -10,6 +10,7 @@ public class Story : BerlinEntity
     public int? ConsumedChapters { get; set; }
     public bool Complete { get; set; }
     public bool Favourite { get; set; }
+    public bool RequiresAuthentication { get; set; }
     public DateTimeOffset LastChecked { get; set; }
     public DateOnly LastAuthored { get; set; }
 
@@ -38,6 +39,7 @@ public class Story : BerlinEntity
             LastChecked = LastChecked,
             LastAuthored = LastAuthored,
             Favourite = Favourite,
+            RequiresAuthentication = RequiresAuthentication,
             Fandoms = [.. StoryFandomLinks.Select(_ => _.FandomId)],
             Authors = [.. StoryAuthorLinks.Select(_ => _.AuthorId)]
         };

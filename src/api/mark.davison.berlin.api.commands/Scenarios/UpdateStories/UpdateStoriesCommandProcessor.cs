@@ -38,6 +38,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
     {
         var toUpdate = await GetStoriesToUpdate(request, cancellationToken);
         var updates = new List<StoryUpdate>();
+        var mutatedStories = new List<Story>();
 
         if (!toUpdate.Any())
         {
@@ -65,7 +66,20 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
                 }
 
                 var storyUpdates = await ProcessStory(site, story, currentUserContext, storyInfoProcessor, cancellationToken);
-                updates.AddRange(storyUpdates);
+
+                if (storyUpdates.SuccessWithValue)
+                {
+                    updates.AddRange(storyUpdates.Value);
+                }
+                else
+                {
+                    if (storyUpdates.Errors.Contains(ValidationMessages.AUTHENTICATION_REQUIRED) &&
+                        !story.RequiresAuthentication)
+                    {
+                        story.RequiresAuthentication = true;
+                        mutatedStories.Add(story);
+                    }
+                }
             }
         }
 
@@ -74,12 +88,17 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
             _dbContext.Set<Story>().UpdateRange(toUpdate); // TODO: Replace with upsert???
         }
 
+        if (mutatedStories.Any())
+        {
+            _dbContext.Set<Story>().UpdateRange(mutatedStories);
+        }
+
         if (updates.Any())
         {
             await _dbContext.Set<StoryUpdate>().AddRangeAsync(updates, cancellationToken);
         }
 
-        if (toUpdate.Any() || updates.Any())
+        if (toUpdate.Any() || updates.Any() || mutatedStories.Any())
         {
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
@@ -99,21 +118,25 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
                     IsFavourite = _.Favourite,
                     Fandoms = [.. _.StoryFandomLinks.Select(_ => _.FandomId)],
                     Authors = [.. _.StoryAuthorLinks.Select(_ => _.AuthorId)],
-                    LastAuthored = _.LastAuthored
+                    LastAuthored = _.LastAuthored,
                 }
             )]
         };
     }
 
-    private async Task<List<StoryUpdate>> ProcessStory(Site site, Story story, ICurrentUserContext currentUserContext, IStoryInfoProcessor storyInfoProcessor, CancellationToken cancellationToken)
+    private async Task<Response<List<StoryUpdate>>> ProcessStory(Site site, Story story, ICurrentUserContext currentUserContext, IStoryInfoProcessor storyInfoProcessor, CancellationToken cancellationToken)
     {
-        List<StoryUpdate> updates = [];
         var info = await storyInfoProcessor.ExtractStoryInfo(story.Address, site.Address, cancellationToken);
 
         if (!info.SuccessWithValue)
         {
-            return updates;
+            return new Response<List<StoryUpdate>>
+            {
+                Errors = [.. info.Errors]
+            };
         }
+
+        List<StoryUpdate> updates = [];
 
         foreach (var fandomExternalName in info.Value.Fandoms)
         {
@@ -210,7 +233,10 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
         story.LastModified = _dateService.Now;
         story.LastChecked = _dateService.Now;
 
-        return updates;
+        return new Response<List<StoryUpdate>>
+        {
+            Value = updates
+        };
     }
 
     private async Task ProcessNotification(Site site, Story story, StoryInfoModel info, CancellationToken cancellationToken)
@@ -250,7 +276,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
                 .ThenInclude(sf => sf.Fandom)
                 .Include(_ => _.StoryAuthorLinks)
                 .ThenInclude(sa => sa.Author)
-                .Where(_ => request.StoryIds.Contains(_.Id))
+                .Where(_ => !_.RequiresAuthentication && request.StoryIds.Contains(_.Id))
                 .ToListAsync(cancellationToken);
 
             // TODO: Override max???
@@ -272,7 +298,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
                 .ThenInclude(sf => sf.Fandom)
                 .Include(_ => _.StoryAuthorLinks)
                 .ThenInclude(sa => sa.Author)
-                .Where(_ => !_.Complete && _.LastChecked <= refreshDate)
+                .Where(_ => !_.Complete && !_.RequiresAuthentication && _.LastChecked <= refreshDate)
                 .OrderBy(_ => _.LastChecked)
                 .Take(max)
                 .ToListAsync(cancellationToken);

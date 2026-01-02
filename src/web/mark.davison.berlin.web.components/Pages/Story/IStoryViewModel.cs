@@ -8,6 +8,7 @@ public interface IStoryViewModel : INotifyPropertyChanged, IDisposable
     bool AuthorsLoading { get; }
     StoryManageDto? Data { get; }
     bool InProgress { get; }
+    bool IsCheckStoryDisabled { get; }
     bool ConsumedChapterUpToDate { get; }
     bool ShowActualFandoms { get; set; }
     bool ShowActualAuthors { get; set; }
