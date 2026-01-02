@@ -18,13 +18,13 @@ public sealed class ExportCommandProcessor : ICommandProcessor<ExportCommandRequ
             .Set<Story>()
             .AsNoTracking()
             .Where(_ => _.UserId == currentUserContext.UserId)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         var storyUpdates = await _dbContext
             .Set<StoryUpdate>()
             .AsNoTracking()
             .Where(_ => _.UserId == currentUserContext.UserId)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         var exportData = new SerialisedtDataDto
         {

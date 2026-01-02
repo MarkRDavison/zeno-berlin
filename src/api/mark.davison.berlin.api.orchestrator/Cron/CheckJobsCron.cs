@@ -24,6 +24,8 @@ public class CheckJobsCron : CronJobService
 
     public override async Task DoWork(CancellationToken cancellationToken)
     {
+        _logger.LogTrace("CheckJobsCron.DoWork");
+
         using var scope = _serviceScopeFactory.CreateScope();
 
         var dbContext = scope.ServiceProvider.GetRequiredService<IDbContext<BerlinDbContext>>();

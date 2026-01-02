@@ -222,7 +222,7 @@ public sealed class JobOrchestrationService : IJobOrchestrationService
         {
             var identity = new ClaimsIdentity("Job");
 
-            identity.AddClaim(new Claim(AuthConstants.InternalUserId, Guid.Empty.ToString()));
+            identity.AddClaim(new Claim(AuthConstants.InternalUserId, job.ContextUser.Id.ToString()));
             identity.AddClaim(new Claim(AuthConstants.TenantId, TenantIds.SystemTenantId.ToString()));
 
             foreach (var userRole in job.ContextUser.UserRoles)
