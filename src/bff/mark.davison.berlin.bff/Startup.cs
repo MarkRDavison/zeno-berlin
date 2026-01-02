@@ -47,8 +47,6 @@ public class Startup(IConfiguration Configuration)
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        Console.WriteLine("AppSettings.API_ORIGIN: {0}", AppSettings.API_ORIGIN);
-
         app
             .UseForwardedHeaders()
             .UseHttpsRedirection()

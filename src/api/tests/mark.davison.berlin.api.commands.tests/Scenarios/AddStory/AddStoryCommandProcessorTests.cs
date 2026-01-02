@@ -20,6 +20,8 @@ public sealed class AddStoryCommandProcessorTests
     {
         _dateService = new();
 
+        _dateService.Setup(_ => _.Now).Returns(DateTime.UtcNow);
+
         _currentUserContext = new();
         _currentUserContext
             .Setup(_ => _.UserId)

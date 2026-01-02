@@ -19,6 +19,8 @@ public sealed class MonthlyNotificationsCronTests
         _logger = new();
         _appSettings = new();
 
+        _dateService.Setup(_ => _.Now).Returns(DateTime.UtcNow);
+
         _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
 
         var scope = new Mock<IServiceScope>();

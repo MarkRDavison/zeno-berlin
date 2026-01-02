@@ -24,6 +24,8 @@ public sealed class UpdateStoriesCronTests
 
         _dbContext = DbContextHelpers.CreateInMemory<BerlinDbContext>(_ => new(_));
 
+        _dateService.Setup(_ => _.Now).Returns(DateTime.UtcNow);
+
         var scope = new Mock<IServiceScope>();
 
         _serviceScopeFactory
