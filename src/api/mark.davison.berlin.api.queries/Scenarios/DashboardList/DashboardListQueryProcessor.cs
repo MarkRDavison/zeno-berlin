@@ -16,6 +16,7 @@ public sealed class DashboardListQueryProcessor : IQueryProcessor<DashboardListQ
             Value = []
         };
 
+        // TODO: FIXME: This creates an absolutely awful auto generated query., like 8 story/story update from clauses
         var storyUpdates = await _dbContext
             .Set<StoryUpdate>()
             .AsNoTracking()

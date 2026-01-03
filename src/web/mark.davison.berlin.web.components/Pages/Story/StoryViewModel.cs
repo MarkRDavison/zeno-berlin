@@ -282,6 +282,13 @@ public partial class StoryViewModel : IStoryViewModel
                     }
                 }
             };
+
+            var dialog = await _dialogService.ShowAsync<
+                FormModal<ModalViewModel<EditStoryFormViewModel, EditStoryForm>,
+                EditStoryFormViewModel,
+                EditStoryForm>>("Edit story", param, options);
+
+            await dialog.Result;
         }
     }
 
