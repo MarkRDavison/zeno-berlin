@@ -56,7 +56,8 @@ public sealed class ExportCommandProcessor : ICommandProcessor<ExportCommandRequ
             Complete = update.Complete,
             CurrentChapters = update.CurrentChapters,
             TotalChapters = update.TotalChapters,
-            LastAuthored = update.LastAuthored
+            LastAuthored = update.LastAuthored,
+            ChapterAddress = update.ChapterAddress
         };
     }
 }

@@ -21,4 +21,5 @@ public sealed class SerialisedStoryUpdateDto
     public int? TotalChapters { get; set; }
     public bool Complete { get; set; }
     public DateOnly LastAuthored { get; set; }
+    public string? ChapterAddress { get; set; } = string.Empty;
 }

@@ -75,7 +75,8 @@ public sealed class ImportCommandProcessor : ICommandProcessor<ImportCommandRequ
                         TotalChapters = update.TotalChapters,
                         LastAuthored = update.LastAuthored,
                         Created = _dateService.Now,
-                        LastModified = _dateService.Now
+                        LastModified = _dateService.Now,
+                        ChapterAddress = update.ChapterAddress
                     };
 
                     updates.Add(newUpdate);
