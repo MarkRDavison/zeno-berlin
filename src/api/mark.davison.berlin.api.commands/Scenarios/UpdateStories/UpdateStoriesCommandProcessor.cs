@@ -42,8 +42,11 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
 
         if (!toUpdate.Any())
         {
+            _logger.LogTrace("Did not find any stories to update.");
             return new() { Warnings = [ValidationMessages.NO_ITEMS] };
         }
+
+        _logger.LogTrace("Found {0} stories to update.", toUpdate.Count);
 
         foreach (var g in toUpdate.GroupBy(_ => _.SiteId))
         {
@@ -154,6 +157,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
                 }
             }
         }
+
         foreach (var authorName in info.Value.Authors)
         {
             if (story.StoryAuthorLinks.All(_ => _.Author?.Name != authorName))
@@ -265,6 +269,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
 
     public async Task<List<Story>> GetStoriesToUpdate(UpdateStoriesRequest request, CancellationToken cancellationToken)
     {
+        // TODO: Change from hours to timespan
         var refreshOffset = TimeSpan.FromHours(_ao3Config.Value.NONFAV_UPDATE_DELAY_HOURS);
         var refreshOffsetFav = TimeSpan.FromHours(_ao3Config.Value.FAV_UPDATE_DELAY_HOURS);
 

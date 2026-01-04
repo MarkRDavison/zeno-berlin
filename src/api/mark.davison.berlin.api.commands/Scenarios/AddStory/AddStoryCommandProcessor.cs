@@ -35,20 +35,38 @@ public sealed class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommand
 
         var externalId = infoProcessor.ExtractExternalStoryId(request.StoryAddress, site.Address);
 
-        var info = await infoProcessor.ExtractStoryInfo(request.StoryAddress, site.Address, cancellationToken);
+        var info = request.AddWithoutRemoteData
+            ? new()
+            : await infoProcessor.ExtractStoryInfo(request.StoryAddress, site.Address, cancellationToken);
+
+        List<string> warnings = [];
 
         if (!info.SuccessWithValue)
         {
-            if (info.Errors is { Count: > 0 })
+            if (info.Errors.Contains(ValidationMessages.AUTHENTICATION_REQUIRED))
             {
-                return ValidationMessages.CreateErrorResponse<AddStoryCommandResponse>(info.Errors.First());
+                warnings.Add(ValidationMessages.AUTHENTICATION_REQUIRED);
             }
+            else if (!request.AddWithoutRemoteData)
+            {
+                if (info.Errors is { Count: > 0 })
+                {
+                    return new AddStoryCommandResponse
+                    {
+                        Errors = [.. info.Errors]
+                    };
+                }
 
-            return ValidationMessages.CreateErrorResponse<AddStoryCommandResponse>(ValidationMessages.FAILED_RETRIEVE);
+                return ValidationMessages.CreateErrorResponse<AddStoryCommandResponse>(ValidationMessages.FAILED_RETRIEVE);
+            }
         }
 
-        var fandoms = await _fandomService.GetOrCreateFandomsByExternalNames(info.Value.Fandoms, cancellationToken);
-        var authors = await _authorService.GetOrCreateAuthorsByName(info.Value.Authors, site.Id, cancellationToken);
+        var fandoms = info.SuccessWithValue
+            ? await _fandomService.GetOrCreateFandomsByExternalNames(info.Value.Fandoms, cancellationToken)
+            : [];
+        var authors = info.SuccessWithValue
+            ? await _authorService.GetOrCreateAuthorsByName(info.Value.Authors, site.Id, cancellationToken)
+            : [];
 
         var storyId = Guid.NewGuid();
         var story = new Story
@@ -58,48 +76,57 @@ public sealed class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommand
             ExternalId = externalId,
             SiteId = site.Id,
             UserId = currentUserContext.UserId,
-            Complete = info.Value.IsCompleted,
-            CurrentChapters = info.Value.CurrentChapters,
-            Name = info.Value.Name,
-            TotalChapters = info.Value.TotalChapters,
+            Complete = info.Value?.IsCompleted ?? false,
+            CurrentChapters = info.Value?.CurrentChapters ?? 0,
+            Name = (string.IsNullOrEmpty(request.Name) ? (info.Value?.Name) : request.Name) ?? "--unknown--",
+            TotalChapters = info.Value?.TotalChapters,
             UpdateTypeId = request.UpdateTypeId ?? UpdateTypeConstants.EachChapterId,
             LastChecked = _dateService.Now,
             LastModified = _dateService.Now,
-            LastAuthored = info.Value.Updated,
+            LastAuthored = info.Value?.Updated ?? _dateService.Today,
+            RequiresAuthentication = warnings.Contains(ValidationMessages.AUTHENTICATION_REQUIRED),
             Favourite = request.Favourite,
             StoryFandomLinks = [.. fandoms.Select(_ => CreateStoryFandomLink(storyId, _.Id, currentUserContext.UserId))],
             StoryAuthorLinks = [.. authors.Select(_ => CreateStoryAuthorLink(storyId, _.Id, currentUserContext.UserId))], // TODO: Some helper methods/entities/framework for linking entities
             Created = _dateService.Now
         };
 
-        info.Value.ChapterInfo.TryGetValue(story.CurrentChapters, out var chapterInfo);
-        var storyUpdate = new StoryUpdate
-        {
-            Id = Guid.NewGuid(),
-            StoryId = story.Id,
-            UserId = currentUserContext.UserId,
-            Complete = info.Value.IsCompleted,
-            ChapterTitle = chapterInfo?.Title,
-            ChapterAddress = chapterInfo?.Address,
-            CurrentChapters = info.Value.CurrentChapters,
-            TotalChapters = info.Value.TotalChapters,
-            LastAuthored = info.Value.Updated,
-            LastModified = _dateService.Now,
-            Created = _dateService.Now
-        };
+        await _dbContext
+            .Set<Story>()
+            .AddAsync(story, cancellationToken);
 
-        await _dbContext.Set<Story>().AddAsync(story, cancellationToken);
-
-        if (!request.SuppressUpdateCreation)
+        if (info.SuccessWithValue)
         {
-            await _dbContext.Set<StoryUpdate>().AddAsync(storyUpdate, cancellationToken);
+            info.Value.ChapterInfo.TryGetValue(story.CurrentChapters, out var chapterInfo);
+            var storyUpdate = new StoryUpdate
+            {
+                Id = Guid.NewGuid(),
+                StoryId = story.Id,
+                UserId = currentUserContext.UserId,
+                Complete = info.Value.IsCompleted,
+                ChapterTitle = chapterInfo?.Title,
+                ChapterAddress = chapterInfo?.Address,
+                CurrentChapters = info.Value.CurrentChapters,
+                TotalChapters = info.Value.TotalChapters,
+                LastAuthored = info.Value.Updated,
+                LastModified = _dateService.Now,
+                Created = _dateService.Now
+            };
+
+            if (!request.SuppressUpdateCreation)
+            {
+                await _dbContext
+                    .Set<StoryUpdate>()
+                    .AddAsync(storyUpdate, cancellationToken);
+            }
         }
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return new()
         {
-            Value = story.ToDto()
+            Value = story.ToDto(),
+            Warnings = [.. warnings]
         };
     }
 
@@ -116,6 +143,7 @@ public sealed class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommand
             LastModified = _dateService.Now
         };
     }
+
     // TODO: Duplicate
     private StoryAuthorLink CreateStoryAuthorLink(Guid storyId, Guid authorId, Guid userId)
     {

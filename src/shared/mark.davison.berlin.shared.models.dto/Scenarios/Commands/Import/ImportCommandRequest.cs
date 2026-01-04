@@ -6,5 +6,6 @@ public sealed class ImportCommandRequest : ICommand<ImportCommandRequest, Import
     public SerialisedtDataDto Data { get; set; } = new();
     public bool TriggerImmediateJob { get; set; }
     public bool UseJob { get; set; }
+    public bool AddWithoutRemoteData { get; set; }
     public Guid? JobId { get; set; }
 }

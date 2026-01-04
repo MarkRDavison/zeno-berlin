@@ -155,4 +155,149 @@ public sealed class AddStoryCommandProcessorTests
 
         await Assert.That(storyUpdateExists).IsEqualTo(1);
     }
+
+    [Test]
+    public async Task ProcessAsync_ForStoryThatRequiresAuthorization_AddedInMinimalState()
+    {
+        const string externalId = "1234";
+
+        var request = new AddStoryCommandRequest
+        {
+            SiteId = _site.Id,
+            StoryAddress = $"{_site.Address}/works/{externalId}"
+        };
+        _storyInfoProcessor
+            .Setup(_ => _.ExtractExternalStoryId(
+                request.StoryAddress,
+                _site.Address))
+            .Returns(externalId);
+
+        _storyInfoProcessor
+            .Setup(_ => _.GenerateBaseStoryAddress(
+                request.StoryAddress,
+                _site.Address))
+            .Returns(request.StoryAddress);
+
+        _storyInfoProcessor
+            .Setup(_ => _.ExtractStoryInfo(
+                request.StoryAddress,
+                _site.Address,
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Response<StoryInfoModel>
+            {
+                Errors = [ValidationMessages.AUTHENTICATION_REQUIRED]
+            });
+
+        _fandomService
+            .Setup(_ => _.GetOrCreateFandomsByExternalNames(
+                It.IsAny<List<string>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+
+        _authorService
+            .Setup(_ => _.GetOrCreateAuthorsByName(
+                It.IsAny<List<string>>(),
+                It.IsAny<Guid>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+
+        var response = await _processor.ProcessAsync(
+            request,
+            _currentUserContext.Object,
+            CancellationToken.None);
+
+        await Assert.That(response.Success).IsTrue();
+        await Assert.That(response.Warnings).Contains(ValidationMessages.AUTHENTICATION_REQUIRED);
+
+        var story = await _dbContext
+            .Set<Story>()
+            .AsNoTracking()
+            .Where(_ =>
+                _.ExternalId == externalId &&
+                _.SiteId == _site.Id)
+            .FirstOrDefaultAsync();
+
+        await Assert.That(story).IsNotNull();
+        await Assert.That(story.Name).IsEqualTo("--unknown--");
+
+        var storyUpdates = await _dbContext
+            .Set<StoryUpdate>()
+            .AsNoTracking()
+            .Where(_ => _.StoryId != story.Id)
+            .CountAsync();
+
+        await Assert.That(storyUpdates).IsEqualTo(0);
+    }
+
+    [Test]
+    public async Task ProcessAsync_WhenAddWithoutRemoteDataSet_AddsStoryInMinimalState()
+    {
+        const string externalId = "1234";
+
+        var request = new AddStoryCommandRequest
+        {
+            SiteId = _site.Id,
+            StoryAddress = $"{_site.Address}/works/{externalId}",
+            AddWithoutRemoteData = true
+        };
+
+        _storyInfoProcessor
+            .Setup(_ => _.ExtractExternalStoryId(
+                request.StoryAddress,
+                _site.Address))
+            .Returns(externalId);
+
+        _storyInfoProcessor
+            .Setup(_ => _.GenerateBaseStoryAddress(
+                request.StoryAddress,
+                _site.Address))
+            .Returns(request.StoryAddress);
+
+        _fandomService
+            .Setup(_ => _.GetOrCreateFandomsByExternalNames(
+                It.IsAny<List<string>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+
+        _authorService
+            .Setup(_ => _.GetOrCreateAuthorsByName(
+                It.IsAny<List<string>>(),
+                It.IsAny<Guid>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+
+        var response = await _processor.ProcessAsync(
+            request,
+            _currentUserContext.Object,
+            CancellationToken.None);
+
+        await Assert.That(response.SuccessWithValue).IsTrue();
+
+        _storyInfoProcessor
+            .Verify(_ =>
+                _.ExtractStoryInfo(
+                    request.StoryAddress,
+                    _site.Address,
+                    It.IsAny<CancellationToken>()),
+                Times.Never);
+
+        var story = await _dbContext
+            .Set<Story>()
+            .AsNoTracking()
+            .Where(_ =>
+                _.ExternalId == externalId &&
+                _.SiteId == _site.Id)
+            .FirstOrDefaultAsync();
+
+        await Assert.That(story).IsNotNull();
+        await Assert.That(story.Name).IsEqualTo("--unknown--");
+
+        var storyUpdates = await _dbContext
+            .Set<StoryUpdate>()
+            .AsNoTracking()
+            .Where(_ => _.StoryId != story.Id)
+            .CountAsync();
+
+        await Assert.That(storyUpdates).IsEqualTo(0);
+    }
 }

@@ -45,7 +45,8 @@ public class Startup(IConfiguration Configuration)
         }
         else
         {
-            services.AddRedis(AppSettings.REDIS, AppSettings.REDIS.INSTANCE_NAME + (AppSettings.PRODUCTION_MODE ? "_prod_" : "_dev_")); // TODO: Add this to common
+            services
+                .AddRedis(AppSettings.REDIS, AppSettings.REDIS.INSTANCE_NAME + (AppSettings.PRODUCTION_MODE ? "_prod_" : "_dev_")); // TODO: Add this to common
         }
 
         // TODO: Add to common, so we have RANDOM, MEMORY etc

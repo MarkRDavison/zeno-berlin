@@ -28,7 +28,7 @@ public sealed class ExportCommandProcessor : ICommandProcessor<ExportCommandRequ
 
         var exportData = new SerialisedtDataDto
         {
-            Version = 1,
+            Version = 2,
             Stories = [.. stories.Select(s => CreateSerialisedStoryDto(s, storyUpdates.Where(u => u.StoryId == s.Id)))]
         };
 
@@ -41,6 +41,7 @@ public sealed class ExportCommandProcessor : ICommandProcessor<ExportCommandRequ
     {
         return new SerialisedStoryDto
         {
+            Name = story.Name,
             StoryAddress = story.Address,
             Favourite = story.Favourite,
             Updates = [.. storyUpdates.OrderByDescending(_ => _.LastAuthored).Select(CreateSerialisedStoryUpdateDto)]

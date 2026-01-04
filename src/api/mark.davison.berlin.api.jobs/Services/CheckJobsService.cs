@@ -63,8 +63,6 @@ public sealed class CheckJobsService : ICheckJobsService
 
             if (jobs.FirstOrDefault() is Job job)
             {
-                Console.WriteLine("Found job: {0} with status {1}", job.Id, job.Status);
-
                 job.Status = JobStatusConstants.Selected;
                 job.PerformerId = Environment.MachineName;
                 job.SelectedAt = _dateService.Now;

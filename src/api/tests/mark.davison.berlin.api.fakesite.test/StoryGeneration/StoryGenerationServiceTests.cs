@@ -1,4 +1,6 @@
-﻿namespace mark.davison.berlin.api.fakesite.test.StoryGeneration;
+﻿using mark.davison.berlin.shared.validation;
+
+namespace mark.davison.berlin.api.fakesite.test.StoryGeneration;
 
 public sealed class StoryGenerationServiceTests
 {
@@ -57,5 +59,25 @@ public sealed class StoryGenerationServiceTests
 
         await Assert.That(info.SuccessWithValue).IsTrue();
         await Assert.That(info.Value!.Name).IsNotNullOrEmpty();
+    }
+
+    [Test]
+    public async Task GenerateStoryPage_ForNullStoryInfo_Works()
+    {
+        var externalStoryId = FakeStoryConstants.AuthenticatedStoryExternalId;
+        _storyGenerationStateService
+            .Setup(_ => _.RecordGeneration(externalStoryId, null))
+            .Returns((StoryGenerationInfo?)null);
+
+        var response = await _service.GenerateStoryPage(externalStoryId, null, CancellationToken.None);
+
+        var info = await Ao3StoryInfoProcessor.ParseStoryInfoFromContent(
+            $"https://idontmatter.com/works/{externalStoryId}",
+            response,
+            CancellationToken.None);
+
+        await Assert.That(info.SuccessWithValue).IsFalse();
+        await Assert.That(info.Value).IsNull();
+        await Assert.That(info.Errors).Contains(ValidationMessages.AUTHENTICATION_REQUIRED);
     }
 }

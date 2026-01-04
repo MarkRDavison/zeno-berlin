@@ -38,9 +38,11 @@ public sealed class ImportCommandProcessor : ICommandProcessor<ImportCommandRequ
             {
                 var addStoryRequest = new AddStoryCommandRequest
                 {
+                    Name = story.Name,
                     StoryAddress = story.StoryAddress,
                     Favourite = story.Favourite,
-                    SuppressUpdateCreation = story.Updates.Any()
+                    SuppressUpdateCreation = story.Updates.Any(),
+                    AddWithoutRemoteData = request.AddWithoutRemoteData
                 };
 
                 var addStoryResponse = await _addStoryCommandHandler.Handle(addStoryRequest, currentUserContext, cancellationToken);
@@ -85,6 +87,8 @@ public sealed class ImportCommandProcessor : ICommandProcessor<ImportCommandRequ
 
             await transaction.CommitTransactionAsync(cancellationToken);
         }
+
+        response.Warnings = [.. response.Warnings.Distinct()];
 
         return response;
     }

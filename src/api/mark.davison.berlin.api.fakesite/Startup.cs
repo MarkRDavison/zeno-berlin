@@ -33,7 +33,6 @@ public class Startup
 
         app.UseRouting();
 
-
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapGet("/works/{externalId}", async (HttpContext context,

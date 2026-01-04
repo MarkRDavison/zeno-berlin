@@ -3,5 +3,5 @@
 public interface IStoryGenerationStateService
 {
     Task ResetAsync();
-    StoryGenerationInfo RecordGeneration(int externalId, int? chapterId);
+    StoryGenerationInfo? RecordGeneration(int externalId, int? chapterId);
 }

@@ -3,6 +3,7 @@
 
     public static class FakeStoryConstants
     {
+        public const int AuthenticatedStoryExternalId = 403;
         public const int CompleteStoryExternalId = 12345;
         public const int IncompleteStoryExternalId = 23413;
         public const int PerpetuallyIncompleteButContinuesStoryExternalId = 67890;

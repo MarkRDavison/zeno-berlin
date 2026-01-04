@@ -35,6 +35,10 @@ public sealed class AddStoryFormSubmission : IFormSubmission<AddStoryFormViewMod
         {
             _snackbar.Add("You've already added that story!", Severity.Warning);
         }
+        else if (response.Errors.Any(_ => _.Contains(ValidationMessages.AUTHENTICATION_REQUIRED)))
+        {
+            _snackbar.Add("This story requires you to be authenticated!", Severity.Warning);
+        }
 
         return response;
     }

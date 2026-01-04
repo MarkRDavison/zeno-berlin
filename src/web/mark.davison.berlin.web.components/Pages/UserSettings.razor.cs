@@ -106,6 +106,7 @@ public partial class UserSettings
         return await ClientJobHttpRepository.PostSetupBackgroundJob<ImportCommandRequest, ImportCommandResponse, ImportSummary>(
             new ImportCommandRequest
             {
+                AddWithoutRemoteData = true,
                 UseJob = true,
                 TriggerImmediateJob = true,
                 Data = data

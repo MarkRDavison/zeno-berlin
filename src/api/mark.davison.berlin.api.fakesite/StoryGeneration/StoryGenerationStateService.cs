@@ -13,7 +13,7 @@ public class StoryGenerationStateService : IStoryGenerationStateService
         _chapterIds = [];
     }
 
-    public StoryGenerationInfo RecordGeneration(int externalId, int? chapterId)
+    public StoryGenerationInfo? RecordGeneration(int externalId, int? chapterId)
     {
         _chapterIds.Clear();
         if (!_storyRequests.ContainsKey(externalId))
@@ -23,6 +23,7 @@ public class StoryGenerationStateService : IStoryGenerationStateService
 
         var info = externalId switch
         {
+            FakeStoryConstants.AuthenticatedStoryExternalId when chapterId is null => null,
             FakeStoryConstants.CompleteStoryExternalId => CreateCompleteStoryInfo(externalId),
             FakeStoryConstants.PerpetuallyIncompleteButContinuesStoryExternalId => CreatePerpetuallyIncompleteButContinuesStoryInfo(externalId),
             _ => CreateRandomStoryInfo(externalId),

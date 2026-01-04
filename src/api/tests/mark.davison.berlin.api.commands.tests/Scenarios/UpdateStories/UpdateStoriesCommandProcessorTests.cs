@@ -332,4 +332,53 @@ public sealed class UpdateStoriesCommandProcessorTests
 
         await Assert.That(persistedStory.RequiresAuthentication).IsTrue();
     }
+
+    [Test]
+    public async Task ProcessAsync_WhereStoryWasAddedWithoutRemoteData_UpdatesStoryCorrectly()
+    {
+        _story1Site1.LastModified.AddDays(-3);
+        _story1Site1.Address = "some random address";
+
+        _dbContext.AddSync([_story1Site1]);
+
+        var info = new StoryInfoModel
+        {
+            Name = "Updated story name",
+            TotalChapters = 50,
+            CurrentChapters = 50,
+            IsCompleted = true,
+            Updated = DateOnly.FromDateTime(DateTime.UtcNow)
+        };
+
+        _notificationHub
+            .Setup(_ => _.SendNotification(It.IsAny<NotificationMessage>()))
+            .ReturnsAsync(new Response());
+
+        _site1StoryInfoProcessor
+            .Setup(_ => _.ExtractStoryInfo(
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Response<StoryInfoModel>
+            {
+                Value = info
+            });
+
+        var request = new UpdateStoriesRequest
+        {
+            StoryIds = [_story1Site1.Id]
+        };
+
+        var response = await _processor.ProcessAsync(request, _currentUserContext.Object, CancellationToken.None);
+
+        await Assert.That(response.SuccessWithValue).IsTrue();
+
+        var story = response.Value!.Single();
+
+        await Assert.That(story.TotalChapters).IsEqualTo(info.TotalChapters);
+        await Assert.That(story.CurrentChapters).IsEqualTo(info.CurrentChapters);
+        await Assert.That(story.IsComplete).IsEqualTo(info.IsCompleted);
+        await Assert.That(story.Name).IsEqualTo(info.Name);
+        await Assert.That(story.LastAuthored).IsEqualTo(info.Updated);
+    }
 }
