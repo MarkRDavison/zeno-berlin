@@ -103,7 +103,9 @@ public partial class UserSettings
 
     private async Task<Response> ImportData(SerialisedtDataDto data)
     {
-        return await ClientJobHttpRepository.PostSetupBackgroundJob<ImportCommandRequest, ImportCommandResponse, ImportSummary>(
+        _inProgress = true;
+
+        var response = await ClientJobHttpRepository.PostSetupBackgroundJob<ImportCommandRequest, ImportCommandResponse, ImportSummary>(
             new ImportCommandRequest
             {
                 AddWithoutRemoteData = true,
@@ -134,6 +136,8 @@ public partial class UserSettings
             },
             CancellationToken.None);
 
+        _inProgress = false;
 
+        return response;
     }
 }

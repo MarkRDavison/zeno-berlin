@@ -15,7 +15,7 @@
                     StartIcon="@Icons.Material.Filled.FileDownload" 
                     OnClick="Export" />
                 <ProgressButton 
-                    InProgress="false" 
+                    InProgress="@_inProgress"
                     Color="Color.Primary" 
                     Disabled="@_inProgress"
                     Label="Import"
