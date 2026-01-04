@@ -47,6 +47,7 @@
     <File Path="../Docker/api.dockerfile" />
     <File Path="../Docker/bff-web.dockerfile" />
     <File Path="../Docker/web.dockerfile" />
+    <File Path="../TODO.md" />
     <File Path=".editorconfig" />
     <File Path="global.json" />
     <File Path="web/entry.sh" />

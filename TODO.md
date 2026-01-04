@@ -58,7 +58,6 @@ With the visual hint for unread chapters, have a user setting as to whether this
 ## Next
 
 ## MISC
-Queries need to use ValidateAndProcessQueryHandler???
 Method for a fandom to be auto assigned as a parent for a new fandom? Wildcard/rules etc
 Consistency around naming of bool IsComplete vs Complete etc
 Story summary???
@@ -78,13 +77,6 @@ UNSUPPORTED_SITE returned with http if site has https recorded, strip protocol o
 navigating to /fandoms after initial load does not load them, so newly added stories wont have their fandoms show up till reload
 
 duplicate story gives no response exit in the console.  Message bar on modal??? or use snackbar
-
-
-## Bigger things
-Get proper auth going
- - still need to fix having to up the proxy buffer size, use session to store tokens instead of putting token in cookie
-
-
 
 ### DONE
 
