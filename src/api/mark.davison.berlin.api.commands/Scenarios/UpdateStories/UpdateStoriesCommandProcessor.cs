@@ -181,22 +181,8 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
             story.Name != info.Value.Name)
         {
             info.Value.ChapterInfo.TryGetValue(info.Value.CurrentChapters, out var chapterInfo);
-            var update = new StoryUpdate
-            {
-                Id = Guid.NewGuid(),
-                StoryId = story.Id,
-                UserId = story.UserId,
-                Complete = info.Value.IsCompleted,
-                CurrentChapters = info.Value.CurrentChapters,
-                ChapterAddress = chapterInfo?.Address,
-                ChapterTitle = chapterInfo?.Title,
-                TotalChapters = info.Value.TotalChapters,
-                LastAuthored = info.Value.Updated,
-                LastModified = _dateService.Now,
-                Created = _dateService.Now
-            };
 
-            updates.Add(update);
+            StoryUpdate? update = null;
 
             var lastUpdate = await _dbContext
                 .Set<StoryUpdate>()
@@ -204,9 +190,31 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
                 .OrderByDescending(_ => _.CurrentChapters)
                 .FirstOrDefaultAsync();
 
+            update = lastUpdate;
+
+            if (lastUpdate is null || lastUpdate.CurrentChapters < info.Value.CurrentChapters)
+            {
+                update = new StoryUpdate
+                {
+                    Id = Guid.NewGuid(),
+                    StoryId = story.Id,
+                    UserId = story.UserId,
+                    Complete = info.Value.IsCompleted,
+                    CurrentChapters = info.Value.CurrentChapters,
+                    ChapterAddress = chapterInfo?.Address,
+                    ChapterTitle = chapterInfo?.Title,
+                    TotalChapters = info.Value.TotalChapters,
+                    LastAuthored = info.Value.Updated,
+                    LastModified = _dateService.Now,
+                    Created = _dateService.Now
+                };
+
+                updates.Add(update);
+            }
+
             if (lastUpdate != null)
             {
-                for (var chapter = lastUpdate.CurrentChapters + 1; chapter < update.CurrentChapters; ++chapter)
+                for (var chapter = lastUpdate.CurrentChapters + 1; chapter < update!.CurrentChapters; ++chapter)
                 {
                     info.Value.ChapterInfo.TryGetValue(chapter, out chapterInfo);
                     updates.Add(new StoryUpdate
