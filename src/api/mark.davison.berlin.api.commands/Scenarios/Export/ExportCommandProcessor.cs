@@ -44,6 +44,7 @@ public sealed class ExportCommandProcessor : ICommandProcessor<ExportCommandRequ
             Name = story.Name,
             StoryAddress = story.Address,
             Favourite = story.Favourite,
+            ConsumedChapters = story.ConsumedChapters,
             Updates = [.. storyUpdates.OrderByDescending(_ => _.LastAuthored).Select(CreateSerialisedStoryUpdateDto)]
         };
     }

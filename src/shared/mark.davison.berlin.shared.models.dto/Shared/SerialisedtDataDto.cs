@@ -11,6 +11,7 @@ public sealed class SerialisedStoryDto
     public string Name { get; set; } = string.Empty;
     public string StoryAddress { get; set; } = string.Empty;
     public bool Favourite { get; set; }
+    public int? ConsumedChapters { get; set; }
     public List<SerialisedStoryUpdateDto> Updates { get; set; } = new();
 }
 

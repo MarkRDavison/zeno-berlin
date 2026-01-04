@@ -5,6 +5,7 @@ public sealed class AddStoryCommandRequest : ICommand<AddStoryCommandRequest, Ad
 {
     public string? Name { get; set; }
     public string StoryAddress { get; set; } = string.Empty;
+    public int? ConsumedChapters { get; set; }
     public Guid? SiteId { get; set; }
     public Guid? UpdateTypeId { get; set; }
     public bool Favourite { get; set; }

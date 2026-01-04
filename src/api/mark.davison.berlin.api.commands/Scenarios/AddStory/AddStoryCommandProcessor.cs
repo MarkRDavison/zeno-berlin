@@ -84,6 +84,7 @@ public sealed class AddStoryCommandProcessor : ICommandProcessor<AddStoryCommand
             LastChecked = _dateService.Now,
             LastModified = _dateService.Now,
             LastAuthored = info.Value?.Updated ?? _dateService.Today,
+            ConsumedChapters = request.ConsumedChapters,
             RequiresAuthentication = warnings.Contains(ValidationMessages.AUTHENTICATION_REQUIRED),
             Favourite = request.Favourite,
             StoryFandomLinks = [.. fandoms.Select(_ => CreateStoryFandomLink(storyId, _.Id, currentUserContext.UserId))],

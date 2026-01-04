@@ -39,6 +39,7 @@ public sealed class ImportCommandProcessor : ICommandProcessor<ImportCommandRequ
                 var addStoryRequest = new AddStoryCommandRequest
                 {
                     Name = story.Name,
+                    ConsumedChapters = story.ConsumedChapters,
                     StoryAddress = story.StoryAddress,
                     Favourite = story.Favourite,
                     SuppressUpdateCreation = story.Updates.Any(),
