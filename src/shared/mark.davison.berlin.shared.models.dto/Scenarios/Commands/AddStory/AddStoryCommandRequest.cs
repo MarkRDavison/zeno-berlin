@@ -3,9 +3,7 @@
 [PostRequest(Path = "add-story-command")]
 public sealed class AddStoryCommandRequest : ICommand<AddStoryCommandRequest, AddStoryCommandResponse>
 {
-    public string? Name { get; set; } // TODO: REMOVE AND Add after in import story processor
     public string StoryAddress { get; set; } = string.Empty;
-    public int? ConsumedChapters { get; set; } // TODO: REMOVE AND Add after in import story processor
     public Guid? SiteId { get; set; }
     public Guid? UpdateTypeId { get; set; }
     public bool Favourite { get; set; }

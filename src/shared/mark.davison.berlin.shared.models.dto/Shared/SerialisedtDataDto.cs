@@ -12,6 +12,8 @@ public sealed class SerialisedStoryDto
     public string StoryAddress { get; set; } = string.Empty;
     public bool Favourite { get; set; }
     public int? ConsumedChapters { get; set; }
+    public int CurrentChapters { get; set; }
+    public int? TotalChapters { get; set; }
     public List<SerialisedStoryUpdateDto> Updates { get; set; } = new();
 }
 
@@ -22,4 +24,5 @@ public sealed class SerialisedStoryUpdateDto
     public bool Complete { get; set; }
     public DateOnly LastAuthored { get; set; }
     public string? ChapterAddress { get; set; } = string.Empty;
+    public string? ChapterTitle { get; set; } = string.Empty;
 }

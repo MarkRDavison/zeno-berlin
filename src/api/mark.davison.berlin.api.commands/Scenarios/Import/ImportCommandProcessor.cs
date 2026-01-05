@@ -38,8 +38,6 @@ public sealed class ImportCommandProcessor : ICommandProcessor<ImportCommandRequ
             {
                 var addStoryRequest = new AddStoryCommandRequest
                 {
-                    Name = story.Name,
-                    ConsumedChapters = story.ConsumedChapters,
                     StoryAddress = story.StoryAddress,
                     Favourite = story.Favourite,
                     SuppressUpdateCreation = story.Updates.Any(),
@@ -63,14 +61,27 @@ public sealed class ImportCommandProcessor : ICommandProcessor<ImportCommandRequ
 
                 response.Value.Imported++;
 
+                var importedStory = await _dbContext.GetByIdAsync<Story>(addStoryResponse.Value.Id, cancellationToken);
+
+                if (importedStory is null)
+                {
+                    continue;
+                }
+
+                importedStory.Name = story.Name;
+                importedStory.ConsumedChapters = story.ConsumedChapters;
+                importedStory.CurrentChapters = story.CurrentChapters;
+                importedStory.TotalChapters = story.TotalChapters;
+
                 foreach (var update in story.Updates)
                 {
                     var newUpdate = new StoryUpdate
                     {
                         Id = Guid.NewGuid(),
-                        StoryId = addStoryResponse.Value.Id,
+                        StoryId = importedStory.Id,
                         UserId = currentUserContext.UserId,
                         Complete = update.Complete,
+                        ChapterTitle = update.ChapterTitle,
                         CurrentChapters = update.CurrentChapters,
                         TotalChapters = update.TotalChapters,
                         LastAuthored = update.LastAuthored,
