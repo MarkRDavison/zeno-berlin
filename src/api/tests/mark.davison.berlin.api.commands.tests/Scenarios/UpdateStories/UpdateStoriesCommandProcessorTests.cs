@@ -47,6 +47,10 @@ public sealed class UpdateStoriesCommandProcessorTests
 
         _dateService.Setup(_ => _.Now).Returns(DateTime.Now);
 
+        _notificationHub
+            .Setup(_ => _.SendNotification(It.IsAny<NotificationMessage>()))
+            .ReturnsAsync(new Response());
+
         _site1 = new()
         {
             Id = Guid.NewGuid(),
@@ -74,7 +78,8 @@ public sealed class UpdateStoriesCommandProcessorTests
             UserId = _currentUserId,
             SiteId = _site1.Id,
             LastModified = _dateService.Object.Now.AddDays(-2),
-            Created = DateTime.UtcNow
+            Created = DateTime.UtcNow,
+            CurrentChapters = 1
         };
         _story2Site1 = new()
         {
@@ -82,7 +87,8 @@ public sealed class UpdateStoriesCommandProcessorTests
             UserId = _currentUserId,
             SiteId = _site1.Id,
             LastModified = _dateService.Object.Now.AddDays(-1.5),
-            Created = DateTime.UtcNow
+            Created = DateTime.UtcNow,
+            CurrentChapters = 1
         };
         _story1Site2 = new()
         {
@@ -90,7 +96,8 @@ public sealed class UpdateStoriesCommandProcessorTests
             UserId = _currentUserId,
             SiteId = _site2.Id,
             LastModified = _dateService.Object.Now,
-            Created = DateTime.UtcNow
+            Created = DateTime.UtcNow,
+            CurrentChapters = 1
         };
         _story2Site2 = new()
         {
@@ -98,7 +105,8 @@ public sealed class UpdateStoriesCommandProcessorTests
             UserId = _currentUserId,
             SiteId = _site2.Id,
             LastModified = _dateService.Object.Now,
-            Created = DateTime.UtcNow
+            Created = DateTime.UtcNow,
+            CurrentChapters = 1
         };
 
         var services = new ServiceCollection();

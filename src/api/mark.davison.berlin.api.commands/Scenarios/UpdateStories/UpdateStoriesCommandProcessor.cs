@@ -42,21 +42,21 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
 
         if (!toUpdate.Any())
         {
-            _logger.LogTrace("Did not find any stories to update.");
+            _logger.LogInformation("Did not find any stories to update.");
             return new() { Warnings = [ValidationMessages.NO_ITEMS] };
         }
 
-        _logger.LogTrace("Found {0} stories to update.", toUpdate.Count);
+        _logger.LogInformation("Found {0} stories to update.", toUpdate.Count);
 
         foreach (var g in toUpdate.GroupBy(_ => _.SiteId))
         {
             if (cancellationToken.IsCancellationRequested) { break; }
 
             var site = await _dbContext.Set<Site>().FindAsync(g.Key, cancellationToken); // TODO: Cache
-            if (site == null) { continue; }
+            if (site is null) { continue; }
 
             var storyInfoProcessor = _serviceProvider.GetKeyedService<IStoryInfoProcessor>(site.ShortName);
-            if (storyInfoProcessor == null) { continue; }
+            if (storyInfoProcessor is null) { continue; }
 
             foreach (var story in g)
             {
@@ -303,6 +303,8 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
             var refreshDate = _dateService.Now.Subtract(refreshOffset);
             var refreshDateFav = _dateService.Now.Subtract(refreshOffsetFav);
 
+            _logger.LogInformation("Trying to update based on favourite: {0} and non favourite: {1}", refreshDateFav, refreshDate);
+
             // TODO: Order by !fav, where fav OR refresh??? 
             // So either its a non fav and needs checking, or everything else fills up on the favourites
             var stories = await _dbContext
@@ -311,7 +313,7 @@ public sealed class UpdateStoriesCommandProcessor : ICommandProcessor<UpdateStor
                 .ThenInclude(sf => sf.Fandom)
                 .Include(_ => _.StoryAuthorLinks)
                 .ThenInclude(sa => sa.Author)
-                .Where(_ => !_.Complete && !_.RequiresAuthentication && _.LastChecked <= refreshDate)
+                .Where(_ => _.CurrentChapters == 0 || !_.Complete && !_.RequiresAuthentication && _.LastChecked <= refreshDate)
                 .OrderBy(_ => _.LastChecked)
                 .Take(max)
                 .ToListAsync(cancellationToken);

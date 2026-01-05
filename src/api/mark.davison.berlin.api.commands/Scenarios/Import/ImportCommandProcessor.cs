@@ -63,22 +63,20 @@ public sealed class ImportCommandProcessor : ICommandProcessor<ImportCommandRequ
 
                 var importedStory = await _dbContext.GetByIdAsync<Story>(addStoryResponse.Value.Id, cancellationToken);
 
-                if (importedStory is null)
+                if (importedStory is not null)
                 {
-                    continue;
+                    importedStory.Name = story.Name;
+                    importedStory.ConsumedChapters = story.ConsumedChapters;
+                    importedStory.CurrentChapters = story.CurrentChapters;
+                    importedStory.TotalChapters = story.TotalChapters;
                 }
-
-                importedStory.Name = story.Name;
-                importedStory.ConsumedChapters = story.ConsumedChapters;
-                importedStory.CurrentChapters = story.CurrentChapters;
-                importedStory.TotalChapters = story.TotalChapters;
 
                 foreach (var update in story.Updates)
                 {
                     var newUpdate = new StoryUpdate
                     {
                         Id = Guid.NewGuid(),
-                        StoryId = importedStory.Id,
+                        StoryId = addStoryResponse.Value.Id,
                         UserId = currentUserContext.UserId,
                         Complete = update.Complete,
                         ChapterTitle = update.ChapterTitle,
